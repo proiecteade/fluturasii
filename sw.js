@@ -1,4 +1,4 @@
-// Notificări pentru administratoare. Nu memorează pagini (site-ul se încarcă mereu proaspăt).
+// Notificări pentru administratoare și pentru părinți. Nu memorează pagini (site-ul se încarcă mereu proaspăt).
 self.addEventListener("install", () => self.skipWaiting());
 self.addEventListener("activate", e => e.waitUntil(self.clients.claim()));
 self.addEventListener("push", e => {

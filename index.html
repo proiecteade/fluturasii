@@ -613,6 +613,68 @@ button.kid:hover{background:var(--surface-2)}
 [id^="sec-"],[id^="item-"],[id^="g-"],[id^="coll-"]{scroll-margin-top:24px}
 @media (max-width:999px){[id^="sec-"],[id^="item-"],[id^="coll-"]{scroll-margin-top:calc(var(--navh,0px) + 76px)}}
 @media (max-width:720px){[id^="g-"]{scroll-margin-top:calc(var(--navh,0px) + 12px)}}
+
+/* zile de naștere */
+.bd-today{position:relative;overflow:hidden;display:flex;gap:16px;align-items:center;padding:20px 22px;border-radius:var(--r);background:linear-gradient(135deg,var(--amber-soft),var(--lilac-soft));cursor:pointer;box-shadow:var(--shadow)}
+.bd-big{font-size:54px;line-height:1;flex:none;animation:bdBob 2.4s ease-in-out infinite}
+.bd-ttl{font-family:var(--f-display);font-size:28px;font-weight:800;line-height:1.1;color:var(--ink)}
+.bd-txt p{margin:4px 0 0;font-weight:700}
+.bd-txt{position:relative;z-index:1;min-width:0}
+.bd-conf{position:absolute;inset:0;pointer-events:none}
+.bd-conf i{position:absolute;top:-30px;font-style:normal;font-size:20px;opacity:.9;animation:bdFall 4.5s linear infinite}
+.bd-conf i:nth-child(1){left:6%;animation-delay:0s}.bd-conf i:nth-child(2){left:20%;animation-delay:1.2s}.bd-conf i:nth-child(3){left:34%;animation-delay:2.6s}.bd-conf i:nth-child(4){left:50%;animation-delay:.6s}
+.bd-conf i:nth-child(5){left:64%;animation-delay:3.2s}.bd-conf i:nth-child(6){left:76%;animation-delay:1.8s}.bd-conf i:nth-child(7){left:88%;animation-delay:.3s}.bd-conf i:nth-child(8){left:95%;animation-delay:2.2s}
+@keyframes bdFall{0%{transform:translateY(0) rotate(0)}100%{transform:translateY(190px) rotate(300deg);opacity:0}}
+@keyframes bdBob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-5px) rotate(4deg)}}
+@media (prefers-reduced-motion:reduce){.bd-conf{display:none}.bd-big{animation:none}}
+@media (max-width:520px){.bd-today{padding:16px}.bd-big{font-size:42px}.bd-ttl{font-size:23px}}
+.bd-soon{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px}
+.bd-soon .eyebrow{margin:0 0 6px}
+.bd-row{display:flex;align-items:center;gap:10px;padding:7px 4px;border-radius:10px;cursor:pointer}
+.bd-row:hover{background:var(--surface-2)}
+.bd-row .t{flex:1;min-width:0;display:flex;flex-direction:column}
+.bd-row small{color:var(--muted);font-weight:700}
+.bd-n{font-weight:800;color:var(--lilac);font-size:13px;white-space:nowrap}
+.bd-ask{background:var(--amber-soft)}
+.bd-ask .who{color:var(--amber)}
+.bd-form{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+.bd-form .inp,.bd-form .sel{width:auto;min-width:0;flex:1 1 150px;max-width:240px}
+.bd-btns{gap:8px}
+.bd-yr{gap:6px;align-items:center}.bd-yr b{font-size:17px;min-width:44px;text-align:center}
+.bd-mine{display:flex;align-items:center;gap:10px;background:var(--wing-soft);border-radius:12px;padding:10px 12px;margin-bottom:14px}
+.bd-mine .t{flex:1;min-width:0}
+.bd-year{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+@media (max-width:900px){.bd-year{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.bd-year{gap:8px}.bd-month{padding:8px}.bd-mh{font-size:16px}.bd-grid{font-size:11px;gap:1px}.bd-grid b{font-size:9.5px}.bd-list li{font-size:12.5px;gap:5px}.bd-dd{min-width:16px}}
+@media (max-width:330px){.bd-year{grid-template-columns:minmax(0,1fr)}}
+.bd-month{border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--surface)}
+.bd-month.cur{border-color:var(--wing);box-shadow:0 0 0 2px var(--wing-soft)}
+.bd-mh{font-family:var(--f-display);font-weight:800;font-size:18px;margin-bottom:6px}
+.bd-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center;font-size:12.5px}
+.bd-grid b{font-size:10.5px;color:var(--muted);font-weight:800;padding-bottom:2px}
+.bd-d{display:grid;place-items:center;aspect-ratio:1;width:100%;max-width:30px;margin:0 auto;border-radius:50%;font-weight:700;color:var(--muted)}
+.bd-d.bd-k{background:var(--amber-soft);color:var(--amber);font-weight:800}
+.bd-d.bd-e{background:var(--lilac-soft);color:var(--lilac);font-weight:800}
+.bd-d.bd-me{background:var(--wing);color:var(--on-wing)}
+.bd-d.bd-now{outline:2px solid var(--wing);outline-offset:-2px;color:var(--ink)}
+.bd-list{list-style:none;margin:10px 0 0;padding:8px 0 0;border-top:1px dashed var(--line);display:flex;flex-direction:column;gap:4px}
+.bd-list li{display:flex;gap:8px;align-items:baseline;font-weight:700;font-size:14px}
+.bd-list li[role="button"]{cursor:pointer}
+.bd-list li.bd-eu .bd-nm{color:var(--wing-ink)}
+.bd-dd{flex:none;min-width:24px;text-align:right;color:var(--amber);font-weight:800}
+.bd-list small{color:var(--muted);font-weight:700}
+.bd-miss{margin-top:16px}
+.bd-chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+/* notificări părinți */
+.me-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.me-row .t{flex:1;min-width:0}
+.me-push{margin-top:14px}
+.me-push .eyebrow{margin:0 0 4px}
+.push-cats{display:flex;flex-direction:column;gap:8px;margin:8px 0}
+.push-cat{display:flex;gap:10px;align-items:flex-start;font-weight:700;font-size:14.5px;cursor:pointer}
+.push-cat input{width:20px;height:20px;flex:none;margin:1px 0 0;accent-color:var(--wing)}
+.push-steps{margin:8px 0;padding-left:22px;display:flex;flex-direction:column;gap:6px;font-weight:600}
+.push-what{margin:6px 0 10px;padding-left:4px;list-style:none;display:flex;flex-direction:column;gap:6px;font-weight:700}
 </style>
 </head>
 <body>
@@ -636,7 +698,7 @@ button.kid:hover{background:var(--surface-2)}
         <p>Grădinița 246 · Grupa mică B</p>
       </div>
     </div>
-    <div class="hdr-acts"><button class="bell" id="bellBtn" type="button" data-a="act" aria-label="Noutăți" hidden></button><button class="helpbtn" type="button" data-a="tab" data-k="ghid" aria-label="Ghid de folosire">?<span> Ghid</span></button><button class="me" id="meBtn" type="button" data-a="pick"></button></div>
+    <div class="hdr-acts"><button class="bell" id="bellBtn" type="button" data-a="act" aria-label="Noutăți" hidden></button><button class="helpbtn" type="button" data-a="tab" data-k="ghid" aria-label="Ghid de folosire">?<span> Ghid</span></button><button class="me" id="meBtn" type="button" data-a="me"></button></div>
   </div>
   <div class="wrap"><nav class="tabs" id="tabs" aria-label="Secțiuni"></nav></div>
 </header>
@@ -699,6 +761,7 @@ const ICON = {
   down:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform:scaleY(-1)"><path d="M7 11v9H4v-9z"/><path d="M7 11l4-8c1.7 0 2.5 1 2.2 2.6L12.6 9H19a2 2 0 0 1 2 2.3l-1.2 7A2 2 0 0 1 17.8 20H7"/></svg>',
   reply:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 8L5 12l5 4"/><path d="M5 12h9a5 5 0 0 1 5 5v2"/></svg>',
   bell:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 1 1 12 0v5l2 2H4z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>',
+  cake:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21h16"/><path d="M5 21v-7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v7"/><path d="M5 16c1.5 1 2.5 1 3.5 0s2-1 3.5 0 2.5 1 3.5 0 2-1 3.5 0"/><path d="M12 12V8"/><path d="M12 3.5c.9 1 .9 2.2 0 3-.9-.8-.9-2 0-3z"/></svg>',
   user:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="9" r="4"/><path d="M4 21c1.5-4 5-5 8-5s6.5 1 8 5"/></svg>'
 };
 
@@ -717,7 +780,7 @@ const ui = {
 };
 const cap = { db:null, admin:false, canWrite:true };
 /* ---------- linkuri directe: #deplata/dans/2026-10, #evenimente/<id>, #buget/<strangere>, #ghid/<capitol> ---------- */
-const HASH_TAB = { acasa:"acasa", necesar:"necesar", evenimente:"evenimente", optionale:"optionale", "de-plata":"optionale", deplata:"optionale", buget:"bani", bani:"bani", ghid:"ghid" };
+const HASH_TAB = { zile:"zile", aniversari:"zile", acasa:"acasa", necesar:"necesar", evenimente:"evenimente", optionale:"optionale", "de-plata":"optionale", deplata:"optionale", buget:"bani", bani:"bani", ghid:"ghid" };
 const TAB_HASH = { bani:"buget", optionale:"deplata" };
 let routeTarget = "";
 function parseRoute(){
@@ -828,6 +891,102 @@ function calendarCard(){
     + (nextFree && !(cur && cur.tip === "vac") && daysUntil(nextFree.d) <= 14 ? '<div class="hint" style="margin-top:8px">Atenție: '+esc(fmtLong(nextFree.d))+' e liber ('+esc(nextFree.n)+').</div>' : '')
     + '</section>';
 }
+/* ---------- zile de naștere ---------- */
+const BD_FARA_AN = 1904; // la doamne păstrăm doar ziua și luna
+const isLeap = y => (y%4 === 0 && y%100 !== 0) || y%400 === 0;
+const bdOf = c => c && c.data_nasterii ? parseD(c.data_nasterii) : null;
+const bdIn = (b, y) => (b.getMonth() === 1 && b.getDate() === 29 && !isLeap(y)) ? new Date(y, 1, 28) : new Date(y, b.getMonth(), b.getDate());
+const bdHasAge = c => !isEdu(c) && bdOf(c) && bdOf(c).getFullYear() !== BD_FARA_AN;
+const aniTxt = n => n === 1 ? "1 an" : n + (n >= 20 && (n % 100 === 0 || n % 100 >= 20) ? " de ani" : " ani");
+const bdName = c => isEdu(c) ? c.nume : firstName(c.nume);
+const bdDayMonth = d => d.getDate()+" "+LUNI[d.getMonth()];
+function nextBd(c){
+  const b = bdOf(c); if (!b) return null;
+  const t = parseD(todayStr()); let d = bdIn(b, t.getFullYear()); if (d < t) d = bdIn(b, t.getFullYear()+1);
+  return { d, n: Math.round((d - t) / 86400000), age: d.getFullYear() - b.getFullYear() };
+}
+const bdPeople = () => sortedEdus().concat(sortedKids());
+function bdHome(){
+  let h = "";
+  const list = bdPeople().map(c => ({ c, x: nextBd(c) })).filter(o => o.x && o.x.n <= 14).sort((a,b) => a.x.n - b.x.n || String(a.c.nume).localeCompare(b.c.nume, "ro"));
+  const today = list.filter(o => o.x.n === 0), soon = list.filter(o => o.x.n > 0);
+  for (const { c, x } of today) {
+    const mine = c.id === ui.me;
+    h += '<div class="bd-today" role="button" tabindex="0" data-a="tab" data-k="zile"><div class="bd-conf" aria-hidden="true"><i>🎈</i><i>🎉</i><i>⭐</i><i>🎊</i><i>🦋</i><i>🎈</i><i>✨</i><i>🎂</i></div>'
+      + '<div class="bd-big" aria-hidden="true">🎂</div><div class="bd-txt"><div class="bd-ttl">La mulți ani, '+esc(bdName(c))+'!</div>'
+      + '<p>'+(mine ? (isEdu(c) ? 'Toți Fluturașii vă urează o zi minunată! 💐' : 'Toți Fluturașii îți urează o zi minunată'+(bdHasAge(c) ? ' la '+esc(aniTxt(x.age)) : '')+'! 🦋')
+        : 'Azi e ziua: <b>'+esc(c.nume)+'</b>'+(bdHasAge(c) ? ' · împlinește '+esc(aniTxt(x.age)) : '')+'.')+'</p></div></div>';
+  }
+  if (soon.length) h += '<div class="bd-soon"><div class="eyebrow">🎈 Zile de naștere în următoarele 2 săptămâni</div>'
+    + soon.map(({ c, x }) => '<div role="button" tabindex="0" class="bd-row" data-a="tab" data-k="zile">'+avHtml(c.id)+'<span class="t"><b>'+esc(c.nume)+'</b><small>'+esc(ZILE[x.d.getDay()]+', '+bdDayMonth(x.d))+(bdHasAge(c) ? ' · împlinește '+esc(aniTxt(x.age)) : '')+'</small></span><span class="bd-n num">'+esc(countdown(x.n))+'</span></div>').join("")
+    + '</div>';
+  const me = kid(ui.me);
+  if (me && !me.data_nasterii && LS.get("fl_bd_later_"+me.id) !== todayStr()) {
+    h += '<div class="notice bd-ask"><span class="gh-ico" aria-hidden="true">🎂</span><div style="flex:1;min-width:0"><div class="who">'+(isEdu(me) ? 'Ziua dumneavoastră' : 'Ziua lui '+esc(firstName(me.nume)))+'</div>'
+      + '<p>'+(isEdu(me) ? 'Spuneți-ne când vă serbați ziua, ca să o vadă toată grupa în calendar.' : 'Completează data nașterii, ca să apară în calendarul grupei și să-i urăm toți „La mulți ani!”.')+'</p>'
+      + bdFields(me, "bdh") + '</div></div>';
+  }
+  return h;
+}
+function bdFields(c, pre){
+  const b = bdOf(c);
+  const btns = '<button class="btn small primary" type="submit">Salvează</button>'+(pre === "bdh" ? '<button type="button" class="btn small ghost" data-a="bdLater" data-id="'+esc(c.id)+'">Mai târziu</button>' : '');
+  if (isEdu(c)) {
+    return '<form id="fBd" class="bd-form"><input type="hidden" name="copil" value="'+esc(c.id)+'">'
+      + '<label class="sr" for="'+pre+'-z">Ziua</label><select class="sel" id="'+pre+'-z" name="zi" required><option value="">Ziua</option>'+Array.from({length:31}, (_,i) => '<option value="'+(i+1)+'"'+(b && b.getDate()===i+1 ? ' selected' : '')+'>'+(i+1)+'</option>').join("")+'</select>'
+      + '<label class="sr" for="'+pre+'-l">Luna</label><select class="sel" id="'+pre+'-l" name="luna" required><option value="">Luna</option>'+LUNI.map((l,i) => '<option value="'+(i+1)+'"'+(b && b.getMonth()===i ? ' selected' : '')+'>'+l+'</option>').join("")+'</select>'
+      + '<div class="row bd-btns">'+btns+'</div></form><p class="hint" style="margin-top:6px">Apar doar ziua și luna.</p>';
+  }
+  return '<form id="fBd" class="bd-form"><input type="hidden" name="copil" value="'+esc(c.id)+'">'
+    + '<label class="sr" for="'+pre+'-d">Data nașterii</label><input class="inp" id="'+pre+'-d" name="data" type="date" required max="'+todayStr()+'" min="2015-01-01" value="'+esc(c.data_nasterii||"")+'">'
+    + '<div class="row bd-btns">'+btns+'</div></form><p class="hint" style="margin-top:6px">Ceilalți părinți văd doar ziua, luna și câți ani împlinește.</p>';
+}
+function bdForm(id){
+  const c = kid(id); if (!c) return;
+  modal('<h3>🎂 '+esc(c.nume)+'</h3><p class="hint">'+(isEdu(c) ? 'Ziua și luna în care își serbează ziua.' : 'Data nașterii.')+'</p>'+bdFields(c, "bdm")
+    + '<div class="acts">'+(c.data_nasterii && cap.admin ? '<button type="button" class="btn danger left" data-a="bdDel" data-id="'+esc(c.id)+'">'+(ui.confirm==="bd"+c.id ? 'Sigur? Apasă iar' : 'Șterge data')+'</button>' : '')+'<button type="button" class="btn" data-a="close">Închide</button></div>');
+}
+async function bdSave(copil, data){
+  if (!sb) { toast("Portalul nu e conectat la baza de date.", true); return false; }
+  const r = await sb.rpc("seteaza_zi_nastere", { p_copil: copil, p_data: data });
+  if (r.error) { toast("Nu s-a salvat. Verifică data și încearcă din nou.", true); return false; }
+  await refetch("copii"); return true;
+}
+function viewZile(){
+  const y = ui.bdYear || new Date().getFullYear(), t = todayStr();
+  const ppl = bdPeople(), withD = ppl.filter(c => bdOf(c)), missing = ppl.filter(c => !bdOf(c));
+  const byDay = {};
+  for (const c of withD) { const d = bdIn(bdOf(c), y); const k = isoOf(d); (byDay[k] = byDay[k] || []).push(c); }
+  let h = '<section><div class="sec-head"><div><h2>🎂 Zilele de naștere</h2><div class="sub">Copiii grupei și doamnele, pe tot anul.</div></div>'
+    + '<div class="row bd-yr"><button type="button" class="btn small ghost" data-a="bdYear" data-v="'+(y-1)+'" aria-label="Anul '+(y-1)+'">‹</button><b class="num">'+y+'</b><button type="button" class="btn small ghost" data-a="bdYear" data-v="'+(y+1)+'" aria-label="Anul '+(y+1)+'">›</button></div></div>';
+  const me = kid(ui.me);
+  if (me) h += '<div class="bd-mine">'+avHtml(me.id)+'<span class="t">'+(bdOf(me) ? '<b>'+esc(isEdu(me) ? 'Ziua dumneavoastră' : 'Ziua lui '+firstName(me.nume))+':</b> '+esc(bdDayMonth(bdOf(me))) : '<b>'+esc(isEdu(me) ? 'Ziua dumneavoastră' : 'Ziua lui '+firstName(me.nume))+'</b> nu e completată încă')+'</span><button type="button" class="btn small'+(bdOf(me) ? ' ghost' : ' primary')+'" data-a="bdEdit" data-id="'+esc(me.id)+'">'+(bdOf(me) ? 'Schimbă' : 'Completează')+'</button></div>';
+  h += '<div class="bd-year">';
+  for (let m = 0; m < 12; m++) {
+    const first = new Date(y, m, 1), days = new Date(y, m+1, 0).getDate(), off = (first.getDay() + 6) % 7;
+    let cells = '';
+    for (let i = 0; i < off; i++) cells += '<span></span>';
+    for (let d = 1; d <= days; d++) {
+      const k = y+"-"+pad(m+1)+"-"+pad(d), who = byDay[k] || [];
+      const cls = (who.length ? (who.some(isEdu) ? ' bd-e' : ' bd-k') : '') + (k === t ? ' bd-now' : '') + (who.some(c => c.id === ui.me) ? ' bd-me' : '');
+      cells += '<span class="bd-d'+cls+'"'+(who.length ? ' title="'+esc(who.map(c => c.nume).join(", "))+'"' : '')+'>'+d+'</span>';
+    }
+    const inMonth = Object.keys(byDay).filter(k => +k.slice(5,7) === m+1).sort().flatMap(k => byDay[k].map(c => ({ k, c })));
+    h += '<div class="bd-month'+(y === new Date().getFullYear() && m === new Date().getMonth() ? ' cur' : '')+'"><div class="bd-mh">'+esc(LUNI[m][0].toUpperCase()+LUNI[m].slice(1))+'</div>'
+      + '<div class="bd-grid"><b>L</b><b>M</b><b>M</b><b>J</b><b>V</b><b>S</b><b>D</b>'+cells+'</div>'
+      + (inMonth.length ? '<ul class="bd-list">'+inMonth.map(({ k, c }) => { const age = y - bdOf(c).getFullYear();
+          return '<li'+(c.id === ui.me ? ' class="bd-eu"' : '')+(cap.admin ? ' role="button" tabindex="0" data-a="bdEdit" data-id="'+esc(c.id)+'"' : '')+'><span class="bd-dd num">'+(+k.slice(8))+'</span><span class="bd-nm">'+(isEdu(c) ? '👩‍🏫 ' : '')+esc(c.nume)+(bdHasAge(c) && age > 0 ? ' <small>· '+esc(aniTxt(age))+'</small>' : '')+'</span></li>'; }).join("")+'</ul>' : '')
+      + '</div>';
+  }
+  h += '</div>';
+  if (missing.length) {
+    h += '<div class="bd-miss"><div class="eyebrow">Încă necompletate: '+missing.length+' din '+ppl.length+'</div>'
+      + (cap.admin ? '<div class="bd-chips">'+missing.map(c => '<button type="button" class="cmd-chip" data-a="bdEdit" data-id="'+esc(c.id)+'">'+(isEdu(c) ? '👩‍🏫 ' : '')+esc(c.nume)+'</button>').join("")+'</div><p class="hint">Apasă pe un nume ca să completezi tu data. Poți schimba orice dată apăsând pe ea în calendar.</p>'
+        : '<p class="hint">Fiecare părinte completează pentru copilul lui, de pe Acasă sau de aici.</p>')
+      + '</div>';
+  }
+  return h + '</section>';
+}
 const targetOf = it => { const m = /^\s*(\d+)/.exec(String(it.cantitate||"")); return m ? +m[1] : 0; };
 const takenOf = it => signups(it.id).reduce((a,x)=>a+(+x.bucati||0),0);
 function avHtml(id, label){ return isEdu(id) ? '<span class="av edu" title="Educatoare" aria-label="Educatoare">👩‍🏫</span>' : '<span class="av" style="background:'+avColor(id)+'">'+esc(initials(label || kidName(id)))+'</span>'; }
@@ -916,6 +1075,7 @@ async function boot(){
   ui.mode = "live";
   await Promise.all(COLS.map(refetch));
   loadAct();
+  checkPush().then(pushSync).then(() => setTimeout(maybeAskPush, 1500));
   try { const r = await sb.rpc("asigura_abonament"); if (r && r.data && !D.comenzi.some(c => c.id === r.data)) { await refetch("comenzi"); } } catch(e){}
   if (!ui.loaded.has("itemi")) { ui.mode = "nodb"; render(); return; }
   const timers = {};
@@ -954,7 +1114,7 @@ function toast(msg, err){
 }
 
 /* ---------- randare ---------- */
-const TABS = [["acasa","Acasă","home"],["necesar","Necesar","list"],["evenimente","Evenimente","cal"],["optionale","De plată","star"],["bani","Bugetul grupei","wallet"]];
+const TABS = [["acasa","Acasă","home"],["necesar","Necesar","list"],["evenimente","Evenimente","cal"],["optionale","De plată","star"],["bani","Bugetul grupei","wallet"],["zile","Zile de naștere","cake","Aniversări"]];
 function render(){
   pending = false;
   const me = kid(ui.me);
@@ -963,7 +1123,7 @@ function render(){
     : '<span class="av" style="background:var(--wing)">'+ICON.user.replace('<svg','<svg width="16" height="16"')+'</span><span class="lbl">Alege copilul tău</span>';
   const tabsHtml = TABS.map(([k,l,i]) => '<button type="button" class="tab" data-a="tab" data-k="'+k+'"'+(ui.tab===k?' aria-current="page"':'')+'>'+ICON[i]+l+'</button>').join("");
   $("#tabs").innerHTML = tabsHtml; paintBell();
-  $("#bnav").style.setProperty("--n", TABS.length); $("#bnav").innerHTML = TABS.map(([k,l,i]) => '<button type="button" data-a="tab" data-k="'+k+'"'+(ui.tab===k?' aria-current="page"':'')+'>'+ICON[i]+'<span>'+l+'</span></button>').join("");
+  $("#bnav").style.setProperty("--n", TABS.length); $("#bnav").innerHTML = TABS.map(([k,l,i,sh]) => '<button type="button" data-a="tab" data-k="'+k+'"'+(ui.tab===k?' aria-current="page"':'')+'>'+ICON[i]+'<span>'+(sh||l)+'</span></button>').join("");
   const v = $("#view");
   if (ui.mode === "loading" || (ui.mode === "live" && !["copii","sectiuni","itemi"].every(n => ui.loaded.has(n)))) {
     v.innerHTML = '<div class="state"><h3>Se încarcă lista grupei…</h3>Evenimentele, necesarul și banii apar în câteva secunde.</div>'; return;
@@ -976,7 +1136,7 @@ function render(){
   }
   if (!kid(ui.me) && D.copii.length && !$("#modalRoot").innerHTML) setTimeout(() => { if (!kid(ui.me) && !$("#modalRoot").innerHTML) openPicker(null, true); }, 0);
   setTimeout(() => { if (routeTarget && document.getElementById(routeTarget)) { const t = routeTarget; routeTarget = ""; goTo(t); } }, 0);
-  const html = ({ acasa: viewHome, necesar: viewNecesar, evenimente: viewEvents, optionale: viewOptionale, bani: viewMoney, ghid: viewGuide }[ui.tab] || viewHome)();
+  const html = ({ acasa: viewHome, necesar: viewNecesar, evenimente: viewEvents, optionale: viewOptionale, bani: viewMoney, zile: viewZile, ghid: viewGuide }[ui.tab] || viewHome)();
   v.innerHTML = (cap.admin ? adminBar() : "") + html + '<p class="foot-note">Bifele și comentariile se salvează automat și le văd toți părinții. <button class="linkbtn" data-a="tab" data-k="ghid">Ghid de folosire</button><br>'+(cap.admin ? 'Ești logată ca administratoare ('+esc(ui.adminEmail)+'). <button class="linkbtn" data-a="logout">Ieși</button>' : '<button class="linkbtn" data-a="login">Administrare</button>')+'</p>';
 }
 
@@ -1003,12 +1163,12 @@ function viewGuide(){
   const sec = (id, emoji, title, steps) => '<section class="gsec" id="g-'+id+'"><h2><span aria-hidden="true">'+emoji+'</span> '+title+' '+linkBtn("ghid/"+id)+'</h2><ol class="gsteps">'+steps+'</ol></section>';
   let h = '<section><div class="sec-head"><div><h2>Cum folosești portalul</h2><div class="sub">Ghid pentru părinți. Durează 2 minute.</div></div><button class="btn small" data-a="tab" data-k="acasa">Înapoi la Acasă</button></div>'
     + '<nav class="gtoc" aria-label="Cuprins">'
-    + [["start","Prima intrare"],["acasa","Ce vezi pe Acasă"],["preiau","Preiau ceva"],["inscriu","Aduc ceva"],["bifez","Bifez pentru copil"],["luna","Iau o lună"],["status","Statusul"],["comentarii","Comentarii"],["bani","Bugetul grupei"],["optionale","Opționale"],["telefon","Pe ecranul telefonului"],["probleme","Dacă ceva nu merge"]].map(([k,l]) => '<button type="button" class="evchip" data-a="goG" data-id="'+k+'">'+l+'</button>').join("")
+    + [["start","Prima intrare"],["acasa","Ce vezi pe Acasă"],["preiau","Preiau ceva"],["inscriu","Aduc ceva"],["bifez","Bifez pentru copil"],["luna","Iau o lună"],["status","Statusul"],["comentarii","Comentarii"],["bani","Bugetul grupei"],["optionale","Opționale"],["zile","Zile de naștere"],["telefon","Telefon și notificări"],["probleme","Dacă ceva nu merge"]].map(([k,l]) => '<button type="button" class="evchip" data-a="goG" data-id="'+k+'">'+l+'</button>').join("")
     + '</nav></section>';
   h += sec("start","🚪","Prima intrare",
       step(1,"Răspunde la întrebare","<p>Prima dată, portalul te întreabă cum le cheamă pe educatoare. Scrie numele lor și apasă "+B("Intră","dark")+". Întreabă o singură dată pe fiecare telefon.</p>")
     + step(2,"Alege cine ești","<p>Imediat după întrebare se deschide fereastra "+B("Cine ești?")+". Alege numele copilului tău (poți căuta după nume). Educatoarele apar primele, cu 👩‍🏫. Nu poți intra în portal până nu alegi un nume.</p><p>Telefonul ține minte alegerea, așa că data viitoare intri direct.</p>")
-    + step(3,"Ai ales greșit sau ai doi copii în grupă?","<p>Apasă oricând pe numele de sus (de ex. "+B("PV Pîrvu Vlad")+") și alege altul.</p>"));
+    + step(3,"Ai ales greșit sau ai doi copii în grupă?","<p>Apasă oricând pe numele de sus (de ex. "+B("PV Pîrvu Vlad")+") → "+B("Schimbă")+" și alege altul.</p>"));
   h += sec("acasa","🏠","Ce vezi pe Acasă",
       step("•","Evenimente următoare","<p>Ce urmează la grupă, în câte zile și cât e gata din pregătiri. Apasă pe un eveniment ca să vezi lista lui.</p>")
     + step("•","Anul școlar","<p>Dacă suntem în vacanță, când revin copiii la grădiniță și când e următoarea vacanță. La „Tot calendarul” găsești tot anul.</p>")
@@ -1041,9 +1201,14 @@ function viewGuide(){
   h += sec("optionale","⭐","De plată: opționale (dans, engleză, dezvoltare personală), caiete",
       step("•","Prezența și suma","<p>În tabul "+B("De plată")+" alegi opționalul și luna. Fiecare bulină verde e o ședință la care a fost copilul. Suma = ședințe × prețul pe ședință.</p>")
     + step("•","Cât ai de plată","<p>Sus apare direct pentru copilul tău, de ex. „Vlad: 2 din 6 ședințe · 20 lei de plată”. Apare și pe Acasă, la „Ce ai tu de făcut”. După ce plătești, administratoarea marchează „Plătit” și trece la „Gata”.</p>"));
-  h += sec("telefon","📱","Pune portalul pe ecranul telefonului",
-      step("iPhone","Safari","<p>Deschide portalul în Safari → apasă "+B("Distribuie ⬆︎")+" → "+B("Adaugă pe ecranul principal")+".</p>")
-    + step("Android","Chrome","<p>Deschide portalul în Chrome → apasă "+B("⋮")+" sus în dreapta → "+B("Adaugă pe ecranul de pornire")+".</p>"));
+  h += sec("zile","🎂","Zile de naștere",
+      step("•","Completează ziua copilului","<p>Pe "+B("Acasă")+" apare un card „Ziua lui …”. Alegi data nașterii și apeși "+B("Salvează")+". O poți schimba oricând apăsând pe numele de sus.</p>")
+    + step("•","Ce văd ceilalți","<p>Doar ziua, luna și câți ani împlinește copilul. Cu 2 săptămâni înainte apare pe Acasă, iar în ziua respectivă apare mesajul „La mulți ani!”.</p>")
+    + step("•","Calendarul anual","<p>În tabul "+B("Zile de naștere")+" vezi tot anul, cu zilele tuturor copiilor și ale doamnelor.</p>"));
+  h += sec("telefon","📱","Pune portalul pe ecranul telefonului și pornește notificările",
+      step("iPhone","Safari","<p>Deschide portalul în Safari → apasă "+B("Partajează ⬆︎")+" → "+B("Adaugă pe ecranul principal")+". Deschide apoi Fluturașii de pe ecranul telefonului: doar așa merg notificările pe iPhone.</p>")
+    + step("Android","Chrome","<p>Deschide portalul în Chrome → apasă "+B("⋮")+" sus în dreapta → "+B("Adaugă pe ecranul de pornire")+" (sau "+B("Instalează aplicația")+").</p>")
+    + step("🔔","Notificări","<p>La prima vizită portalul te întreabă dacă pornești notificările: apasă "+B("Pornește notificările")+" și apoi "+B("Permite")+". Primești o notificare când apare ceva nou de ales sau de plătit și când urmează ziua unui copil, doar între 8:00 și 21:00. Ca să le oprești sau să alegi ce primești, apasă pe numele de sus.</p>"));
   h += sec("probleme","🛟","Dacă ceva nu merge",
       step("?","Nu văd ce a bifat altcineva","<p>De obicei apare singur în câteva secunde. Dacă nu, trage pagina în jos ca să se reîncarce.</p>")
     + step("?","Pe alt telefon îmi cere iar întrebarea","<p>E normal: întrebarea și alegerea copilului se țin minte pe fiecare telefon separat.</p>")
@@ -1054,6 +1219,7 @@ function viewGuide(){
 function viewHome(){
   let h = "";
   if (LS.get("fl_ghid") !== "1") h += '<div class="notice guide-hint"><span class="gh-ico" aria-hidden="true">👋</span><div style="flex:1;min-width:0"><div class="who">Prima dată aici?</div><p>Vezi în 2 minute cum folosești portalul: cum preiei ceva, cum bifezi, cum comentezi.</p><div class="row" style="margin-top:10px"><button class="btn small primary" data-a="tab" data-k="ghid">Deschide ghidul</button><button class="btn small ghost" data-a="ghidOk">Am înțeles</button></div></div></div>';
+  h += bdHome();
   if (D.setari.anunt) h += '<div class="notice">'+ICON.bell+'<div><div class="who">Anunț</div><p>'+linkify(D.setari.anunt)+'</p></div></div>';
   const t = todayStr();
   const up = D.sectiuni.filter(s => isEvent(s) && !arh(s) && s.data && s.data >= t).sort((a,b)=>a.data.localeCompare(b.data));
@@ -1714,7 +1880,7 @@ function dayLabel(iso){
   return ["Duminică","Luni","Marți","Miercuri","Joi","Vineri","Sâmbătă"][d.getDay()]+", "+d.getDate()+" "+LUNI_S[d.getMonth()]+".";
 }
 const hm = iso => { const d = new Date(iso); return pad(d.getHours())+":"+pad(d.getMinutes()); };
-function actIcon(t){ const m = { insc:"🙋", retras:"↩️", coment:"💬", coment_sters:"🗑️", vot:"", plata:"💳", plata_anulata:"↩️" }; return t in m ? m[t] : "•"; }
+function actIcon(t){ const m = { insc:"🙋", retras:"↩️", coment:"💬", coment_sters:"🗑️", vot:"", plata:"💳", plata_anulata:"↩️", zi_nastere:"🎂" }; return t in m ? m[t] : "•"; }
 function actPanel(){
   const pp = pendingPays(); const prev = ui.actPrev;
   let h = '<div class="act-head"><h3>Noutăți</h3><button type="button" class="btn small" data-a="close">Închide</button></div>';
@@ -1747,36 +1913,101 @@ async function checkPush(){
     else if (Notification.permission === "denied") st = "denied";
     else { const reg = await navigator.serviceWorker.getRegistration("/"); const sub = reg && await reg.pushManager.getSubscription(); st = sub ? "on" : "off"; }
   } catch(e){ st = "nosup"; }
-  if (ui.pushSt !== st) { ui.pushSt = st; if (ui.actOpen) { const el = document.querySelector(".act-push"); if (el) el.innerHTML = pushBlock(); } }
+  if (ui.pushSt !== st) { ui.pushSt = st; repaintPush(); }
+  return st;
 }
+function repaintPush(){
+  const el = document.querySelector(".act-push"); if (el) el.innerHTML = pushBlock();
+  const p = document.querySelector(".me-push"); if (p) p.innerHTML = parentPushBlock();
+}
+const PUSH_CAT = [["alege","📋 Ceva nou de ales sau de bifat"],["plata","💳 Ceva nou de plătit"],["zile","🎂 Zile de naștere (cu 2 săptămâni înainte și în ziua respectivă)"]];
+const IOS_STEPS = '<ol class="push-steps"><li>Deschide portalul în <b>Safari</b>.</li><li>Apasă <b>Partajează</b> (pătratul cu săgeata în sus, jos pe ecran).</li><li>Alege <b>Adaugă pe ecranul principal</b> → <b>Adaugă</b>.</li><li>Deschide <b>Fluturașii</b> de pe ecranul telefonului și apasă <b>Pornește notificările</b>.</li></ol>';
 function pushBlock(){
   const st = ui.pushSt || "off";
   const head = '<div class="eyebrow">🔔 Notificări pe acest dispozitiv</div>';
-  if (st === "on") return head + '<p class="hint">Pornite. Primești o notificare la fiecare noutate (fără like-uri).</p><button type="button" class="btn small ghost" data-a="pushOff">Oprește pe acest dispozitiv</button>';
-  if (st === "ios") return head + '<p class="hint">Pe iPhone, notificările merg doar din aplicația de pe ecranul principal: în Safari apasă <b>Partajează</b> (pătratul cu săgeată) → <b>Adaugă pe ecranul principal</b>, deschide Fluturașii de acolo, intră în administrare și apasă din nou pe clopoțel.</p>';
+  if (st === "on") return head + '<p class="hint">Pornite. Primești o notificare la fiecare noutate de la părinți (fără like-uri)'+(kid(ui.me) ? ', plus notificările de părinte pentru '+esc(kidName(ui.me))+' (le alegi din numele de sus)' : '')+'.</p><button type="button" class="btn small ghost" data-a="pushOff">Oprește pe acest dispozitiv</button>';
+  if (st === "ios") return head + '<p class="hint">Pe iPhone, notificările merg doar din aplicația de pe ecranul principal:</p>' + IOS_STEPS;
   if (st === "denied") return head + '<p class="hint">Notificările sunt blocate pentru acest site. Le poți permite din setările browserului (sau ale telefonului: Setări → Notificări → Fluturașii).</p>';
   if (st === "nosup") return head + '<p class="hint">Browserul acesta nu primește notificări. Încearcă din Chrome, Safari sau Edge.</p>';
   return head + '<p class="hint">Primești pe telefon sau laptop o notificare când un părinte face ceva în portal.</p><button type="button" class="btn small primary" data-a="pushOn">Pornește notificările</button>';
 }
+function parentPushBlock(){
+  const st = ui.pushSt || "off";
+  const head = '<div class="eyebrow">🔔 Notificări pe acest telefon</div>';
+  if (st === "on") { const off = ui.pushOprite || [];
+    return head + '<p class="hint">Pornite. Debifează ce nu vrei să primești:</p><div class="push-cats">'
+      + PUSH_CAT.map(([k,l]) => '<label class="push-cat"><input type="checkbox" data-a="pushCat" data-k="'+k+'"'+(off.includes(k) ? '' : ' checked')+'> <span>'+l+'</span></label>').join("")
+      + '</div><p class="hint">Notificările vin doar între 8:00 și 21:00.</p><button type="button" class="btn small ghost" data-a="pushOff">Oprește notificările pe acest telefon</button>'; }
+  if (st === "ios") return head + '<p class="hint">Pe iPhone, notificările merg doar dacă pui portalul pe ecranul principal:</p>' + IOS_STEPS;
+  if (st === "denied") return head + '<p class="hint">Notificările sunt blocate pentru acest site. Le poți permite din setările telefonului (Setări → Notificări → Fluturașii) sau ale browserului, apoi revino aici.</p>';
+  if (st === "nosup") return head + '<p class="hint">Browserul acesta nu primește notificări. Încearcă din Chrome (Android) sau din aplicația de pe ecranul principal (iPhone).</p>';
+  return head + '<p class="hint">Primești o notificare când apare ceva nou de ales sau de plătit și când urmează ziua unui copil.</p><button type="button" class="btn small primary" data-a="pushOn">Pornește notificările</button>';
+}
 function urlB64(b){ const p = "=".repeat((4 - b.length % 4) % 4); const s = atob((b + p).replace(/-/g, "+").replace(/_/g, "/")); return Uint8Array.from([...s].map(c => c.charCodeAt(0))); }
 function devName(){ const u = navigator.userAgent; return (/iPhone/.test(u) ? "iPhone" : /iPad/.test(u) ? "iPad" : /Android/.test(u) ? "Android" : /Mac/.test(u) ? "Mac" : /Windows/.test(u) ? "Windows" : "Dispozitiv") + (isStandalone() ? " (aplicație)" : ""); }
+async function curSub(){ try { const reg = await navigator.serviceWorker.getRegistration("/"); return reg && await reg.pushManager.getSubscription(); } catch(e){ return null; } }
+async function pushSaveParent(sub){
+  if (!sb || !sub) return;
+  const j = sub.toJSON();
+  await sb.rpc("push_parinte_salveaza", { p_endpoint: j.endpoint, p_p256dh: j.keys.p256dh, p_auth: j.keys.auth, p_copil: kid(ui.me) ? ui.me : "", p_dispozitiv: devName() });
+  ui.pushCopil = ui.me;
+}
+// ține abonamentul legat de copilul ales pe acest telefon
+async function pushSync(){
+  if (!sb || ui.pushSt !== "on") return;
+  const sub = await curSub(); if (!sub) return;
+  try {
+    const r = await sb.rpc("push_parinte_stare", { p_endpoint: sub.endpoint });
+    const row = r && r.data && r.data[0];
+    ui.pushOprite = row ? (row.oprite || []) : [];
+    if (!row || (kid(ui.me) && row.copil_id !== ui.me)) await pushSaveParent(sub);
+  } catch(e){}
+  repaintPush();
+}
 async function pushOn(){
   try {
     const reg = await navigator.serviceWorker.register("/sw.js"); await navigator.serviceWorker.ready;
     const perm = await Notification.requestPermission(); if (perm !== "granted") { await checkPush(); toast("Notificările nu au fost permise.", true); return; }
     let sub = await reg.pushManager.getSubscription();
     if (!sub) sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: urlB64(VAPID_PUBLIC) });
-    const j = sub.toJSON();
-    chk(await sb.from("push_abonamente").upsert({ endpoint: j.endpoint, email: (ui.adminEmail||"").toLowerCase(), p256dh: j.keys.p256dh, auth: j.keys.auth, dispozitiv: devName() }));
+    await pushSaveParent(sub);
+    if (cap.admin) { const j = sub.toJSON(); chk(await sb.from("push_abonamente").upsert({ endpoint: j.endpoint, email: (ui.adminEmail||"").toLowerCase(), p256dh: j.keys.p256dh, auth: j.keys.auth, dispozitiv: devName() })); }
+    LS.set("fl_push_off", null); ui.pushOprite = [];
     try { reg.showNotification("Fluturașii", { body: "Notificările sunt pornite ✓", icon: "/icon-192.png", tag: "test" }); } catch(e){}
     toast("Notificări pornite ✓");
   } catch(e){ toast("Nu am putut porni notificările. Încearcă din nou.", true); }
-  await checkPush();
+  await checkPush(); repaintPush();
 }
 async function pushOff(){
-  try { const reg = await navigator.serviceWorker.getRegistration("/"); const sub = reg && await reg.pushManager.getSubscription();
-    if (sub) { const ep = sub.endpoint; await sub.unsubscribe(); await sb.from("push_abonamente").delete().eq("endpoint", ep); } toast("Notificări oprite"); } catch(e){}
+  try { const sub = await curSub();
+    if (sub) { const ep = sub.endpoint; await sub.unsubscribe(); await sb.rpc("push_parinte_sterge", { p_endpoint: ep }); } LS.set("fl_push_off", "1"); toast("Notificări oprite"); } catch(e){}
   await checkPush();
+}
+async function pushCat(k, on){
+  const sub = await curSub(); if (!sub) return;
+  const off = new Set(ui.pushOprite || []); on ? off.delete(k) : off.add(k); ui.pushOprite = [...off];
+  const r = await sb.rpc("push_parinte_setari", { p_endpoint: sub.endpoint, p_oprite: ui.pushOprite });
+  toast(r.error ? "Nu s-a salvat. Încearcă din nou." : "Salvat", !!r.error);
+}
+// pornite pentru toți: le cerem o dată, la prima vizită (și din nou după o săptămână, dacă au amânat)
+async function maybeAskPush(){
+  if (!kid(ui.me) || LS.get("fl_push_off") === "1" || $("#modalRoot").innerHTML) return;
+  const st = await checkPush(); if (st !== "off" && st !== "ios") return;
+  const last = +LS.get("fl_push_ask") || 0; if (Date.now() - last < 7*86400000) return;
+  if ($("#modalRoot").innerHTML) return;
+  LS.set("fl_push_ask", String(Date.now()));
+  if (st === "ios") modal('<h3>🔔 Notificări de la grupă</h3><p>Ca să afli imediat când apare ceva nou de ales, de plătit sau o zi de naștere, pune portalul pe ecranul telefonului:</p>'+IOS_STEPS+'<div class="acts"><button class="btn primary" data-a="close">Am înțeles</button></div>');
+  else modal('<h3>🔔 Notificări de la grupă</h3><p>Primești o notificare pe telefon când apare:</p><ul class="push-what"><li>📋 ceva nou de ales sau de bifat</li><li>💳 ceva nou de plătit</li><li>🎂 ziua unui copil (cu 2 săptămâni înainte și în ziua respectivă)</li></ul><p class="hint">Doar între 8:00 și 21:00. Le poți opri oricând, apăsând pe numele de sus.</p><div class="acts"><button class="btn" data-a="close">Nu acum</button><button class="btn primary" data-a="pushOnModal">Pornește notificările</button></div>');
+}
+function openMe(){
+  const me = kid(ui.me); if (!me) { openPicker(); return; }
+  const b = bdOf(me);
+  modal('<h3>'+esc(me.nume)+'</h3>'
+    + '<div class="me-row">'+avHtml(me.id)+'<span class="t">Pe acest telefon ești <b>'+esc(me.nume)+'</b></span><button type="button" class="btn small ghost" data-a="pick">Schimbă</button></div>'
+    + '<div class="me-row"><span class="gh-ico" aria-hidden="true">🎂</span><span class="t">'+(b ? 'Ziua de naștere: <b>'+esc(bdDayMonth(b))+'</b>' : 'Ziua de naștere nu e completată')+'</span><button type="button" class="btn small'+(b ? ' ghost' : ' primary')+'" data-a="bdEdit" data-id="'+esc(me.id)+'">'+(b ? 'Schimbă' : 'Completează')+'</button></div>'
+    + '<div class="me-push">'+parentPushBlock()+'</div>'
+    + '<div class="acts"><button class="btn" data-a="close">Închide</button></div>');
+  checkPush().then(pushSync);
 }
 if ("serviceWorker" in navigator) navigator.serviceWorker.addEventListener("message", e => { if (e.data && e.data.open) location.href = e.data.open; });
 function modal(html){ $("#modalRoot").innerHTML = '<div class="scrim" data-a="closeScrim"><div class="modal" role="dialog" aria-modal="true">'+html+'</div></div>'; const f = $("#modalRoot [autofocus]"); if (f) f.focus(); }
@@ -1874,8 +2105,15 @@ document.addEventListener("click", async e => {
     case "ghidOk": LS.set("fl_ghid","1"); render(); break;
     case "goG": syncHash("ghid/"+id); goTo("g-"+id); break;
     case "pick": openPicker(); break;
+    case "me": openMe(); break;
+    case "bdEdit": bdForm(id); break;
+    case "bdLater": LS.set("fl_bd_later_"+id, todayStr()); render(); break;
+    case "bdYear": ui.bdYear = +t.dataset.v; render(); break;
+    case "bdDel": if (ui.confirm !== "bd"+id) { ui.confirm = "bd"+id; bdForm(id); break; } ui.confirm = null; if (await bdSave(id, null)) { closeModal(); toast("Data a fost ștearsă"); } break;
+    case "pushOnModal": t.disabled = true; closeModal(); await pushOn(); break;
+    case "pushCat": await pushCat(t.dataset.k, t.checked); break;
     case "close": closeModal(); break;
-    case "pickKid": if (!id) break; pickForced = false; ui.me = id; LS.set("fl_me", id); closeModal(); render(); if (afterPick) { const f = afterPick; afterPick = null; f(); } break;
+    case "pickKid": if (!id) break; pickForced = false; ui.me = id; LS.set("fl_me", id); closeModal(); render(); if (afterPick) { const f = afterPick; afterPick = null; f(); } else setTimeout(() => { pushSync(); maybeAskPush(); }, 600); break;
     case "goSec": { const s = sec(id); setTab(tabOfSec(s)); if (s) syncHash(secPath(s)); goTo("sec-"+id); break; }
     case "goItem": { const it = D.itemi.find(i=>i.id===id); if (!it) break; setTab(tabOfSec(sec(it.sectiune))); goTo("item-"+id); break; }
     case "toggleC": ui.openC.has(id) ? ui.openC.delete(id) : ui.openC.add(id); render(); if (ui.openC.has(id)) { const ta = document.getElementById("cm-"+id); if (ta && matchMedia("(min-width:721px)").matches) ta.focus(); } break;
@@ -2068,6 +2306,14 @@ document.addEventListener("submit", async e => {
   const btn = f.querySelector('[type="submit"]'); if (btn) btn.disabled = true;
   const now = new Date().toISOString();
   try {
+    if (fid === "fBd") {
+      const c = kid(fd.copil); if (!c) return;
+      const data = isEdu(c) ? (fd.zi && fd.luna ? BD_FARA_AN+"-"+pad(+fd.luna)+"-"+pad(+fd.zi) : "") : fd.data;
+      const dd = parseD(data);
+      if (!dd || dd.getDate() !== +data.slice(8) || (!isEdu(c) && data > todayStr())) { toast("Data nu e corectă.", true); return; }
+      if (await bdSave(c.id, data)) { if ($("#modalRoot").innerHTML) closeModal(); toast("Salvat 🎂"); }
+      return;
+    }
     if (f.dataset.a === "comment") {
       const text = (fd.text||"").trim(); if (!text) return;
       const id = f.dataset.id; const parent = f.dataset.parent || ""; const insc = f.dataset.insc || ""; const kidId = kid(ui.me) ? ui.me : "";
