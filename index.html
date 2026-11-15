@@ -650,6 +650,7 @@ button.kid:hover{background:var(--surface-2)}
 .bd-month{border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--surface)}
 .bd-month.cur{border-color:var(--wing);box-shadow:0 0 0 2px var(--wing-soft)}
 .bd-mh{font-family:var(--f-display);font-weight:800;font-size:18px;margin-bottom:6px}
+.bd-mh .bd-y{font-size:.75em;color:var(--muted);font-weight:700}
 .bd-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center;font-size:12.5px}
 .bd-grid b{font-size:10.5px;color:var(--muted);font-weight:800;padding-bottom:2px}
 .bd-d{display:grid;place-items:center;aspect-ratio:1;width:100%;max-width:30px;margin:0 auto;border-radius:50%;font-weight:700;color:var(--muted)}
@@ -939,7 +940,7 @@ function bdFields(c, pre){
   }
   return '<form id="fBd" class="bd-form"><input type="hidden" name="copil" value="'+esc(c.id)+'">'
     + '<label class="sr" for="'+pre+'-d">Data nașterii</label><input class="inp" id="'+pre+'-d" name="data" type="date" required max="'+todayStr()+'" min="2015-01-01" value="'+esc(c.data_nasterii||"")+'">'
-    + '<div class="row bd-btns">'+btns+'</div></form><p class="hint" style="margin-top:6px">Ceilalți părinți văd doar ziua, luna și câți ani împlinește.</p>';
+    + '<div class="row bd-btns">'+btns+'</div></form>';
 }
 function bdForm(id){
   const c = kid(id); if (!c) return;
@@ -953,16 +954,16 @@ async function bdSave(copil, data){
   await refetch("copii"); return true;
 }
 function viewZile(){
-  const y = ui.bdYear || new Date().getFullYear(), t = todayStr();
+  const t = todayStr(), now = new Date(), y0 = now.getFullYear(), m0 = now.getMonth();
+  const months = Array.from({length:12}, (_,i) => ({ y: y0 + Math.floor((m0+i)/12), m: (m0+i) % 12 }));
   const ppl = bdPeople(), withD = ppl.filter(c => bdOf(c)), missing = ppl.filter(c => !bdOf(c));
   const byDay = {};
-  for (const c of withD) { const d = bdIn(bdOf(c), y); const k = isoOf(d); (byDay[k] = byDay[k] || []).push(c); }
-  let h = '<section><div class="sec-head"><div><h2>🎂 Zilele de naștere</h2><div class="sub">Copiii grupei și doamnele, pe tot anul.</div></div>'
-    + '<div class="row bd-yr"><button type="button" class="btn small ghost" data-a="bdYear" data-v="'+(y-1)+'" aria-label="Anul '+(y-1)+'">‹</button><b class="num">'+y+'</b><button type="button" class="btn small ghost" data-a="bdYear" data-v="'+(y+1)+'" aria-label="Anul '+(y+1)+'">›</button></div></div>';
+  for (const c of withD) for (const yy of [y0, y0+1]) { const d = bdIn(bdOf(c), yy); const k = isoOf(d); (byDay[k] = byDay[k] || []).push(c); }
+  let h = '<section><div class="sec-head"><div><h2>🎂 Zilele de naștere</h2><div class="sub">Copiii grupei și doamnele, în următoarele 12 luni.</div></div></div>';
   const me = kid(ui.me);
   if (me) h += '<div class="bd-mine">'+avHtml(me.id)+'<span class="t">'+(bdOf(me) ? '<b>'+esc(isEdu(me) ? 'Ziua dumneavoastră' : 'Ziua lui '+firstName(me.nume))+':</b> '+esc(bdDayMonth(bdOf(me))) : '<b>'+esc(isEdu(me) ? 'Ziua dumneavoastră' : 'Ziua lui '+firstName(me.nume))+'</b> nu e completată încă')+'</span><button type="button" class="btn small'+(bdOf(me) ? ' ghost' : ' primary')+'" data-a="bdEdit" data-id="'+esc(me.id)+'">'+(bdOf(me) ? 'Schimbă' : 'Completează')+'</button></div>';
   h += '<div class="bd-year">';
-  for (let m = 0; m < 12; m++) {
+  for (const { y, m } of months) {
     const first = new Date(y, m, 1), days = new Date(y, m+1, 0).getDate(), off = (first.getDay() + 6) % 7;
     let cells = '';
     for (let i = 0; i < off; i++) cells += '<span></span>';
@@ -971,8 +972,8 @@ function viewZile(){
       const cls = (who.length ? (who.some(isEdu) ? ' bd-e' : ' bd-k') : '') + (k === t ? ' bd-now' : '') + (who.some(c => c.id === ui.me) ? ' bd-me' : '');
       cells += '<span class="bd-d'+cls+'"'+(who.length ? ' title="'+esc(who.map(c => c.nume).join(", "))+'"' : '')+'>'+d+'</span>';
     }
-    const inMonth = Object.keys(byDay).filter(k => +k.slice(5,7) === m+1).sort().flatMap(k => byDay[k].map(c => ({ k, c })));
-    h += '<div class="bd-month'+(y === new Date().getFullYear() && m === new Date().getMonth() ? ' cur' : '')+'"><div class="bd-mh">'+esc(LUNI[m][0].toUpperCase()+LUNI[m].slice(1))+'</div>'
+    const inMonth = Object.keys(byDay).filter(k => +k.slice(0,4) === y && +k.slice(5,7) === m+1).sort().flatMap(k => byDay[k].map(c => ({ k, c })));
+    h += '<div class="bd-month'+(y === y0 && m === m0 ? ' cur' : '')+'"><div class="bd-mh">'+esc(LUNI[m][0].toUpperCase()+LUNI[m].slice(1))+(y !== y0 ? ' <small class="num bd-y">'+y+'</small>' : '')+'</div>'
       + '<div class="bd-grid"><b>L</b><b>M</b><b>M</b><b>J</b><b>V</b><b>S</b><b>D</b>'+cells+'</div>'
       + (inMonth.length ? '<ul class="bd-list">'+inMonth.map(({ k, c }) => { const age = y - bdOf(c).getFullYear();
           return '<li'+(c.id === ui.me ? ' class="bd-eu"' : '')+(cap.admin ? ' role="button" tabindex="0" data-a="bdEdit" data-id="'+esc(c.id)+'"' : '')+'><span class="bd-dd num">'+(+k.slice(8))+'</span><span class="bd-nm">'+(isEdu(c) ? '👩‍🏫 ' : '')+esc(c.nume)+(bdHasAge(c) && age > 0 ? ' <small>· '+esc(aniTxt(age))+'</small>' : '')+'</span></li>'; }).join("")+'</ul>' : '')
@@ -1203,8 +1204,8 @@ function viewGuide(){
     + step("•","Cât ai de plată","<p>Sus apare direct pentru copilul tău, de ex. „Vlad: 2 din 6 ședințe · 20 lei de plată”. Apare și pe Acasă, la „Ce ai tu de făcut”. După ce plătești, administratoarea marchează „Plătit” și trece la „Gata”.</p>"));
   h += sec("zile","🎂","Zile de naștere",
       step("•","Completează ziua copilului","<p>Pe "+B("Acasă")+" apare un card „Ziua lui …”. Alegi data nașterii și apeși "+B("Salvează")+". O poți schimba oricând apăsând pe numele de sus.</p>")
-    + step("•","Ce văd ceilalți","<p>Doar ziua, luna și câți ani împlinește copilul. Cu 2 săptămâni înainte apare pe Acasă, iar în ziua respectivă apare mesajul „La mulți ani!”.</p>")
-    + step("•","Calendarul anual","<p>În tabul "+B("Zile de naștere")+" vezi tot anul, cu zilele tuturor copiilor și ale doamnelor.</p>"));
+    + step("•","Pe Acasă","<p>Cu 2 săptămâni înainte, ziua copilului apare pe Acasă. În ziua respectivă apare mesajul „La mulți ani!” și toți primesc o notificare.</p>")
+    + step("•","Calendarul","<p>În tabul "+B("Zile de naștere")+" vezi următoarele 12 luni, începând cu luna curentă, cu zilele tuturor copiilor și ale doamnelor.</p>"));
   h += sec("telefon","📱","Pune portalul pe ecranul telefonului și pornește notificările",
       step("iPhone","Safari","<p>Deschide portalul în Safari → apasă "+B("Partajează ⬆︎")+" → "+B("Adaugă pe ecranul principal")+". Deschide apoi Fluturașii de pe ecranul telefonului: doar așa merg notificările pe iPhone.</p>")
     + step("Android","Chrome","<p>Deschide portalul în Chrome → apasă "+B("⋮")+" sus în dreapta → "+B("Adaugă pe ecranul de pornire")+" (sau "+B("Instalează aplicația")+").</p>")
@@ -2108,7 +2109,6 @@ document.addEventListener("click", async e => {
     case "me": openMe(); break;
     case "bdEdit": bdForm(id); break;
     case "bdLater": LS.set("fl_bd_later_"+id, todayStr()); render(); break;
-    case "bdYear": ui.bdYear = +t.dataset.v; render(); break;
     case "bdDel": if (ui.confirm !== "bd"+id) { ui.confirm = "bd"+id; bdForm(id); break; } ui.confirm = null; if (await bdSave(id, null)) { closeModal(); toast("Data a fost ștearsă"); } break;
     case "pushOnModal": t.disabled = true; closeModal(); await pushOn(); break;
     case "pushCat": await pushCat(t.dataset.k, t.checked); break;

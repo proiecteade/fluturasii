@@ -16,8 +16,7 @@ Toate datele sunt în Supabase (citite direct din index.html cu supabase-js). Ch
 
 ## Zile de naștere
 - `copii.data_nasterii` (date). Părinții o completează prin funcția `seteaza_zi_nastere` (pe Acasă sau din numele de sus). La doamne se păstrează doar ziua și luna (anul 1904 = „fără an”).
-- Pe Acasă: „La mulți ani!” în ziua respectivă și lista celor din următoarele 14 zile. Tab nou „Zile de naștere” (#zile): calendar ianuarie–decembrie, cu săgeți pentru an.
-- Ceilalți părinți văd doar ziua, luna și câți ani împlinește.
+- Pe Acasă: „La mulți ani!” în ziua respectivă și lista celor din următoarele 14 zile. Tab nou „Zile de naștere” (#zile): calendar pe 12 luni, începând mereu cu luna curentă.
 
 ## Notificări
 - Același abonament pe telefon (tabelul `push_abonamente`): `email` completat = dispozitiv de administratoare (primește noutățile de la părinți, ca înainte); `copil_id` completat = notificări de părinte. Pe telefonul Adelinei sunt amândouă.
@@ -49,3 +48,4 @@ Vercel publică automat din branch-ul main. Hellomeri.go.ro nu e implicat (pagin
 - 2026-11-14: Poze Atelierul Moșului — adăugat în descriere termenul de alegere a pachetului (25 noiembrie, inclusiv). Doar date în Supabase.
 - 2026-11-15: zile de naștere (completare, „La mulți ani!”, calendar anual) + notificări pentru toți părinții.
 - 2026-11-15: fără notificare cu 2 săptămâni înainte de zilele de naștere (doar pe site); notificare doar în ziua respectivă.
+- 2026-11-15: calendarul zilelor de naștere pornește cu luna curentă (12 luni); scos mesajul de sub câmpul de dată.
