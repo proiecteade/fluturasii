@@ -1208,7 +1208,7 @@ function viewGuide(){
   h += sec("telefon","📱","Pune portalul pe ecranul telefonului și pornește notificările",
       step("iPhone","Safari","<p>Deschide portalul în Safari → apasă "+B("Partajează ⬆︎")+" → "+B("Adaugă pe ecranul principal")+". Deschide apoi Fluturașii de pe ecranul telefonului: doar așa merg notificările pe iPhone.</p>")
     + step("Android","Chrome","<p>Deschide portalul în Chrome → apasă "+B("⋮")+" sus în dreapta → "+B("Adaugă pe ecranul de pornire")+" (sau "+B("Instalează aplicația")+").</p>")
-    + step("🔔","Notificări","<p>La prima vizită portalul te întreabă dacă pornești notificările: apasă "+B("Pornește notificările")+" și apoi "+B("Permite")+". Primești o notificare când apare ceva nou de ales sau de plătit și când urmează ziua unui copil, doar între 8:00 și 21:00. Ca să le oprești sau să alegi ce primești, apasă pe numele de sus.</p>"));
+    + step("🔔","Notificări","<p>La prima vizită portalul te întreabă dacă pornești notificările: apasă "+B("Pornește notificările")+" și apoi "+B("Permite")+". Primești o notificare când apare ceva nou de ales sau de plătit și în ziua de naștere a unui copil, doar între 8:00 și 21:00. Ca să le oprești sau să alegi ce primești, apasă pe numele de sus.</p>"));
   h += sec("probleme","🛟","Dacă ceva nu merge",
       step("?","Nu văd ce a bifat altcineva","<p>De obicei apare singur în câteva secunde. Dacă nu, trage pagina în jos ca să se reîncarce.</p>")
     + step("?","Pe alt telefon îmi cere iar întrebarea","<p>E normal: întrebarea și alegerea copilului se țin minte pe fiecare telefon separat.</p>")
@@ -1920,7 +1920,7 @@ function repaintPush(){
   const el = document.querySelector(".act-push"); if (el) el.innerHTML = pushBlock();
   const p = document.querySelector(".me-push"); if (p) p.innerHTML = parentPushBlock();
 }
-const PUSH_CAT = [["alege","📋 Ceva nou de ales sau de bifat"],["plata","💳 Ceva nou de plătit"],["zile","🎂 Zile de naștere (cu 2 săptămâni înainte și în ziua respectivă)"]];
+const PUSH_CAT = [["alege","📋 Ceva nou de ales sau de bifat"],["plata","💳 Ceva nou de plătit"],["zile","🎂 Zile de naștere (în ziua respectivă)"]];
 const IOS_STEPS = '<ol class="push-steps"><li>Deschide portalul în <b>Safari</b>.</li><li>Apasă <b>Partajează</b> (pătratul cu săgeata în sus, jos pe ecran).</li><li>Alege <b>Adaugă pe ecranul principal</b> → <b>Adaugă</b>.</li><li>Deschide <b>Fluturașii</b> de pe ecranul telefonului și apasă <b>Pornește notificările</b>.</li></ol>';
 function pushBlock(){
   const st = ui.pushSt || "off";
@@ -1941,7 +1941,7 @@ function parentPushBlock(){
   if (st === "ios") return head + '<p class="hint">Pe iPhone, notificările merg doar dacă pui portalul pe ecranul principal:</p>' + IOS_STEPS;
   if (st === "denied") return head + '<p class="hint">Notificările sunt blocate pentru acest site. Le poți permite din setările telefonului (Setări → Notificări → Fluturașii) sau ale browserului, apoi revino aici.</p>';
   if (st === "nosup") return head + '<p class="hint">Browserul acesta nu primește notificări. Încearcă din Chrome (Android) sau din aplicația de pe ecranul principal (iPhone).</p>';
-  return head + '<p class="hint">Primești o notificare când apare ceva nou de ales sau de plătit și când urmează ziua unui copil.</p><button type="button" class="btn small primary" data-a="pushOn">Pornește notificările</button>';
+  return head + '<p class="hint">Primești o notificare când apare ceva nou de ales sau de plătit și în ziua de naștere a unui copil.</p><button type="button" class="btn small primary" data-a="pushOn">Pornește notificările</button>';
 }
 function urlB64(b){ const p = "=".repeat((4 - b.length % 4) % 4); const s = atob((b + p).replace(/-/g, "+").replace(/_/g, "/")); return Uint8Array.from([...s].map(c => c.charCodeAt(0))); }
 function devName(){ const u = navigator.userAgent; return (/iPhone/.test(u) ? "iPhone" : /iPad/.test(u) ? "iPad" : /Android/.test(u) ? "Android" : /Mac/.test(u) ? "Mac" : /Windows/.test(u) ? "Windows" : "Dispozitiv") + (isStandalone() ? " (aplicație)" : ""); }
@@ -1996,8 +1996,8 @@ async function maybeAskPush(){
   const last = +LS.get("fl_push_ask") || 0; if (Date.now() - last < 7*86400000) return;
   if ($("#modalRoot").innerHTML) return;
   LS.set("fl_push_ask", String(Date.now()));
-  if (st === "ios") modal('<h3>🔔 Notificări de la grupă</h3><p>Ca să afli imediat când apare ceva nou de ales, de plătit sau o zi de naștere, pune portalul pe ecranul telefonului:</p>'+IOS_STEPS+'<div class="acts"><button class="btn primary" data-a="close">Am înțeles</button></div>');
-  else modal('<h3>🔔 Notificări de la grupă</h3><p>Primești o notificare pe telefon când apare:</p><ul class="push-what"><li>📋 ceva nou de ales sau de bifat</li><li>💳 ceva nou de plătit</li><li>🎂 ziua unui copil (cu 2 săptămâni înainte și în ziua respectivă)</li></ul><p class="hint">Doar între 8:00 și 21:00. Le poți opri oricând, apăsând pe numele de sus.</p><div class="acts"><button class="btn" data-a="close">Nu acum</button><button class="btn primary" data-a="pushOnModal">Pornește notificările</button></div>');
+  if (st === "ios") modal('<h3>🔔 Notificări de la grupă</h3><p>Ca să afli imediat când apare ceva nou de ales sau de plătit și când e ziua unui copil, pune portalul pe ecranul telefonului:</p>'+IOS_STEPS+'<div class="acts"><button class="btn primary" data-a="close">Am înțeles</button></div>');
+  else modal('<h3>🔔 Notificări de la grupă</h3><p>Primești o notificare pe telefon când apare:</p><ul class="push-what"><li>📋 ceva nou de ales sau de bifat</li><li>💳 ceva nou de plătit</li><li>🎂 e ziua unui copil (în ziua respectivă)</li></ul><p class="hint">Doar între 8:00 și 21:00. Le poți opri oricând, apăsând pe numele de sus.</p><div class="acts"><button class="btn" data-a="close">Nu acum</button><button class="btn primary" data-a="pushOnModal">Pornește notificările</button></div>');
 }
 function openMe(){
   const me = kid(ui.me); if (!me) { openPicker(); return; }

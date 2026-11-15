@@ -21,7 +21,7 @@ Toate datele sunt în Supabase (citite direct din index.html cu supabase-js). Ch
 
 ## Notificări
 - Același abonament pe telefon (tabelul `push_abonamente`): `email` completat = dispozitiv de administratoare (primește noutățile de la părinți, ca înainte); `copil_id` completat = notificări de părinte. Pe telefonul Adelinei sunt amândouă.
-- Părinții: portalul le cere pornirea la prima vizită (și din nou după 7 zile dacă amână); toate tipurile pornite implicit; le opresc sau debifează din numele de sus. Categorii: `alege` (item nou), `plata` (strângere, comandă, lună de opțional), `zile` (cu 14 zile înainte și în ziua respectivă).
+- Părinții: portalul le cere pornirea la prima vizită (și din nou după 7 zile dacă amână); toate tipurile pornite implicit; le opresc sau debifează din numele de sus. Categorii: `alege` (item nou), `plata` (strângere, comandă, lună de opțional), `zile` (doar în ziua respectivă; cele din următoarele 14 zile apar doar pe site).
 - Fluxul: triggerul `push_nou` pune noutățile în `push_coada`; `push_proceseaza()` rulează la 2 minute (pg_cron, job „fluturasii-push”), le adună, sare peste ce a fost șters și trimite doar între 8:00 și 21:00 (ora României). Cine a adăugat ceva nu primește notificare pentru el.
 - Trimiterea fizică: /api/push pe Vercel (cheile vin din tabelul `secrete`).
 
@@ -48,3 +48,4 @@ Vercel publică automat din branch-ul main. Hellomeri.go.ro nu e implicat (pagin
 - 2026-11-12: adăugat „Unde sunt cheile” și „Backup”.
 - 2026-11-14: Poze Atelierul Moșului — adăugat în descriere termenul de alegere a pachetului (25 noiembrie, inclusiv). Doar date în Supabase.
 - 2026-11-15: zile de naștere (completare, „La mulți ani!”, calendar anual) + notificări pentru toți părinții.
+- 2026-11-15: fără notificare cu 2 săptămâni înainte de zilele de naștere (doar pe site); notificare doar în ziua respectivă.
