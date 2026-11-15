@@ -181,6 +181,7 @@ p,h1,h2,h3,h4,b,small,span{overflow-wrap:break-word}
 .ev .prog{display:flex;justify-content:space-between;font-size:12.5px;font-weight:700;color:var(--muted);margin-top:6px}
 .ev .first{grid-column:1/-1}
 .ev .prog.info-line{color:var(--ink);font-size:14px;font-weight:700;margin-top:0}
+.ev .prog.info-line span{white-space:pre-line;overflow-wrap:anywhere;min-width:0}
 
 /* Liste rapide */
 .quick{display:grid;gap:8px}
@@ -1230,7 +1231,7 @@ function viewHome(){
     const its = itemsOf(s.id).filter(i=>i.tip!=="info"); const tot = its.length; const done = its.filter(i=>i.status==="done").length;
     const pct = tot ? Math.round(its.reduce((a,i)=>a+progressOf(i),0)/tot*100) : 0;
     return '<div class="ev" role="button" tabindex="0" data-a="goSec" data-id="'+esc(s.id)+'">'+calTile(s)+'<div style="min-width:0"><h3>'+(s.icon ? '<span class="h-ico" aria-hidden="true">'+esc(s.icon)+'</span> ' : '')+esc(s.titlu)+'</h3><div class="when">'+whenLine(s)+'</div>'
-      + (tot ? '<div class="bar wing"><i style="width:'+pct+'%"></i></div><div class="prog num"><span>'+done+' din '+tot+' rezolvate</span><span>'+pct+'%</span></div>' : (itemsOf(s.id).length ? '<div class="prog info-line"><span>'+esc(s.descriere || itemsOf(s.id).filter(i=>i.tip==="info").map(i=>i.titlu).join(" · "))+'</span></div>' : '<div class="prog"><span>Lista se completează</span></div>'))
+      + (tot ? '<div class="bar wing"><i style="width:'+pct+'%"></i></div><div class="prog num"><span>'+done+' din '+tot+' rezolvate</span><span>'+pct+'%</span></div>' : (itemsOf(s.id).length ? '<div class="prog info-line"><span>'+linkify(s.descriere || itemsOf(s.id).filter(i=>i.tip==="info").map(i=>i.titlu).join(" · "))+'</span></div>' : '<div class="prog"><span>Lista se completează</span></div>'))
       + '</div></div>';
   }).join("") + '</div>';
   h += '</section>';
@@ -2097,6 +2098,7 @@ function tabOfSec(s){ return isEvent(s) ? "evenimente" : "necesar"; }
 function needMe(then){ if (kid(ui.me)) return true; openPicker(then); return false; }
 
 document.addEventListener("click", async e => {
+  if (e.target.closest("a.lnk")) return;
   const t = e.target.closest("[data-a]"); if (!t) return;
   const a = t.dataset.a, id = t.dataset.id;
   if (a === "closeScrim") { if (e.target === t && !pickForced) closeModal(); return; }

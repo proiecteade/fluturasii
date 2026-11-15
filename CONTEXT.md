@@ -50,3 +50,4 @@ Vercel publică automat din branch-ul main. Hellomeri.go.ro nu e implicat (pagin
 - 2026-11-15: fără notificare cu 2 săptămâni înainte de zilele de naștere (doar pe site); notificare doar în ziua respectivă.
 - 2026-11-15: calendarul zilelor de naștere pornește cu luna curentă (12 luni); scos mesajul de sub câmpul de dată.
 - 2026-11-15: adăugat evenimentul „Sărbătorim Moș Nicolae” (4 dec., figurine Decorella, strângerea vine mai târziu); la „Cadouri împachetate și etichetate” — mențiunea că toți copiii primesc același cadou. Doar date în Supabase.
+- 2026-11-15: reparat cardurile din „Evenimente următoare”: rândurile noi din descriere se păstrează, linkurile se pot apăsa și nu mai ies din chenar.
