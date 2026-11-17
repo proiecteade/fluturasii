@@ -51,3 +51,4 @@ Vercel publică automat din branch-ul main. Hellomeri.go.ro nu e implicat (pagin
 - 2026-11-15: calendarul zilelor de naștere pornește cu luna curentă (12 luni); scos mesajul de sub câmpul de dată.
 - 2026-11-15: adăugat evenimentul „Sărbătorim Moș Nicolae” (4 dec., figurine Decorella, strângerea vine mai târziu); la „Cadouri împachetate și etichetate” — mențiunea că toți copiii primesc același cadou. Doar date în Supabase.
 - 2026-11-15: reparat cardurile din „Evenimente următoare”: rândurile noi din descriere se păstrează, linkurile se pot apăsa și nu mai ies din chenar.
+- 2026-11-17: adăugată plata obligatorie „Figurine de pictat · Moș Nicolae” (30 lei/copil, până pe 25 nov., cont ING) la De plată. Cod: plățile obligatorii se văd acum (doar ChatGPT rămâne ascuns); eticheta „Pentru toți” la plățile obligatorii.

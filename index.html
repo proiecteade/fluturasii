@@ -1288,7 +1288,7 @@ const cmdSave = (r, patch) => r.virtual ? sb.from("comenzi_copii").upsert(Object
 const cmdProds = C => Array.isArray(C.produse) ? C.produse : [];
 const cmdSum = (C, r) => r ? cmdProds(C).filter(p => (Array.isArray(r.produse) ? r.produse : []).includes(p.id)).reduce((a,p)=>a+(+p.pret||0),0) : 0;
 const cmdOk = r => !!(r && (r.platit || r.platit_declarat)), cmdDecl = r => !!(r && !r.platit && r.platit_declarat);
-const cmdVis = c => !c.obligatoriu; // ChatGPT ascuns pentru toți până la reactivare
+const cmdVis = c => !(c.obligatoriu && /^gpt-/.test(c.id)); // ChatGPT ascuns pentru toți până la reactivare; celelalte plăți obligatorii se văd
 const openCmds = () => D.comenzi.filter(c => cmdVis(c) && !c.inchisa && !arh(c)).sort((a,b)=>(a.ordine||0)-(b.ordine||0));
 function cmdPayBtn(C, r, k){
   const sum = cmdSum(C, r); if (!sum) return '<span class="opaid none">—</span>';
@@ -1349,7 +1349,7 @@ function myPay(){
   if (!isChild(me)) return { rows: out, total };
   for (const c of D.colecte) if (!collStats(c).ids.has(me) && !declared(c.id, me)) { total += +c.suma||0; out.push('<div role="button" tabindex="0" class="qrow pay" data-a="goCollTab" data-id="'+esc(c.id)+'"><span class="dot" style="background:var(--berry)"></span><span class="t"><b>'+esc(c.titlu)+'</b><span class="qsub"><span class="tag">Strângere de bani</span><small>Contribuție</small></span></span><span class="pright"><span class="pamt num">'+esc(lei(c.suma))+'</span>'+payBtn("colecta", c.id, true)+'</span></div>'); }
   for (const o of optDues(me).filter(x => !optOk(x.p))) { total += o.sum; out.push('<div role="button" tabindex="0" class="qrow pay" data-a="goOpt" data-id="'+esc(o.l.id)+'"><span class="dot" style="background:var(--berry)"></span><span class="t"><b>'+esc((o.o.icon?o.o.icon+" ":"")+o.o.nume)+' · '+esc(lunaLabel(o.l.luna))+'</b><span class="qsub"><span class="tag">Opțional</span><small>'+o.n+' '+((o.l.sedinte||[]).length ? (o.n===1?'ședință':'ședințe') : (o.n===1?'zi':'zile'))+' × '+esc(lei(o.l.pret))+'</small></span></span><span class="pright"><span class="pamt num">'+esc(lei(o.sum))+'</span>'+payBtn("optional", o.l.id, true)+'</span></div>'); }
-  for (const C of D.comenzi.filter(cmdVis)) { const r = cmdRec(C.id, me), sum = cmdSum(C, r); if (sum && !cmdOk(r)) { total += sum; out.push('<div role="button" tabindex="0" class="qrow pay" data-a="goCmd" data-id="'+esc(C.id)+'"><span class="dot" style="background:var(--berry)"></span><span class="t"><b>'+esc((C.icon||"📚")+" "+C.titlu)+'</b><span class="qsub"><span class="tag">Opțional</span><small>'+esc(cmdProds(C).filter(p => (r.produse||[]).includes(p.id)).map(p=>p.nume).join(" + "))+'</small></span></span><span class="pright"><span class="pamt num">'+esc(lei(sum))+'</span>'+payBtn("cmd", C.id, true)+'</span></div>'); } }
+  for (const C of D.comenzi.filter(cmdVis)) { const r = cmdRec(C.id, me), sum = cmdSum(C, r); if (sum && !cmdOk(r)) { total += sum; out.push('<div role="button" tabindex="0" class="qrow pay" data-a="goCmd" data-id="'+esc(C.id)+'"><span class="dot" style="background:var(--berry)"></span><span class="t"><b>'+esc((C.icon||"📚")+" "+C.titlu)+'</b><span class="qsub"><span class="tag">'+(C.obligatoriu?'Pentru toți':'Opțional')+'</span><small>'+esc(cmdProds(C).filter(p => (r.produse||[]).includes(p.id)).map(p=>p.nume).join(" + "))+'</small></span></span><span class="pright"><span class="pamt num">'+esc(lei(sum))+'</span>'+payBtn("cmd", C.id, true)+'</span></div>'); } }
   return { rows: out, total };
 }
 function myTodo(){
