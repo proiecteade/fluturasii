@@ -27,6 +27,15 @@ Toate datele sunt în Supabase (citite direct din index.html cu supabase-js). Ch
 ## Cum se publică
 Vercel publică automat din branch-ul main. Hellomeri.go.ro nu e implicat (pagina /gradinita vine din repo-ul separat proiecteade/gradinita).
 
+## Administrare fără cod (din portal, logată ca administratoare)
+- **✏️ Texte** (bara de admin): pune chenar punctat pe titluri, subtitluri, mesaje, file și tot ghidul; apeși și schimbi. Se salvează în tabelul `texte` (cheie → valoare); dacă o cheie lipsește, se folosește textul din cod. „Vezi toate textele” = listă cu căutare. Mini-format: rând gol = paragraf, **îngroșat**, [[buton]].
+- **⚙️ Mai mult**: plată nouă cu produse (`comenzi`, cu „ascunsă” / „închisă” / „un singur pachet” / „pentru toți”), opțional nou (cu „banii merg direct la grădiniță” = `optionale.direct`), lună nouă fără Excel (ședințe pe zile sau pe zile de prezență), strângere de bani, anul școlar (`setari.an_scolar`; dacă e gol se folosește cel din cod), anunț/copii/doamne + răspunsul de la intrare (`texte` cheia `intrare.raspuns`, mai multe răspunsuri separate prin virgulă).
+- La opționale, administratoarea apasă pe buline (prezent/absent) sau pe „N zile ✏️”.
+- Codul nu mai are nimic „bătut” pentru ChatGPT (acum `comenzi.ascuns`) sau hrană (acum `optionale.direct`).
+
+## „Am făcut”
+- `inscrieri.facut_la`; funcția `marcheaza_facut(id, copil, on)` — o poate apăsa părintele copilului ales pe telefon sau administratoarea. Apare la înscrieri (Preiau / Mă înscriu) și la lunile „Pe rând, lunar”; pe Acasă trece din „Ce ai tu de făcut” în „Gata”. Administratoarea primește notificare.
+
 ## Unde sunt cheile (fără valori)
 - Cheile Supabase și cheile pentru notificări (web-push / VAPID): în Vercel → proiectul fluturasii → Settings → Environment Variables; unele sunt și în tabelul `secrete` din Supabase (exclus intenționat din backup).
 - Parola bazei de date Supabase: în Supabase → proiectul fluturasii → Settings → Database.
@@ -54,3 +63,4 @@ Vercel publică automat din branch-ul main. Hellomeri.go.ro nu e implicat (pagin
 - 2026-11-17: adăugată plata obligatorie „Figurine de pictat · Moș Nicolae” (30 lei/copil, până pe 25 nov., cont ING) la De plată. Cod: plățile obligatorii se văd acum (doar ChatGPT rămâne ascuns); eticheta „Pentru toți” la plățile obligatorii.
 - 2026-11-22: reconciliere cu extrasul ING 1–22 nov.: confirmate în portal 11 plăți la poze, 16 la figurine, engleza oct. pentru Ilieș. Rămase de lămurit: transferurile de 300 (17 nov.) și 318 lei (19 nov.), cerneala imprimantă 183,96 lei (nu e în buget), cadoul domnișoarei Raluca (598 lei, nu e în portal), 20 lei rămași la caiete EDU.
 - 2026-11-22: trecută în buget cheltuiala „Cerneală imprimantă” 183,96 lei (16 nov., cont). Transferurile 300 + 318 lei = cadoul domnișoarei Raluca (nu se ține în portal).
+- 2026-11-22: totul editabil din portal (✏️ Texte, ⚙️ Mai mult: plăți cu produse, opționale, luni fără Excel, an școlar, doamne, răspunsul de la intrare); butonul „Am făcut” la înscrieri și la lunile pe rând.

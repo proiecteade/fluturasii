@@ -677,6 +677,43 @@ button.kid:hover{background:var(--surface-2)}
 .push-cat input{width:20px;height:20px;flex:none;margin:1px 0 0;accent-color:var(--wing)}
 .push-steps{margin:8px 0;padding-left:22px;display:flex;flex-direction:column;gap:6px;font-weight:600}
 .push-what{margin:6px 0 10px;padding-left:4px;list-style:none;display:flex;flex-direction:column;gap:6px;font-weight:700}
+
+/* făcut */
+.facut{display:inline-flex;align-items:center;gap:5px;flex:none;border:1.5px solid var(--meadow);background:transparent;color:var(--meadow);font-weight:800;font-size:12.5px;padding:4px 10px;border-radius:999px;white-space:nowrap;font-family:inherit;cursor:pointer}
+.facut svg{width:14px;height:14px}
+.facut.on{background:var(--meadow-soft);border-color:transparent}
+span.facut.on{cursor:default}
+button.facut:not(.on):hover{background:var(--meadow-soft)}
+.month .facut{margin-left:auto}
+.qrow .facut{margin-left:auto;align-self:center}
+
+/* texte editabile */
+.tx{outline:1.5px dashed var(--amber);outline-offset:2px;border-radius:4px;cursor:text;background:color-mix(in srgb,var(--amber-soft) 55%,transparent)}
+.tx:hover{background:var(--amber-soft)}
+.txb{display:block}
+.txbar{flex-basis:100%;margin-top:8px;font-weight:700;font-size:13.5px;background:var(--amber-soft);color:var(--ink);padding:8px 12px;border-radius:10px}
+.txlist{display:flex;flex-direction:column;gap:4px;max-height:55vh;overflow:auto}
+.txrow{display:flex;gap:8px;align-items:baseline;text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 10px;font:inherit;font-weight:600;color:var(--ink);cursor:pointer}
+.txrow:hover{background:var(--surface-2)}
+.txmod{flex:none;font-size:11px;font-weight:800;color:var(--amber);background:var(--amber-soft);border-radius:999px;padding:1px 7px}
+
+/* administrare */
+.adm-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:6px 0}
+@media (max-width:480px){.adm-grid{grid-template-columns:minmax(0,1fr)}}
+.adm-card{display:flex;flex-direction:column;gap:2px;text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:12px;font:inherit;color:var(--ink);cursor:pointer}
+.adm-card:hover{background:var(--surface-2)}
+.adm-card span{font-size:13px;color:var(--muted);font-weight:600}
+.chkl{gap:8px;font-weight:700;font-size:14px;align-items:flex-start}
+.chkl input{width:18px;height:18px;flex:none;margin-top:2px;accent-color:var(--wing)}
+.prod-rows{display:flex;flex-direction:column;gap:10px}
+.prod-row{border:1px solid var(--line);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:8px;background:var(--surface-2)}
+.an-rows{display:flex;flex-direction:column;gap:6px}
+.an-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 34px;gap:6px;align-items:center;border-bottom:1px dashed var(--line);padding-bottom:6px}
+.an-row [name="pt"]{grid-row:1;grid-column:1}.an-row [name="pn"]{grid-row:1;grid-column:2/4}.an-row [name="ps"]{grid-row:2;grid-column:1}.an-row [name="pe"]{grid-row:2;grid-column:2}.an-row .x{grid-row:2;grid-column:3}
+.an-row.lib{grid-template-columns:minmax(0,1fr) minmax(0,1.4fr) 34px}.an-row.lib [name],.an-row.lib .x{grid-row:auto;grid-column:auto}
+.dots i.ed{cursor:pointer}
+.dots i.ed:hover{outline:2px solid var(--wing);outline-offset:1px}
+.zbtn{border:1px dashed var(--line);background:transparent;border-radius:8px;padding:2px 8px;font:inherit;color:inherit;cursor:pointer}
 </style>
 </head>
 <body>
@@ -696,8 +733,8 @@ button.kid:hover{background:var(--surface-2)}
         </g>
       </svg>
       <div>
-        <h1>Fluturașii</h1>
-        <p>Grădinița 246 · Grupa mică B</p>
+        <h1 id="brandT">Fluturașii</h1>
+        <p id="brandS">Grădinița 246 · Grupa mică B</p>
       </div>
     </div>
     <div class="hdr-acts"><button class="bell" id="bellBtn" type="button" data-a="act" aria-label="Noutăți" hidden></button><button class="helpbtn" type="button" data-a="tab" data-k="ghid" aria-label="Ghid de folosire">?<span> Ghid</span></button><button class="me" id="meBtn" type="button" data-a="me"></button></div>
@@ -771,8 +808,8 @@ const STATUS = { todo:"De făcut", progress:"În lucru", done:"Rezolvat" };
 const TIP = { single:"Cine se ocupă", multi:"Se înscrie oricine", fiecare:"Fiecare copil", rotatie:"Pe rând, lunar", info:"Doar de știut" };
 
 /* ---------- stare ---------- */
-const D = { copii:[], sectiuni:[], itemi:[], stari:{}, inscrieri:[], comentarii:[], voturi:[], voturi_insc:[], colecte:[], optionale:[], optional_luni:[], optional_prezente:[], plati_declarate:[], comenzi:[], comenzi_copii:[], financiar:[], setari:{} };
-const COLS = ["copii","sectiuni","itemi","stari","inscrieri","comentarii","voturi","voturi_insc","colecte","optionale","optional_luni","optional_prezente","plati_declarate","comenzi","comenzi_copii","financiar","setari"];
+const D = { copii:[], sectiuni:[], itemi:[], stari:{}, inscrieri:[], comentarii:[], voturi:[], voturi_insc:[], colecte:[], optionale:[], optional_luni:[], optional_prezente:[], plati_declarate:[], comenzi:[], comenzi_copii:[], financiar:[], setari:{}, texte:{} };
+const COLS = ["copii","sectiuni","itemi","stari","inscrieri","comentarii","voturi","voturi_insc","colecte","optionale","optional_luni","optional_prezente","plati_declarate","comenzi","comenzi_copii","financiar","setari","texte"];
 const ui = {
   tab: LS.get("fl_tab") || "acasa", opt: "", optLuna: "",
   me: LS.get("fl_me") || "",
@@ -826,7 +863,7 @@ const authorId = () => ui.authorHash || "";
 const kidsTotal = () => D.copii.filter(c => c.rol !== "educatoare").length;
 
 /* Structura anului școlar 2026–2027 (Ordinul 3.194/2026; vacanța mobilă pentru București stabilită de ISMB) */
-const AN_SCOLAR = {
+const AN_SCOLAR_DEF = {
   titlu: "2026–2027",
   perioade: [
     { tip:"curs", n:"Cursuri", s:"2026-09-07", e:"2026-10-23" },
@@ -862,6 +899,7 @@ const AN_SCOLAR = {
     { d:"2027-08-15", n:"Adormirea Maicii Domnului", L:1 }
   ]
 };
+let AN_SCOLAR = AN_SCOLAR_DEF;
 const isoOf = d => d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
 const isSchoolDay = iso => { const d = parseD(iso), wd = d.getDay(); if (wd === 0 || wd === 6) return false; if (AN_SCOLAR.libere.some(l => l.d === iso)) return false; return AN_SCOLAR.perioade.some(p => p.tip === "curs" && iso >= p.s && iso <= p.e); };
 function hasSchoolDaysLeft(y, m){ const d = new Date(Math.max(new Date(y, m, 1), parseD(todayStr()))); while (d.getMonth() === m) { if (isSchoolDay(isoOf(d))) return true; d.setDate(d.getDate()+1); } return false; }
@@ -882,16 +920,154 @@ function calendarCard(){
   const nextFree = AN_SCOLAR.libere.find(l => l.d >= t && inCurs(l.d));
   const rows = P.map(p => { const st = p.e < t ? "past" : (t >= p.s ? "now" : ""); return '<li class="calrow '+p.tip+' '+st+'"><span class="cdot"></span><span class="cn">'+esc(p.n)+'</span><span class="cd num">'+esc(fmtRange(p.s, p.e))+'</span></li>'; }).join("");
   const free = AN_SCOLAR.libere.filter(l => inCurs(l.d)).map(l => '<li class="calrow free'+(l.d < t ? ' past' : '')+'"><span class="cdot"></span><span class="cn">'+esc(l.n)+'</span><span class="cd num">'+esc(fmtLong(l.d)+' '+l.d.slice(0,4))+'</span></li>').join("");
-  return '<section><div class="sec-head"><div><h2>Anul școlar '+AN_SCOLAR.titlu+'</h2><div class="sub">Vacanțele și zilele libere ale grădiniței.</div></div></div>'
+  return '<section><div class="sec-head"><div><h2>Anul școlar '+AN_SCOLAR.titlu+'</h2><div class="sub">'+TX("calendar.sub","Vacanțele și zilele libere ale grădiniței.")+'</div></div></div>'
     + status + (() => {
       const up = P.filter(p => p.tip === "vac" && p.e >= t).map(p => ({ d: p.s, t: p.n, when: fmtRange(p.s, p.e), cls: "vac" }))
         .concat(AN_SCOLAR.libere.filter(l => l.d >= t && inCurs(l.d)).map(l => ({ d: l.d, t: l.n, when: fmtLong(l.d), cls: "free" })))
         .sort((a,b) => a.d.localeCompare(b.d)).slice(0, 4);
       if (!up.length) return '';
-      return '<div class="eyebrow" style="margin:12px 0 6px">Următoarele zile libere</div><ul class="cal-list cal-next">'+up.map(x => '<li class="calrow '+x.cls+(x.d <= t ? ' now' : '')+'"><span class="cdot"></span><span class="cn">'+esc(x.t)+' <small>· '+esc(x.d <= t ? 'acum' : countdown(daysUntil(x.d)).toLowerCase())+'</small></span><span class="cd num">'+esc(x.when)+'</span></li>').join("")+'</ul>';
-    })() + '<details class="all calall"><summary>Tot calendarul</summary><ul class="cal-list">'+rows+'</ul><div class="eyebrow" style="margin:14px 0 6px">Zile libere în timpul săptămânii (nu ducem copiii)</div><ul class="cal-list">'+free+'</ul></details>'
+      return '<div class="eyebrow" style="margin:12px 0 6px">'+TX("calendar.urmatoarele","Următoarele zile libere")+'</div><ul class="cal-list cal-next">'+up.map(x => '<li class="calrow '+x.cls+(x.d <= t ? ' now' : '')+'"><span class="cdot"></span><span class="cn">'+esc(x.t)+' <small>· '+esc(x.d <= t ? 'acum' : countdown(daysUntil(x.d)).toLowerCase())+'</small></span><span class="cd num">'+esc(x.when)+'</span></li>').join("")+'</ul>';
+    })() + '<details class="all calall"><summary>'+TX("calendar.tot","Tot calendarul")+'</summary><ul class="cal-list">'+rows+'</ul><div class="eyebrow" style="margin:14px 0 6px">'+TX("calendar.libere","Zile libere în timpul săptămânii (nu ducem copiii)")+'</div><ul class="cal-list">'+free+'</ul></details>'
     + (nextFree && !(cur && cur.tip === "vac") && daysUntil(nextFree.d) <= 14 ? '<div class="hint" style="margin-top:8px">Atenție: '+esc(fmtLong(nextFree.d))+' e liber ('+esc(nextFree.n)+').</div>' : '')
     + '</section>';
+}
+/* ---------- administrare: formulare ---------- */
+const slugId = t => String(t||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,30) || "x";
+function admMore(){
+  modal('<h3>⚙️ Administrare</h3><p class="hint">Tot ce poți schimba singură în portal.</p><div class="adm-grid">'
+    + '<button type="button" class="adm-card" data-a="cmdEdit"><b>💳 Plată nouă</b><span>Cu produse sau pachete (ex. caiete, poze, figurine)</span></button>'
+    + '<button type="button" class="adm-card" data-a="optEdit"><b>⭐ Opțional nou</b><span>Ex. dans, engleză, hrană</span></button>'
+    + '<button type="button" class="adm-card" data-a="lunaEdit"><b>📅 Lună nouă la un opțional</b><span>Fără Excel: ședințe sau zile, preț</span></button>'
+    + '<button type="button" class="adm-card" data-a="collEdit"><b>🪙 Strângere de bani</b><span>Sumă pe copil</span></button>'
+    + '<button type="button" class="adm-card" data-a="anEdit"><b>🗓️ Anul școlar</b><span>Vacanțe și zile libere</span></button>'
+    + '<button type="button" class="adm-card" data-a="settings"><b>👧 Anunț, copii, doamne</b><span>Și răspunsul de la intrare</span></button>'
+    + '<button type="button" class="adm-card" data-a="txList"><b>✏️ Toate textele</b><span>Titluri, mesaje, ghid</span></button>'
+    + '</div><div class="acts"><button class="btn" data-a="close">Închide</button></div>');
+}
+/* plăți cu produse (comenzi) */
+function cmdForm(id, keep){
+  const C = keep || (id ? D.comenzi.find(c => c.id === id) : null) || { titlu:"", icon:"📚", descriere:"", plata:"", cadou:"", imagine:"", produse:[{}], o_singura:false, obligatoriu:false, ascuns:false, inchisa:false };
+  const prods = (Array.isArray(C.produse) && C.produse.length ? C.produse : [{}]);
+  const chk = (n, on, l) => '<label class="row chkl" for="fc-'+n+'"><input type="checkbox" id="fc-'+n+'" name="'+n+'"'+(on?' checked':'')+'> '+l+'</label>';
+  modal('<h3>'+(id ? 'Editează plata' : 'Plată nouă')+'</h3><form id="fCmd" class="view" style="gap:12px"><input type="hidden" name="id" value="'+esc(id||"")+'">'
+    + '<div class="grid2"><label class="field" for="fc-t"><span>Titlu</span><input class="inp" id="fc-t" name="titlu" required maxlength="80" value="'+esc(C.titlu||"")+'" placeholder="ex. Caiete EDU"></label>'
+    + '<label class="field" for="fc-i"><span>Iconiță</span><input class="inp" id="fc-i" name="icon" maxlength="8" value="'+esc(C.icon||"")+'"></label></div>'
+    + '<label class="field" for="fc-d"><span>Descriere (ce e, până când se alege)</span><textarea class="ta" id="fc-d" name="descriere" maxlength="1500">'+esc(C.descriere||"")+'</textarea></label>'
+    + '<label class="field" for="fc-p"><span>Cum se plătește (cont, cui, până când)</span><textarea class="ta" id="fc-p" name="plata" maxlength="1200">'+esc(C.plata||"")+'</textarea></label>'
+    + '<div class="eyebrow">Produse / pachete</div><div class="prod-rows" id="prodRows">'+prods.map((p, i) => prodRow(p, i)).join("")+'</div>'
+    + '<button type="button" class="btn small ghost" data-a="prodAdd">'+ICON.plus+'Încă un produs</button>'
+    + '<label class="field" for="fc-c"><span>Cadou / mențiune (opțional)</span><input class="inp" id="fc-c" name="cadou" maxlength="300" value="'+esc(C.cadou||"")+'"></label>'
+    + '<label class="field" for="fc-img"><span>Link către o poză cu oferta (opțional)</span><input class="inp" id="fc-img" name="imagine" type="url" maxlength="500" value="'+esc(C.imagine||"")+'" placeholder="https://…"></label>'
+    + chk("o_singura", C.o_singura, "Se alege un singur pachet (nu mai multe)")
+    + chk("obligatoriu", C.obligatoriu, "Pentru toți copiii, fără alegere (toți plătesc tot)")
+    + chk("inchisa", C.inchisa, "Închisă: nu se mai pot face alegeri")
+    + chk("ascuns", C.ascuns, "Ascunsă: părinții nu o văd deloc")
+    + '<div class="acts">'+(id ? '<button type="button" class="btn danger left" data-a="cmdDel" data-id="'+esc(id)+'">'+(ui.confirm==="cmd"+id ? 'Sigur? Se șterg și alegerile' : 'Șterge')+'</button>' : '')+'<button type="button" class="btn" data-a="close">Renunță</button><button class="btn primary" type="submit">Salvează</button></div></form>');
+}
+function prodRow(p, i){
+  return '<div class="prod-row" data-i="'+i+'"><input type="hidden" name="p_id" value="'+esc(p.id||"")+'">'
+    + '<div class="grid2"><label class="field"><span>Nume</span><input class="inp" name="p_nume" maxlength="80" value="'+esc(p.nume||"")+'" placeholder="ex. Pachet 1 · Canvas"></label>'
+    + '<label class="field"><span>Preț (lei)</span><input class="inp num" name="p_pret" type="number" min="0" step="0.01" inputmode="decimal" value="'+esc(p.pret ?? "")+'"></label></div>'
+    + '<div class="grid2"><label class="field"><span>Nume scurt (în liste)</span><input class="inp" name="p_scurt" maxlength="30" value="'+esc(p.scurt||"")+'"></label>'
+    + '<label class="field"><span>Link (opțional)</span><input class="inp" name="p_link" maxlength="300" value="'+esc(p.link||"")+'"></label></div>'
+    + '<label class="field"><span>Ce conține (opțional)</span><input class="inp" name="p_info" maxlength="300" value="'+esc(p.info||"")+'"></label>'
+    + '<div class="row" style="justify-content:space-between"><label class="row chkl"><input type="checkbox" name="p_rec"'+(p.recomandat?' checked':'')+'> ⭐ Recomandat</label><button type="button" class="btn small ghost danger" data-a="prodDel">Scoate produsul</button></div></div>';
+}
+function cmdFromForm(f){
+  const g = n => [...f.querySelectorAll('[name="'+n+'"]')];
+  const ids = g("p_id"), nm = g("p_nume"), pr = g("p_pret"), sc = g("p_scurt"), lk = g("p_link"), inf = g("p_info"), rc = g("p_rec");
+  const produse = nm.map((el, i) => { const n = el.value.trim(); if (!n) return null; const o = { id: ids[i].value || slugId(sc[i].value || n)+"-"+uid().slice(0,4), nume: n, pret: +pr[i].value || 0 };
+    if (sc[i].value.trim()) o.scurt = sc[i].value.trim(); if (lk[i].value.trim()) o.link = lk[i].value.trim(); if (inf[i].value.trim()) o.info = inf[i].value.trim(); if (rc[i].checked) o.recomandat = true; return o; }).filter(Boolean);
+  const v = n => (f.elements[n] ? f.elements[n].value : "").trim(), c = n => !!(f.elements[n] && f.elements[n].checked);
+  return { titlu: v("titlu"), icon: v("icon"), descriere: v("descriere"), plata: v("plata"), cadou: v("cadou"), imagine: v("imagine"), produse, o_singura: c("o_singura"), obligatoriu: c("obligatoriu"), inchisa: c("inchisa"), ascuns: c("ascuns") };
+}
+/* opționale: lună nouă / editare lună */
+function lunaForm(id, optId){
+  const L = id ? D.optional_luni.find(x => x.id === id) : null;
+  const opts = D.optionale.slice().sort((a,b)=>(a.ordine||0)-(b.ordine||0));
+  const now = new Date(); const def = L ? L.luna : now.getFullYear()+"-"+pad(now.getMonth()+1);
+  const ses = L && Array.isArray(L.sedinte) ? L.sedinte : [];
+  modal('<h3>'+(L ? 'Editează luna' : 'Lună nouă la un opțional')+'</h3><form id="fLuna" class="view" style="gap:12px"><input type="hidden" name="id" value="'+esc(id||"")+'">'
+    + '<div class="grid2"><label class="field" for="fl-o"><span>Opționalul</span><select class="sel" id="fl-o" name="opt"'+(L?' disabled':'')+'>'+opts.map(o => '<option value="'+esc(o.id)+'"'+(o.id === (L ? L.optionalId : (optId || ui.opt)) ? ' selected' : '')+'>'+esc((o.icon?o.icon+" ":"")+o.nume)+'</option>').join("")+'</select></label>'
+    + '<label class="field" for="fl-l"><span>Luna</span><input class="inp" id="fl-l" name="luna" type="month" required value="'+esc(def)+'"'+(L?' disabled':'')+'></label></div>'
+    + '<label class="field" for="fl-p"><span>Preț (lei) pe ședință sau pe zi</span><input class="inp num" id="fl-p" name="pret" type="number" min="0" step="0.01" inputmode="decimal" required value="'+esc(L ? L.pret : "")+'"></label>'
+    + '<label class="field" for="fl-s"><span>Zilele cu ședințe (numerele zilelor, despărțite prin virgulă)</span><input class="inp" id="fl-s" name="sedinte" value="'+esc(ses.map(d => parseD(d) ? parseD(d).getDate() : d).join(", "))+'" placeholder="ex. 7, 14, 21, 28"></label>'
+    + '<p class="hint">Lasă gol dacă se plătește pe zile (ca la hrană): după salvare apeși pe numărul de zile al fiecărui copil și îl scrii. La ședințe, apeși pe bulinele copiilor ca să marchezi prezent / absent.</p>'
+    + '<div class="acts"><button type="button" class="btn" data-a="close">Renunță</button><button class="btn primary" type="submit">Salvează</button></div></form>');
+}
+async function saveLuna(fd){
+  const L = fd.id ? D.optional_luni.find(x => x.id === fd.id) : null;
+  const optId = L ? L.optionalId : fd.opt, luna = L ? L.luna : fd.luna;
+  if (!optId || !/^\d{4}-\d{2}$/.test(luna || "")) { toast("Alege opționalul și luna.", true); return false; }
+  const [y, m] = luna.split("-").map(Number), last = new Date(y, m, 0).getDate();
+  const days = String(fd.sedinte||"").split(/[^0-9]+/).filter(Boolean).map(Number).filter(d => d >= 1 && d <= last);
+  const sedinte = [...new Set(days)].sort((a,b)=>a-b).map(d => y+"-"+pad(m)+"-"+pad(d));
+  const id = L ? L.id : optId+"-"+luna;
+  if (!L && D.optional_luni.some(x => x.id === id)) { toast("Luna asta există deja la acest opțional.", true); return false; }
+  return write(async () => {
+    if (L) chk(await sb.from("optional_luni").update({ pret: +fd.pret || 0, sedinte }).eq("id", id));
+    else chk(await sb.from("optional_luni").insert({ id, optional_id: optId, luna, pret: +fd.pret || 0, sedinte }));
+    const oldSes = L && Array.isArray(L.sedinte) ? L.sedinte : [];
+    for (const k of sortedKids()) {
+      const pid = id+"_"+k.id, p = D.optional_prezente.find(x => x.id === pid);
+      if (!p) chk(await sb.from("optional_prezente").insert({ id: pid, luna_id: id, copil_id: k.id, prezente: sedinte.map(() => 0) }));
+      else if (sedinte.length && (oldSes.join() !== sedinte.join())) { const old = Array.isArray(p.prezente) ? p.prezente : []; chk(await sb.from("optional_prezente").update({ prezente: sedinte.map(d => { const i = oldSes.indexOf(d); return i >= 0 ? (+old[i] ? 1 : 0) : 0; }) }).eq("id", pid)); }
+    }
+    await refetch("optional_luni"); await refetch("optional_prezente");
+    ui.opt = optId; ui.optLuna = id;
+  }, "Luna salvată");
+}
+function zileForm(pid){
+  const p = D.optional_prezente.find(x => x.id === pid); if (!p) return;
+  modal('<h3>'+esc(kidName(p.copilId))+'</h3><form id="fZile" class="view" style="gap:12px"><input type="hidden" name="id" value="'+esc(pid)+'">'
+    + '<label class="field" for="fz-n"><span>Câte zile a fost la grădiniță</span><input class="inp num" id="fz-n" name="n" type="number" min="0" max="31" inputmode="numeric" required autofocus value="'+presSum(p)+'"></label>'
+    + '<div class="acts"><button type="button" class="btn" data-a="close">Renunță</button><button class="btn primary" type="submit">Salvează</button></div></form>');
+}
+/* anul școlar */
+function anForm(data){
+  const A = data || JSON.parse(JSON.stringify(AN_SCOLAR));
+  const per = (p, i) => '<div class="an-row"><select class="sel" name="pt" aria-label="Tip"><option value="curs"'+(p.tip==="curs"?' selected':'')+'>Cursuri</option><option value="vac"'+(p.tip==="vac"?' selected':'')+'>Vacanță</option></select>'
+    + '<input class="inp" name="pn" maxlength="60" aria-label="Nume" value="'+esc(p.n||"")+'" placeholder="Nume"><input class="inp" name="ps" type="date" aria-label="De la" value="'+esc(p.s||"")+'"><input class="inp" name="pe" type="date" aria-label="Până la" value="'+esc(p.e||"")+'">'
+    + '<button type="button" class="x" data-a="anDel" aria-label="Scoate rândul">'+ICON.x+'</button></div>';
+  const lib = l => '<div class="an-row lib"><input class="inp" name="ld" type="date" aria-label="Data" value="'+esc(l.d||"")+'"><input class="inp" name="ln" maxlength="60" aria-label="Ce e" value="'+esc(l.n||"")+'" placeholder="ex. Sfântul Andrei"><button type="button" class="x" data-a="anDel" aria-label="Scoate rândul">'+ICON.x+'</button></div>';
+  modal('<h3>🗓️ Anul școlar</h3><form id="fAn" class="view" style="gap:12px">'
+    + '<label class="field" for="fan-t"><span>Titlu (ex. 2027–2028)</span><input class="inp" id="fan-t" name="titlu" maxlength="20" value="'+esc(A.titlu||"")+'"></label>'
+    + '<div class="eyebrow">Perioade (cursuri și vacanțe), în ordine</div><div id="anPer" class="an-rows">'+(A.perioade||[]).map(per).join("")+'</div>'
+    + '<button type="button" class="btn small ghost" data-a="anAdd" data-k="per">'+ICON.plus+'Încă o perioadă</button>'
+    + '<div class="eyebrow">Zile libere (legale sau ale grădiniței)</div><div id="anLib" class="an-rows">'+(A.libere||[]).map(lib).join("")+'</div>'
+    + '<button type="button" class="btn small ghost" data-a="anAdd" data-k="lib">'+ICON.plus+'Încă o zi liberă</button>'
+    + '<div class="acts"><button type="button" class="btn" data-a="close">Renunță</button><button class="btn primary" type="submit">Salvează</button></div></form>');
+  ui.anRowTpl = { per: per({ tip:"curs" }), lib: lib({}) };
+}
+function anFromForm(f){
+  const q = (sel, n) => [...f.querySelectorAll(sel+' [name="'+n+'"]')];
+  const pt = q("#anPer","pt"), pn = q("#anPer","pn"), ps = q("#anPer","ps"), pe = q("#anPer","pe"), ld = q("#anLib","ld"), ln = q("#anLib","ln");
+  const perioade = pt.map((el, i) => ({ tip: el.value, n: pn[i].value.trim() || (el.value === "curs" ? "Cursuri" : "Vacanță"), s: ps[i].value, e: pe[i].value })).filter(p => p.s && p.e).sort((a,b)=>a.s.localeCompare(b.s));
+  const libere = ld.map((el, i) => ({ d: el.value, n: ln[i].value.trim() || "Zi liberă" })).filter(l => l.d).sort((a,b)=>a.d.localeCompare(b.d));
+  return { titlu: f.elements.titlu.value.trim(), perioade, libere };
+}
+/* ---------- texte editabile ---------- */
+const TXT_DEF = new Map();
+function T(k, def){ TXT_DEF.set(k, def); const v = D.texte && D.texte[k]; return v != null && v !== "" ? v : def; }
+function mdInline(raw){ return linkify(raw).replace(/\[\[([^\]|]+?)(?:\|([a-z-]+))?\]\]/g, (m, t, c) => '<span class="gbtn '+(c||"")+'">'+t+'</span>').replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>'); }
+function md(raw){ return String(raw).split(/\n{2,}/).map(par => '<p>'+mdInline(par)+'</p>').join(""); }
+function TX(k, def, rich){
+  const v = T(k, def), h = rich === "p" ? md(v) : rich ? mdInline(v) : esc(v);
+  return ui.txEdit && cap.admin ? '<span class="tx'+(rich === "p" ? ' txb' : '')+'" data-a="txEdit" data-k="'+esc(k)+'" title="Apasă ca să schimbi textul">'+h+'</span>' : h;
+}
+function txForm(k){
+  const def = TXT_DEF.has(k) ? TXT_DEF.get(k) : "", cur = (D.texte && D.texte[k]) || "";
+  modal('<h3>✏️ Schimbă textul</h3><form id="fTx" class="view" style="gap:12px"><input type="hidden" name="k" value="'+esc(k)+'">'
+    + '<label class="field" for="ftx-v"><span>Text</span><textarea class="ta" id="ftx-v" name="v" style="min-height:'+(String(cur||def).length > 120 ? 220 : 110)+'px" autofocus>'+esc(cur || def)+'</textarea></label>'
+    + '<p class="hint">Rând gol = paragraf nou · **text** = îngroșat · [[text]] = arată ca un buton · linkurile devin clickabile singure.</p>'
+    + (cur && def ? '<details class="all"><summary>Textul inițial</summary><p class="hint" style="white-space:pre-line">'+esc(def)+'</p></details>' : '')
+    + '<div class="acts">'+(cur ? '<button type="button" class="btn ghost left" data-a="txReset" data-k="'+esc(k)+'">Revino la textul inițial</button>' : '')+'<button type="button" class="btn" data-a="close">Renunță</button><button class="btn primary" type="submit">Salvează</button></div></form>');
+}
+function txList(){
+  const keys = [...new Set([...TXT_DEF.keys(), ...Object.keys(D.texte||{})])].filter(k => k !== "intrare.raspuns").sort();
+  modal('<h3>✏️ Toate textele</h3><p class="hint">Textele pe care le-ai văzut în portal de când l-ai deschis, plus cele schimbate deja. Apasă pe unul ca să-l schimbi.</p><label class="sr" for="txq">Caută</label><input class="inp" id="txq" placeholder="Caută un text" autocomplete="off" style="margin-bottom:10px">'
+    + '<div class="txlist" id="txList">'+keys.map(k => { const v = T(k, TXT_DEF.get(k) || ""); return '<button type="button" class="txrow" data-a="txEdit" data-k="'+esc(k)+'" data-n="'+esc((k+" "+v).toLowerCase())+'">'+((D.texte||{})[k] ? '<span class="txmod">schimbat</span>' : '')+'<span>'+esc(String(v).slice(0, 140))+'</span></button>'; }).join("")+'</div>'
+    + '<div class="acts"><button class="btn" data-a="close">Închide</button></div>');
 }
 /* ---------- zile de naștere ---------- */
 const BD_FARA_AN = 1904; // la doamne păstrăm doar ziua și luna
@@ -919,7 +1095,7 @@ function bdHome(){
       + '<p>'+(mine ? (isEdu(c) ? 'Toți Fluturașii vă urează o zi minunată! 💐' : 'Toți Fluturașii îți urează o zi minunată'+(bdHasAge(c) ? ' la '+esc(aniTxt(x.age)) : '')+'! 🦋')
         : 'Azi e ziua: <b>'+esc(c.nume)+'</b>'+(bdHasAge(c) ? ' · împlinește '+esc(aniTxt(x.age)) : '')+'.')+'</p></div></div>';
   }
-  if (soon.length) h += '<div class="bd-soon"><div class="eyebrow">🎈 Zile de naștere în următoarele 2 săptămâni</div>'
+  if (soon.length) h += '<div class="bd-soon"><div class="eyebrow">'+TX("zile.urmeaza","🎈 Zile de naștere în următoarele 2 săptămâni")+'</div>'
     + soon.map(({ c, x }) => '<div role="button" tabindex="0" class="bd-row" data-a="tab" data-k="zile">'+avHtml(c.id)+'<span class="t"><b>'+esc(c.nume)+'</b><small>'+esc(ZILE[x.d.getDay()]+', '+bdDayMonth(x.d))+(bdHasAge(c) ? ' · împlinește '+esc(aniTxt(x.age)) : '')+'</small></span><span class="bd-n num">'+esc(countdown(x.n))+'</span></div>').join("")
     + '</div>';
   const me = kid(ui.me);
@@ -960,7 +1136,7 @@ function viewZile(){
   const ppl = bdPeople(), withD = ppl.filter(c => bdOf(c)), missing = ppl.filter(c => !bdOf(c));
   const byDay = {};
   for (const c of withD) for (const yy of [y0, y0+1]) { const d = bdIn(bdOf(c), yy); const k = isoOf(d); (byDay[k] = byDay[k] || []).push(c); }
-  let h = '<section><div class="sec-head"><div><h2>🎂 Zilele de naștere</h2><div class="sub">Copiii grupei și doamnele, în următoarele 12 luni.</div></div></div>';
+  let h = '<section><div class="sec-head"><div><h2>'+TX("zile.titlu","🎂 Zilele de naștere")+'</h2><div class="sub">'+TX("zile.sub","Copiii grupei și doamnele, în următoarele 12 luni.")+'</div></div></div>';
   const me = kid(ui.me);
   if (me) h += '<div class="bd-mine">'+avHtml(me.id)+'<span class="t">'+(bdOf(me) ? '<b>'+esc(isEdu(me) ? 'Ziua dumneavoastră' : 'Ziua lui '+firstName(me.nume))+':</b> '+esc(bdDayMonth(bdOf(me))) : '<b>'+esc(isEdu(me) ? 'Ziua dumneavoastră' : 'Ziua lui '+firstName(me.nume))+'</b> nu e completată încă')+'</span><button type="button" class="btn small'+(bdOf(me) ? ' ghost' : ' primary')+'" data-a="bdEdit" data-id="'+esc(me.id)+'">'+(bdOf(me) ? 'Schimbă' : 'Completează')+'</button></div>';
   h += '<div class="bd-year">';
@@ -1026,7 +1202,8 @@ async function refetch(t){
   if (res.error) return;
   const rows = res.data.map(fromDb);
   if (t === "stari") { const m = {}; rows.forEach(r => m[r.id] = r); D.stari = m; }
-  else if (t === "setari") D.setari = rows.find(r => r.id === "general") || {};
+  else if (t === "setari") { D.setari = rows.find(r => r.id === "general") || {}; const a = D.setari.an_scolar; AN_SCOLAR = a && Array.isArray(a.perioade) && a.perioade.length ? Object.assign({ libere: [] }, a) : AN_SCOLAR_DEF; }
+  else if (t === "texte") { const m = {}; res.data.forEach(r => { if (r.valoare != null && r.valoare !== "") m[r.cheie] = r.valoare; }); D.texte = m; }
   else D[t] = rows;
   ui.loaded.add(t); schedule();
 }
@@ -1058,18 +1235,21 @@ const gateOk = () => { if (LS.get("fl_ok") === "1") return true; try { return se
 const gateNorm = v => String(v||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim().toLowerCase();
 function showGate(err){
   document.body.classList.add("gated");
-  $("#view").innerHTML = '<div class="gate"><div class="gate-card"><h2>Bun venit la Fluturașii!</h2><p>Portalul e doar pentru părinții și educatoarele grupei. Răspunde la întrebare ca să intri.</p>'
-    + '<form id="fGate" class="view" style="gap:12px"><label class="field" for="fg-a"><span>Cum le cheamă pe educatoarele Fluturașilor?</span><input class="inp" id="fg-a" name="raspuns" autocomplete="off" autocapitalize="words" required autofocus></label>'
+  $("#view").innerHTML = '<div class="gate"><div class="gate-card"><h2>'+TX("intrare.titlu","Bun venit la Fluturașii!")+'</h2><p>'+TX("intrare.text","Portalul e doar pentru părinții și educatoarele grupei. Răspunde la întrebare ca să intri.")+'</p>'
+    + '<form id="fGate" class="view" style="gap:12px"><label class="field" for="fg-a"><span>'+TX("intrare.intrebare","Cum le cheamă pe educatoarele Fluturașilor?")+'</span><input class="inp" id="fg-a" name="raspuns" autocomplete="off" autocapitalize="words" required autofocus></label>'
     + (err ? '<p class="gate-err" role="alert">Nu e răspunsul corect. Mai încearcă.</p>' : '')
-    + '<button class="btn primary" type="submit">Intră</button></form><p class="hint">Te întreabă o singură dată pe acest telefon sau calculator.</p></div></div>';
+    + '<button class="btn primary" type="submit">Intră</button></form><p class="hint">'+TX("intrare.nota","Te întreabă o singură dată pe acest telefon sau calculator.")+'</p></div></div>';
   const f = document.getElementById("fg-a"); if (f) f.focus();
 }
 async function boot(){
-  if (!gateOk()) { showGate(); return; }
+  if (!gateOk()) {
+    try { if (!sb && window.supabase) sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); if (sb) await Promise.race([refetch("texte"), new Promise(r => setTimeout(r, 2500))]); } catch(e){}
+    showGate(); return;
+  }
   document.body.classList.remove("gated");
   render();
   if (!window.supabase || SUPABASE_URL.indexOf("__") === 0) { ui.mode = "nodb"; render(); return; }
-  sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  sb = sb || window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
   cap.db = db;
   ui.authorHash = await sha256(ui.device);
   try { await checkAdmin(); } catch(e){}
@@ -1118,14 +1298,16 @@ function toast(msg, err){
 /* ---------- randare ---------- */
 const TABS = [["acasa","Acasă","home"],["necesar","Necesar","list"],["evenimente","Evenimente","cal"],["optionale","De plată","star"],["bani","Bugetul grupei","wallet"],["zile","Zile de naștere","cake","Aniversări"]];
 function render(){
+  if (document.body.classList.contains("gated")) return;
   pending = false;
   const me = kid(ui.me);
   $("#meBtn").innerHTML = me
     ? (isEdu(me) ? avHtml(me.id) : '<span class="av" style="background:var(--me)">'+esc(initials(me.nume))+'</span>')+'<span class="lbl">'+esc(me.nume)+'</span>'
     : '<span class="av" style="background:var(--wing)">'+ICON.user.replace('<svg','<svg width="16" height="16"')+'</span><span class="lbl">Alege copilul tău</span>';
-  const tabsHtml = TABS.map(([k,l,i]) => '<button type="button" class="tab" data-a="tab" data-k="'+k+'"'+(ui.tab===k?' aria-current="page"':'')+'>'+ICON[i]+l+'</button>').join("");
+  $("#brandT").innerHTML = TX("antet.titlu","Fluturașii"); $("#brandS").innerHTML = TX("antet.sub","Grădinița 246 · Grupa mică B");
+  const tabsHtml = TABS.map(([k,l,i]) => '<button type="button" class="tab" data-a="tab" data-k="'+k+'"'+(ui.tab===k?' aria-current="page"':'')+'>'+ICON[i]+TX("tab."+k, l)+'</button>').join("");
   $("#tabs").innerHTML = tabsHtml; paintBell();
-  $("#bnav").style.setProperty("--n", TABS.length); $("#bnav").innerHTML = TABS.map(([k,l,i,sh]) => '<button type="button" data-a="tab" data-k="'+k+'"'+(ui.tab===k?' aria-current="page"':'')+'>'+ICON[i]+'<span>'+(sh||l)+'</span></button>').join("");
+  $("#bnav").style.setProperty("--n", TABS.length); $("#bnav").innerHTML = TABS.map(([k,l,i,sh]) => '<button type="button" data-a="tab" data-k="'+k+'"'+(ui.tab===k?' aria-current="page"':'')+'>'+ICON[i]+'<span>'+TX("tab."+k+".telefon", sh||l)+'</span></button>').join("");
   const v = $("#view");
   if (ui.mode === "loading" || (ui.mode === "live" && !["copii","sectiuni","itemi"].every(n => ui.loaded.has(n)))) {
     v.innerHTML = '<div class="state"><h3>Se încarcă lista grupei…</h3>Evenimentele, necesarul și banii apar în câteva secunde.</div>'; return;
@@ -1139,14 +1321,18 @@ function render(){
   if (!kid(ui.me) && D.copii.length && !$("#modalRoot").innerHTML) setTimeout(() => { if (!kid(ui.me) && !$("#modalRoot").innerHTML) openPicker(null, true); }, 0);
   setTimeout(() => { if (routeTarget && document.getElementById(routeTarget)) { const t = routeTarget; routeTarget = ""; goTo(t); } }, 0);
   const html = ({ acasa: viewHome, necesar: viewNecesar, evenimente: viewEvents, optionale: viewOptionale, bani: viewMoney, zile: viewZile, ghid: viewGuide }[ui.tab] || viewHome)();
-  v.innerHTML = (cap.admin ? adminBar() : "") + html + '<p class="foot-note">Bifele și comentariile se salvează automat și le văd toți părinții. <button class="linkbtn" data-a="tab" data-k="ghid">Ghid de folosire</button><br>'+(cap.admin ? 'Ești logată ca administratoare ('+esc(ui.adminEmail)+'). <button class="linkbtn" data-a="logout">Ieși</button>' : '<button class="linkbtn" data-a="login">Administrare</button>')+'</p>';
+  v.innerHTML = (cap.admin ? adminBar() : "") + html + '<p class="foot-note">'+TX("subsol","Bifele și comentariile se salvează automat și le văd toți părinții.")+' <button class="linkbtn" data-a="tab" data-k="ghid">Ghid de folosire</button><br>'+(cap.admin ? 'Ești logată ca administratoare ('+esc(ui.adminEmail)+'). <button class="linkbtn" data-a="logout">Ieși</button>' : '<button class="linkbtn" data-a="login">Administrare</button>')+'</p>';
 }
 
 function adminBar(){
   return '<div class="adminbar"><span>Mod administrator · doar tu poți adăuga și edita</span><div class="row">'
     + '<button class="btn small" data-a="secEdit">'+ICON.plus+'Secțiune</button>'
     + '<button class="btn small" data-a="itemEdit">'+ICON.plus+'Item</button>'
-    + '<button class="btn small" data-a="settings">Anunț și copii</button></div></div>';
+    + '<button class="btn small" data-a="settings">Anunț și copii</button>'
+    + '<button class="btn small'+(ui.txEdit ? ' primary' : '')+'" data-a="txToggle" aria-pressed="'+!!ui.txEdit+'">✏️ Texte</button>'
+    + '<button class="btn small" data-a="admMore">⚙️ Mai mult</button></div>'
+    + (ui.txEdit ? '<div class="txbar">✏️ Apasă pe orice text cu chenar punctat ca să-l schimbi. <button type="button" class="linkbtn" data-a="txList">Vezi toate textele</button> · <button type="button" class="linkbtn" data-a="txToggle">Gata</button></div>' : '')
+    + '</div>';
 }
 
 function calTile(s){
@@ -1159,74 +1345,24 @@ function whenLine(s){
 }
 
 /* Acasă */
+const GUIDE = [{"id": "start", "e": "🚪", "t": "Prima intrare", "steps": [["1", "Răspunde la întrebare", "Prima dată, portalul te întreabă cum le cheamă pe educatoare. Scrie numele lor și apasă [[Intră|dark]]. Întreabă o singură dată pe fiecare telefon."], ["2", "Alege cine ești", "Imediat după întrebare se deschide fereastra [[Cine ești?]]. Alege numele copilului tău (poți căuta după nume). Educatoarele apar primele, cu 👩‍🏫. Nu poți intra în portal până nu alegi un nume.\n\nTelefonul ține minte alegerea, așa că data viitoare intri direct."], ["3", "Ai ales greșit sau ai doi copii în grupă?", "Apasă oricând pe numele de sus (de ex. [[PV Pîrvu Vlad]]) → [[Schimbă]] și alege altul."]]}, {"id": "acasa", "e": "🏠", "t": "Ce vezi pe Acasă", "steps": [["•", "Evenimente următoare", "Ce urmează la grupă, în câte zile și cât e gata din pregătiri. Apasă pe un eveniment ca să vezi lista lui."], ["•", "Anul școlar", "Dacă suntem în vacanță, când revin copiii la grădiniță și când e următoarea vacanță. La „Tot calendarul” găsești tot anul."], ["•", "Ce ai tu de făcut", "Doar lucrurile tale: ce ai preluat, ce n-ai bifat încă și strângerile de bani la care n-ai trimis încă."], ["•", "Unde e nevoie de ajutor", "Lucruri de care nu se ocupă încă nimeni. Apasă pe unul ca să ajungi direct la el."]]}, {"id": "preiau", "e": "🙋", "t": "Preiau ceva (de ex. baloți, reflectoare, Moș Crăciun)", "steps": [["1", "Găsește itemul", "În tabul [[Evenimente]] sau [[Necesar]]. Itemul are eticheta [[Cine se ocupă|chip]]."], ["2", "Scrie câte bucăți iei", "Dacă scrie „4 bucăți” și tu aduci 2, scrie **2** în căsuța cu număr. La „Detalii” poți scrie de unde le iei (opțional)."], ["3", "Apasă Preiau", "Apasă [[Preiau|blue]]. Numele copilului tău apare pe card, iar ceilalți văd „Mai trebuie 2”."], ["4", "Te-ai răzgândit?", "Apasă [[✕|x]] de lângă numele tău. Merge doar de pe telefonul de pe care ai preluat."], ["•", "Când ai terminat", "După ce ai adus sau ai făcut ce ai preluat, apasă [[✓ Am făcut|tick]] lângă numele tău. Toți văd că e gata."]]}, {"id": "inscriu", "e": "🥧", "t": "Aduc ceva (decor, plăcinte, murături…)", "steps": [["1", "Scrie ce aduci", "La itemii cu eticheta [[Se înscrie oricine|chip]], scrie în căsuță ce aduci, de exemplu „2 ghivece cu crizanteme”."], ["2", "Apasă Mă înscriu", "Apasă [[Mă înscriu|blue]]. Te poți înscrie de mai multe ori, dacă aduci mai multe lucruri."], ["•", "Când ai adus", "Apasă [[✓ Am făcut|tick]] lângă numele tău, ca să știe toată lumea că e adus."]]}, {"id": "bifez", "e": "✅", "t": "Bifez pentru copilul meu (coajă de portocală, poză, cadou)", "steps": [["•", "E lista ta de pregătit", "Itemii cu eticheta [[Fiecare copil|chip]] sunt ca un checklist: fiecare părinte pregătește lucrul acela pentru copilul lui (de ex. coaja de portocală, poza în ramă, cadoul etichetat). Îi găsești pe toți și la „Ce ai tu de făcut”, pe Acasă."], ["1", "Bifează când e gata", "Când ai pregătit lucrul pentru copilul tău, apasă [[✓ Bifează pentru Vlad|tick]]. Se face verde și dispare din „Ce ai tu de făcut”. La „Vezi toți copiii” se vede cine e gata."], ["2", "Ai bifat din greșeală?", "Apasă încă o dată și se debifează."]]}, {"id": "luna", "e": "🗓️", "t": "Iau o lună (hârtie igienică umedă)", "steps": [["1", "Alege o lună liberă", "Lângă o lună care scrie „liber”, apasă [[Iau eu]]. Luna e a ta și apare la „Ce ai tu de făcut”."], ["•", "Când ai adus", "În luna ta, după ce ai adus, apasă [[✓ Am făcut|tick]]. Apare și pe Acasă, la „Ce ai tu de făcut”."]]}, {"id": "status", "e": "🏁", "t": "Cum știu în ce stadiu e un lucru", "steps": [["•", "Statusul de pe card", "Sus, pe fiecare card, scrie [[De făcut|st-todo]], [[În lucru|st-prog]] sau [[Rezolvat|st-done]]. Statusul îl schimbă doar administratoarea. Când un lucru e rezolvat, cardul se face verde și trece la finalul listei."], ["•", "Ai terminat ce ai preluat?", "Scrie un comentariu pe card (de ex. „Am adus baloții”) sau anunță administratoarea, iar ea marchează itemul ca rezolvat."]]}, {"id": "comentarii", "e": "💬", "t": "Comentarii, întrebări, linkuri", "steps": [["1", "Scrie un comentariu", "Sub fiecare card apasă [[💬 Comentează]], scrie și apasă [[Trimite|dark]]. E locul bun pentru linkuri, oferte sau întrebări."], ["2", "Răspunde și votează", "Sub orice comentariu poți apăsa [[↩ Răspunde]] sau poți vota cu [[👍]] / [[👎]] (de exemplu, la două oferte de Moș)."]]}, {"id": "bani", "e": "💰", "t": "Bugetul grupei", "steps": [["•", "Vezi tot, la vedere", "În tabul [[Bugetul grupei]] vezi câți bani sunt în contul clasei și cash la educatoare, plus fiecare încasare și cheltuială."], ["•", "Strângeri de bani", "La fiecare strângere vezi suma pe copil și dacă a ajuns contribuția copilului tău. Bifele le pune doar administratoarea, după ce vede banii în cont."], ["•", "Cum trimiți banii", "Detaliile de plată sunt în anunțul de pe Acasă sau în grupul părinților. Scrie la plată numele copilului."]]}, {"id": "optionale", "e": "⭐", "t": "De plată: opționale (dans, engleză, dezvoltare personală), caiete", "steps": [["•", "Prezența și suma", "În tabul [[De plată]] alegi opționalul și luna. Fiecare bulină verde e o ședință la care a fost copilul. Suma = ședințe × prețul pe ședință."], ["•", "Cât ai de plată", "Sus apare direct pentru copilul tău, de ex. „Vlad: 2 din 6 ședințe · 20 lei de plată”. Apare și pe Acasă, la „Ce ai tu de făcut”. După ce plătești, administratoarea marchează „Plătit” și trece la „Gata”."]]}, {"id": "zile", "e": "🎂", "t": "Zile de naștere", "steps": [["•", "Completează ziua copilului", "Pe [[Acasă]] apare un card „Ziua lui …”. Alegi data nașterii și apeși [[Salvează]]. O poți schimba oricând apăsând pe numele de sus."], ["•", "Pe Acasă", "Cu 2 săptămâni înainte, ziua copilului apare pe Acasă. În ziua respectivă apare mesajul „La mulți ani!” și toți primesc o notificare."], ["•", "Calendarul", "În tabul [[Zile de naștere]] vezi următoarele 12 luni, începând cu luna curentă, cu zilele tuturor copiilor și ale doamnelor."]]}, {"id": "telefon", "e": "📱", "t": "Pune portalul pe ecranul telefonului și pornește notificările", "steps": [["iPhone", "Safari", "Deschide portalul în Safari → apasă [[Partajează ⬆︎]] → [[Adaugă pe ecranul principal]]. Deschide apoi Fluturașii de pe ecranul telefonului: doar așa merg notificările pe iPhone."], ["Android", "Chrome", "Deschide portalul în Chrome → apasă [[⋮]] sus în dreapta → [[Adaugă pe ecranul de pornire]] (sau [[Instalează aplicația]])."], ["🔔", "Notificări", "La prima vizită portalul te întreabă dacă pornești notificările: apasă [[Pornește notificările]] și apoi [[Permite]]. Primești o notificare când apare ceva nou de ales sau de plătit și în ziua de naștere a unui copil, doar între 8:00 și 21:00. Ca să le oprești sau să alegi ce primești, apasă pe numele de sus."]]}, {"id": "probleme", "e": "🛟", "t": "Dacă ceva nu merge", "steps": [["?", "Nu văd ce a bifat altcineva", "De obicei apare singur în câteva secunde. Dacă nu, trage pagina în jos ca să se reîncarce."], ["?", "Pe alt telefon îmi cere iar întrebarea", "E normal: întrebarea și alegerea copilului se țin minte pe fiecare telefon separat."], ["?", "Nu pot șterge ce am pus", "Poți retrage doar ce ai adăugat de pe același telefon. Pentru altceva, scrie-i administratoarei."], ["?", "Apare „Nu s-a salvat”", "Verifică internetul și încearcă din nou. Dacă tot nu merge, anunță administratoarea."]]}];
+const GUIDE_TOC = [["start", "Prima intrare"], ["acasa", "Ce vezi pe Acasă"], ["preiau", "Preiau ceva"], ["inscriu", "Aduc ceva"], ["bifez", "Bifez pentru copil"], ["luna", "Iau o lună"], ["status", "Statusul"], ["comentarii", "Comentarii"], ["bani", "Bugetul grupei"], ["optionale", "Opționale"], ["zile", "Zile de naștere"], ["telefon", "Telefon și notificări"], ["probleme", "Dacă ceva nu merge"]];
 function viewGuide(){
-  const B = (txt, cls) => '<span class="gbtn '+(cls||"")+'">'+txt+'</span>';
-  const step = (n, title, body) => '<li class="gstep"><span class="gnum">'+n+'</span><div class="gbody"><h3>'+title+'</h3>'+body+'</div></li>';
-  const sec = (id, emoji, title, steps) => '<section class="gsec" id="g-'+id+'"><h2><span aria-hidden="true">'+emoji+'</span> '+title+' '+linkBtn("ghid/"+id)+'</h2><ol class="gsteps">'+steps+'</ol></section>';
-  let h = '<section><div class="sec-head"><div><h2>Cum folosești portalul</h2><div class="sub">Ghid pentru părinți. Durează 2 minute.</div></div><button class="btn small" data-a="tab" data-k="acasa">Înapoi la Acasă</button></div>'
-    + '<nav class="gtoc" aria-label="Cuprins">'
-    + [["start","Prima intrare"],["acasa","Ce vezi pe Acasă"],["preiau","Preiau ceva"],["inscriu","Aduc ceva"],["bifez","Bifez pentru copil"],["luna","Iau o lună"],["status","Statusul"],["comentarii","Comentarii"],["bani","Bugetul grupei"],["optionale","Opționale"],["zile","Zile de naștere"],["telefon","Telefon și notificări"],["probleme","Dacă ceva nu merge"]].map(([k,l]) => '<button type="button" class="evchip" data-a="goG" data-id="'+k+'">'+l+'</button>').join("")
-    + '</nav></section>';
-  h += sec("start","🚪","Prima intrare",
-      step(1,"Răspunde la întrebare","<p>Prima dată, portalul te întreabă cum le cheamă pe educatoare. Scrie numele lor și apasă "+B("Intră","dark")+". Întreabă o singură dată pe fiecare telefon.</p>")
-    + step(2,"Alege cine ești","<p>Imediat după întrebare se deschide fereastra "+B("Cine ești?")+". Alege numele copilului tău (poți căuta după nume). Educatoarele apar primele, cu 👩‍🏫. Nu poți intra în portal până nu alegi un nume.</p><p>Telefonul ține minte alegerea, așa că data viitoare intri direct.</p>")
-    + step(3,"Ai ales greșit sau ai doi copii în grupă?","<p>Apasă oricând pe numele de sus (de ex. "+B("PV Pîrvu Vlad")+") → "+B("Schimbă")+" și alege altul.</p>"));
-  h += sec("acasa","🏠","Ce vezi pe Acasă",
-      step("•","Evenimente următoare","<p>Ce urmează la grupă, în câte zile și cât e gata din pregătiri. Apasă pe un eveniment ca să vezi lista lui.</p>")
-    + step("•","Anul școlar","<p>Dacă suntem în vacanță, când revin copiii la grădiniță și când e următoarea vacanță. La „Tot calendarul” găsești tot anul.</p>")
-    + step("•","Ce ai tu de făcut","<p>Doar lucrurile tale: ce ai preluat, ce n-ai bifat încă și strângerile de bani la care n-ai trimis încă.</p>")
-    + step("•","Unde e nevoie de ajutor","<p>Lucruri de care nu se ocupă încă nimeni. Apasă pe unul ca să ajungi direct la el.</p>"));
-  h += sec("preiau","🙋","Preiau ceva (de ex. baloți, reflectoare, Moș Crăciun)",
-      step(1,"Găsește itemul","<p>În tabul "+B("Evenimente")+" sau "+B("Necesar")+". Itemul are eticheta "+B("Cine se ocupă","chip")+".</p>")
-    + step(2,"Scrie câte bucăți iei","<p>Dacă scrie „4 bucăți” și tu aduci 2, scrie <b>2</b> în căsuța cu număr. La „Detalii” poți scrie de unde le iei (opțional).</p>")
-    + step(3,"Apasă Preiau","<p>Apasă "+B("Preiau","blue")+". Numele copilului tău apare pe card, iar ceilalți văd „Mai trebuie 2”.</p>")
-    + step(4,"Te-ai răzgândit?","<p>Apasă "+B("✕","x")+" de lângă numele tău. Merge doar de pe telefonul de pe care ai preluat.</p>"));
-  h += sec("inscriu","🥧","Aduc ceva (decor, plăcinte, murături…)",
-      step(1,"Scrie ce aduci","<p>La itemii cu eticheta "+B("Se înscrie oricine","chip")+", scrie în căsuță ce aduci, de exemplu „2 ghivece cu crizanteme”.</p>")
-    + step(2,"Apasă Mă înscriu","<p>Apasă "+B("Mă înscriu","blue")+". Te poți înscrie de mai multe ori, dacă aduci mai multe lucruri.</p>"));
-  h += sec("bifez","✅","Bifez pentru copilul meu (coajă de portocală, poză, cadou)",
-      step("•","E lista ta de pregătit","<p>Itemii cu eticheta "+B("Fiecare copil","chip")+" sunt ca un checklist: fiecare părinte pregătește lucrul acela pentru copilul lui (de ex. coaja de portocală, poza în ramă, cadoul etichetat). Îi găsești pe toți și la „Ce ai tu de făcut”, pe Acasă.</p>")
-    + step(1,"Bifează când e gata","<p>Când ai pregătit lucrul pentru copilul tău, apasă "+B("✓ Bifează pentru Vlad","tick")+". Se face verde și dispare din „Ce ai tu de făcut”. La „Vezi toți copiii” se vede cine e gata.</p>")
-    + step(2,"Ai bifat din greșeală?","<p>Apasă încă o dată și se debifează.</p>"));
-  h += sec("luna","🗓️","Iau o lună (hârtie igienică umedă)",
-      step(1,"Alege o lună liberă","<p>Lângă o lună care scrie „liber”, apasă "+B("Iau eu")+". Luna e a ta și apare la „Ce ai tu de făcut”.</p>"));
-  h += sec("status","🏁","Cum știu în ce stadiu e un lucru",
-      step("•","Statusul de pe card","<p>Sus, pe fiecare card, scrie "+B("De făcut","st-todo")+", "+B("În lucru","st-prog")+" sau "+B("Rezolvat","st-done")+". Statusul îl schimbă doar administratoarea. Când un lucru e rezolvat, cardul se face verde și trece la finalul listei.</p>")
-    + step("•","Ai terminat ce ai preluat?","<p>Scrie un comentariu pe card (de ex. „Am adus baloții”) sau anunță administratoarea, iar ea marchează itemul ca rezolvat.</p>"));
-  h += sec("comentarii","💬","Comentarii, întrebări, linkuri",
-      step(1,"Scrie un comentariu","<p>Sub fiecare card apasă "+B("💬 Comentează")+", scrie și apasă "+B("Trimite","dark")+". E locul bun pentru linkuri, oferte sau întrebări.</p>")
-    + step(2,"Răspunde și votează","<p>Sub orice comentariu poți apăsa "+B("↩ Răspunde")+" sau poți vota cu "+B("👍")+" / "+B("👎")+" (de exemplu, la două oferte de Moș).</p>"));
-  h += sec("bani","💰","Bugetul grupei",
-      step("•","Vezi tot, la vedere","<p>În tabul "+B("Bugetul grupei")+" vezi câți bani sunt în contul clasei și cash la educatoare, plus fiecare încasare și cheltuială.</p>")
-    + step("•","Strângeri de bani","<p>La fiecare strângere vezi suma pe copil și dacă a ajuns contribuția copilului tău. Bifele le pune doar administratoarea, după ce vede banii în cont.</p>")
-    + step("•","Cum trimiți banii","<p>Detaliile de plată sunt în anunțul de pe Acasă sau în grupul părinților. Scrie la plată numele copilului.</p>"));
-  h += sec("optionale","⭐","De plată: opționale (dans, engleză, dezvoltare personală), caiete",
-      step("•","Prezența și suma","<p>În tabul "+B("De plată")+" alegi opționalul și luna. Fiecare bulină verde e o ședință la care a fost copilul. Suma = ședințe × prețul pe ședință.</p>")
-    + step("•","Cât ai de plată","<p>Sus apare direct pentru copilul tău, de ex. „Vlad: 2 din 6 ședințe · 20 lei de plată”. Apare și pe Acasă, la „Ce ai tu de făcut”. După ce plătești, administratoarea marchează „Plătit” și trece la „Gata”.</p>"));
-  h += sec("zile","🎂","Zile de naștere",
-      step("•","Completează ziua copilului","<p>Pe "+B("Acasă")+" apare un card „Ziua lui …”. Alegi data nașterii și apeși "+B("Salvează")+". O poți schimba oricând apăsând pe numele de sus.</p>")
-    + step("•","Pe Acasă","<p>Cu 2 săptămâni înainte, ziua copilului apare pe Acasă. În ziua respectivă apare mesajul „La mulți ani!” și toți primesc o notificare.</p>")
-    + step("•","Calendarul","<p>În tabul "+B("Zile de naștere")+" vezi următoarele 12 luni, începând cu luna curentă, cu zilele tuturor copiilor și ale doamnelor.</p>"));
-  h += sec("telefon","📱","Pune portalul pe ecranul telefonului și pornește notificările",
-      step("iPhone","Safari","<p>Deschide portalul în Safari → apasă "+B("Partajează ⬆︎")+" → "+B("Adaugă pe ecranul principal")+". Deschide apoi Fluturașii de pe ecranul telefonului: doar așa merg notificările pe iPhone.</p>")
-    + step("Android","Chrome","<p>Deschide portalul în Chrome → apasă "+B("⋮")+" sus în dreapta → "+B("Adaugă pe ecranul de pornire")+" (sau "+B("Instalează aplicația")+").</p>")
-    + step("🔔","Notificări","<p>La prima vizită portalul te întreabă dacă pornești notificările: apasă "+B("Pornește notificările")+" și apoi "+B("Permite")+". Primești o notificare când apare ceva nou de ales sau de plătit și în ziua de naștere a unui copil, doar între 8:00 și 21:00. Ca să le oprești sau să alegi ce primești, apasă pe numele de sus.</p>"));
-  h += sec("probleme","🛟","Dacă ceva nu merge",
-      step("?","Nu văd ce a bifat altcineva","<p>De obicei apare singur în câteva secunde. Dacă nu, trage pagina în jos ca să se reîncarce.</p>")
-    + step("?","Pe alt telefon îmi cere iar întrebarea","<p>E normal: întrebarea și alegerea copilului se țin minte pe fiecare telefon separat.</p>")
-    + step("?","Nu pot șterge ce am pus","<p>Poți retrage doar ce ai adăugat de pe același telefon. Pentru altceva, scrie-i administratoarei.</p>")
-    + step("?","Apare „Nu s-a salvat”","<p>Verifică internetul și încearcă din nou. Dacă tot nu merge, anunță administratoarea.</p>"));
+  const step = (sid, i, st) => '<li class="gstep"><span class="gnum">'+esc(st[0])+'</span><div class="gbody"><h3>'+TX("ghid."+sid+"."+(i+1)+".titlu", st[1])+'</h3>'+TX("ghid."+sid+"."+(i+1)+".text", st[2], "p")+'</div></li>';
+  let h = '<section><div class="sec-head"><div><h2>'+TX("ghid.titlu","Cum folosești portalul")+'</h2><div class="sub">'+TX("ghid.sub","Ghid pentru părinți. Durează 2 minute.")+'</div></div><button class="btn small" data-a="tab" data-k="acasa">Înapoi la Acasă</button></div>'
+    + '<nav class="gtoc" aria-label="Cuprins">'+GUIDE_TOC.map(([k,l]) => '<button type="button" class="evchip" data-a="goG" data-id="'+k+'">'+TX("ghid.cuprins."+k, l)+'</button>').join("")+'</nav></section>';
+  for (const g of GUIDE) h += '<section class="gsec" id="g-'+g.id+'"><h2><span aria-hidden="true">'+g.e+'</span> '+TX("ghid."+g.id+".titlu", g.t)+' '+linkBtn("ghid/"+g.id)+'</h2><ol class="gsteps">'+g.steps.map((st, i) => step(g.id, i, st)).join("")+'</ol></section>';
   return h;
 }
 function viewHome(){
   let h = "";
-  if (LS.get("fl_ghid") !== "1") h += '<div class="notice guide-hint"><span class="gh-ico" aria-hidden="true">👋</span><div style="flex:1;min-width:0"><div class="who">Prima dată aici?</div><p>Vezi în 2 minute cum folosești portalul: cum preiei ceva, cum bifezi, cum comentezi.</p><div class="row" style="margin-top:10px"><button class="btn small primary" data-a="tab" data-k="ghid">Deschide ghidul</button><button class="btn small ghost" data-a="ghidOk">Am înțeles</button></div></div></div>';
+  if (LS.get("fl_ghid") !== "1") h += '<div class="notice guide-hint"><span class="gh-ico" aria-hidden="true">👋</span><div style="flex:1;min-width:0"><div class="who">'+TX("acasa.ghid.titlu","Prima dată aici?")+'</div><p>'+TX("acasa.ghid.text","Vezi în 2 minute cum folosești portalul: cum preiei ceva, cum bifezi, cum comentezi.")+'</p><div class="row" style="margin-top:10px"><button class="btn small primary" data-a="tab" data-k="ghid">Deschide ghidul</button><button class="btn small ghost" data-a="ghidOk">Am înțeles</button></div></div></div>';
   h += bdHome();
-  if (D.setari.anunt) h += '<div class="notice">'+ICON.bell+'<div><div class="who">Anunț</div><p>'+linkify(D.setari.anunt)+'</p></div></div>';
+  if (D.setari.anunt) h += '<div class="notice">'+ICON.bell+'<div><div class="who">'+TX("acasa.anunt","Anunț")+'</div><p>'+linkify(D.setari.anunt)+'</p></div></div>';
   const t = todayStr();
   const up = D.sectiuni.filter(s => isEvent(s) && !arh(s) && s.data && s.data >= t).sort((a,b)=>a.data.localeCompare(b.data));
-  h += '<section><div class="sec-head"><div><h2>Evenimente următoare</h2><div class="sub">Ce urmează la grupă și cât e gata din pregătiri.</div></div></div>';
-  if (!up.length) h += '<div class="empty">Nu e niciun eveniment programat.</div>';
+  h += '<section><div class="sec-head"><div><h2>'+TX("acasa.evenimente.titlu","Evenimente următoare")+'</h2><div class="sub">'+TX("acasa.evenimente.sub","Ce urmează la grupă și cât e gata din pregătiri.")+'</div></div></div>';
+  if (!up.length) h += '<div class="empty">'+TX("evenimente.gol","Nu e niciun eveniment programat.")+'</div>';
   else h += '<div class="timeline">' + up.map(s => {
     const its = itemsOf(s.id).filter(i=>i.tip!=="info"); const tot = its.length; const done = its.filter(i=>i.status==="done").length;
     const pct = tot ? Math.round(its.reduce((a,i)=>a+progressOf(i),0)/tot*100) : 0;
@@ -1239,17 +1375,17 @@ function viewHome(){
   h += calendarCard();
   const mineH = myTodo(); const help = needsHelp();
   h += '<div class="two">';
-  h += '<section><div class="sec-head"><div><h2>'+(kid(ui.me) ? 'Ce ai tu de făcut' : 'Ce ai de făcut')+'</h2><div class="sub">'+(kid(ui.me) ? 'Pentru '+esc(kidName(ui.me)) : 'Alege-ți copilul ca să vezi lista ta.')+'</div></div></div>';
+  h += '<section><div class="sec-head"><div><h2>'+(kid(ui.me) ? TX("acasa.todo.titlu","Ce ai tu de făcut") : TX("acasa.todo.titlu0","Ce ai de făcut"))+'</h2><div class="sub">'+(kid(ui.me) ? 'Pentru '+esc(kidName(ui.me)) : 'Alege-ți copilul ca să vezi lista ta.')+'</div></div></div>';
   if (!kid(ui.me)) h += '<button class="btn wingb" data-a="pick">'+ICON.user+'Alege copilul tău</button>';
   else {
     const pay = myPay();
     if (pay.rows.length) h += '<div class="todo-grp"><div class="eyebrow pay-h">💳 De plătit<span class="num">'+esc(lei(pay.total))+'</span></div><div class="quick">'+pay.rows.join("")+'</div></div>';
-    h += '<div class="todo-grp"><div class="eyebrow">📋 De pregătit și de adus</div>'+(mineH.length ? '<div class="quick">'+mineH.join("")+'</div>' : '<div class="empty">Nimic deschis pentru voi acum. Mulțumim!</div>')+'</div>';
+    h += '<div class="todo-grp"><div class="eyebrow">'+TX("acasa.todo.pregatit","📋 De pregătit și de adus")+'</div>'+(mineH.length ? '<div class="quick">'+mineH.join("")+'</div>' : '<div class="empty">'+TX("acasa.todo.gol","Nimic deschis pentru voi acum. Mulțumim!")+'</div>')+'</div>';
   }
   if (kid(ui.me)) { const dn = myDone(); if (dn.length) h += '<div class="done-list"><div class="eyebrow done-h">✓ Gata ('+dn.length+')</div><div class="quick">'+dn.join("")+'</div></div>'; }
   h += '</section>';
-  h += '<section><div class="sec-head"><div><h2>Unde e nevoie de ajutor</h2><div class="sub">Lucruri care nu au încă pe cineva.</div></div></div>';
-  h += help.length ? '<div class="quick">'+help.join("")+'</div>' : '<div class="empty">Totul are pe cineva care se ocupă.</div>';
+  h += '<section><div class="sec-head"><div><h2>'+TX("acasa.ajutor.titlu","Unde e nevoie de ajutor")+'</h2><div class="sub">'+TX("acasa.ajutor.sub","Lucruri care nu au încă pe cineva.")+'</div></div></div>';
+  h += help.length ? '<div class="quick">'+help.join("")+'</div>' : '<div class="empty">'+TX("acasa.ajutor.gol","Totul are pe cineva care se ocupă.")+'</div>';
   h += '</section></div>';
   return h;
 }
@@ -1267,15 +1403,20 @@ function termenInfo(it){
   return { label, hot, short: words || dates };
 }
 const termenChip = it => { const ti = termenInfo(it); return ti ? '<span class="chip due'+(ti.hot?' hot':'')+'" title="Când trebuie gata">📅 '+esc(ti.label)+'</span>' : ''; };
-function qrow(it, sub, color){
+const canFacut = s => cap.canWrite && (cap.admin || (!!s && s.copilId === ui.me));
+function facutBtn(s){
+  if (!s) return '';
+  if (s.facut_la) return canFacut(s) ? '<button type="button" class="facut on" data-a="facut" data-id="'+esc(s.id)+'" data-on="0" title="Apasă ca să anulezi">'+ICON.check+'Făcut</button>' : '<span class="facut on">'+ICON.check+'Făcut</span>';
+  return canFacut(s) ? '<button type="button" class="facut" data-a="facut" data-id="'+esc(s.id)+'" data-on="1">'+ICON.check+'Am făcut</button>' : '';
+}
+function qrow(it, sub, color, extra){
   const s = sec(it.sectiune);
-  return '<div role="button" tabindex="0" class="qrow" data-a="goItem" data-id="'+esc(it.id)+'"><span class="dot" style="background:var(--'+(color||"wing")+')"></span><span class="t"><b>'+esc(it.titlu)+'</b><span class="qsub">'+termenChip(it)+secTag(s)+(sub ? '<small>'+esc(sub)+'</small>' : '')+'</span></span></div>';
+  return '<div role="button" tabindex="0" class="qrow" data-a="goItem" data-id="'+esc(it.id)+'"><span class="dot" style="background:var(--'+(color||"wing")+')"></span><span class="t"><b>'+esc(it.titlu)+'</b><span class="qsub">'+termenChip(it)+secTag(s)+(sub ? '<small>'+esc(sub)+'</small>' : '')+'</span></span>'+(extra||'')+'</div>';
 }
 function allItems(){ return D.itemi.filter(i => !arh(i) && !arh(sec(i.sectiune))).map(itemFull).sort((a,b)=>{ const sa = sec(a.sectiune)||{}, sb = sec(b.sectiune)||{}; return String(sa.data||"9999").localeCompare(String(sb.data||"9999")) || (a.ordine||0)-(b.ordine||0); }); }
 function sectionUpcoming(it){ const s = sec(it.sectiune); return !s || !s.data || s.data >= todayStr(); }
 // la hrană banii merg direct la grădiniță: bifa părintelui e suficientă, fără confirmare
-const DIRECT_OPT = ["hrana"];
-const isDirect = p => { const l = D.optional_luni.find(x => x.id === p.lunaId); return !!l && DIRECT_OPT.includes(l.optionalId); };
+const isDirect = p => { const l = D.optional_luni.find(x => x.id === p.lunaId); return !!l && !!(D.optionale.find(o => o.id === l.optionalId) || {}).direct; };
 const optOk = p => !!(p.platit || p.platit_declarat), optDecl = p => !p.platit && !!p.platit_declarat && !isDirect(p);
 const optConf = p => !!(p.platit || (p.platit_declarat && isDirect(p)));
 const declared = (cid, k) => D.plati_declarate.some(x => x.colectaId === cid && x.copilId === k);
@@ -1288,7 +1429,7 @@ const cmdSave = (r, patch) => r.virtual ? sb.from("comenzi_copii").upsert(Object
 const cmdProds = C => Array.isArray(C.produse) ? C.produse : [];
 const cmdSum = (C, r) => r ? cmdProds(C).filter(p => (Array.isArray(r.produse) ? r.produse : []).includes(p.id)).reduce((a,p)=>a+(+p.pret||0),0) : 0;
 const cmdOk = r => !!(r && (r.platit || r.platit_declarat)), cmdDecl = r => !!(r && !r.platit && r.platit_declarat);
-const cmdVis = c => !(c.obligatoriu && /^gpt-/.test(c.id)); // ChatGPT ascuns pentru toți până la reactivare; celelalte plăți obligatorii se văd
+const cmdVis = c => !c.ascuns; // „Ascunsă” din formularul plății
 const openCmds = () => D.comenzi.filter(c => cmdVis(c) && !c.inchisa && !arh(c)).sort((a,b)=>(a.ordine||0)-(b.ordine||0));
 function cmdPayBtn(C, r, k){
   const sum = cmdSum(C, r); if (!sum) return '<span class="opaid none">—</span>';
@@ -1301,7 +1442,7 @@ function viewComanda(C){
   const answered = recs.filter(x => x.r && x.r.raspuns).length;
   const total = recs.reduce((a,x)=>a+cmdSum(C,x.r),0), paid = recs.filter(x => cap.admin ? x.r && x.r.platit : cmdOk(x.r)).reduce((a,x)=>a+cmdSum(C,x.r),0);
   const editable = k => !C.inchisa && !arh(C) && (cap.admin || k === ui.me);
-  let h = '</section><section class="optmonth" id="cmd-'+esc(C.id)+'"><div class="sec-head"><div><h2>'+esc(C.icon||"📚")+' '+esc(C.titlu)+'</h2><div class="sub sdesc">'+linkify(C.descriere||"")+'</div></div><div class="row">'+linkBtn("deplata/"+C.id)+(cap.admin && hasArhCol("comenzi") ? '<button class="btn small ghost" data-a="arh" data-t="comenzi" data-id="'+esc(C.id)+'" data-on="'+(arh(C)?0:1)+'">'+(arh(C) ? 'Scoate din arhivă' : '🗂️ Arhivează')+'</button>' : '')+'</div></div>'
+  let h = '</section><section class="optmonth" id="cmd-'+esc(C.id)+'"><div class="sec-head"><div><h2>'+esc(C.icon||"📚")+' '+esc(C.titlu)+'</h2><div class="sub sdesc">'+linkify(C.descriere||"")+'</div></div><div class="row">'+linkBtn("deplata/"+C.id)+(cap.admin ? '<button class="btn small ghost" data-a="cmdEdit" data-id="'+esc(C.id)+'">'+ICON.pen+'Editează</button>' : '')+(cap.admin && hasArhCol("comenzi") ? '<button class="btn small ghost" data-a="arh" data-t="comenzi" data-id="'+esc(C.id)+'" data-on="'+(arh(C)?0:1)+'">'+(arh(C) ? 'Scoate din arhivă' : '🗂️ Arhivează')+'</button>' : '')+'</div></div>'
     + (arh(C) ? '<div class="arh-note">🗂️ Arhivat'+(C.arhivat_la ? ' pe '+esc(fmtShort(C.arhivat_la)) : '')+' · nu se mai pot face alegeri</div>' : '');
   if (C.obligatoriu) {
     const mine = isChild(ui.me) ? recs.find(x => x.k.id === ui.me) : null; const pret = prods.reduce((a,p)=>a+(+p.pret||0),0);
@@ -1358,12 +1499,13 @@ function myTodo(){
     if (it.tip === "info" || it.status === "done" || !sectionUpcoming(it)) continue;
     const s = sec(it.sectiune), where = s ? s.titlu + (s.data ? " · "+fmtShort(s.data) : "") : "";
     if (it.tip === "single" || it.tip === "multi") {
-      const mine = signups(it.id).filter(x=>x.copilId===me);
-      if (mine.length) { const q = mine.reduce((a,x)=>a+(+x.bucati||0),0); const notes = mine.map(x=>x.nota).filter(Boolean).join(", "); out.push(qrow(it, [q ? "Preiei "+q+" buc." : (it.tip==="single" ? "Te ocupi tu" : "Te-ai înscris"), notes].filter(Boolean).join(" · "), "lilac")); }
+      const mine = signups(it.id).filter(x=>x.copilId===me && !x.facut_la);
+      if (mine.length) { const q = mine.reduce((a,x)=>a+(+x.bucati||0),0); const notes = mine.map(x=>x.nota).filter(Boolean).join(", "); out.push(qrow(it, [q ? "Preiei "+q+" buc." : (it.tip==="single" ? "Te ocupi tu" : "Te-ai înscris"), notes].filter(Boolean).join(" · "), "lilac", mine.length === 1 ? facutBtn(mine[0]) : '')); }
+      else if (signups(it.id).some(x=>x.copilId===me)) continue;
       else if (it.responsabil === me) out.push(qrow(it, "Te ocupi tu", "lilac"));
     }
     else if (it.tip === "fiecare" && isChild(me) && !signups(it.id).some(x=>x.copilId===me)) out.push(qrow(it, "Nebifat încă", "wing"));
-    else if (it.tip === "rotatie") { const slot = signups(it.id).find(x => x.copilId===me && mk.has(x.cheie)); if (slot) { const [y,m] = slot.cheie.split("-"); out.push(qrow(it, "Luna ta: "+LUNI[+m-1]+" "+y, "lilac")); } }
+    else if (it.tip === "rotatie") { const slot = signups(it.id).find(x => x.copilId===me && mk.has(x.cheie) && !x.facut_la); if (slot) { const [y,m] = slot.cheie.split("-"); out.push(qrow(it, "Luna ta: "+LUNI[+m-1]+" "+y, "lilac", facutBtn(slot))); } }
   }
   if (isChild(me)) for (const C of openCmds().filter(c => !c.obligatoriu)) { const r = cmdRec(C.id, me); if (!r || !r.raspuns) out.unshift('<div role="button" tabindex="0" class="qrow" data-a="goCmd" data-id="'+esc(C.id)+'"><span class="dot" style="background:var(--lilac)"></span><span class="t"><b>'+esc((C.icon||"📚")+" "+C.titlu)+'</b><span class="qsub"><span class="tag">Opțional</span><small>Alege ce iei (sau „Nu luăm”)</small></span></span></div>'); }
   return out;
@@ -1375,7 +1517,8 @@ function myDone(){
     if (!sectionUpcoming(it) || it.tip === "info") continue;
     const s = sec(it.sectiune);
     if (it.tip === "fiecare" && signups(it.id).some(x=>x.copilId===me)) out.push(row('data-a="goItem" data-id="'+esc(it.id)+'"', it.titlu, secTag(s), it.bifa || "Bifat"));
-    else if ((it.tip === "single" || it.tip === "multi") && it.status === "done" && signups(it.id).some(x=>x.copilId===me)) out.push(row('data-a="goItem" data-id="'+esc(it.id)+'"', it.titlu, secTag(s), "Rezolvat"));
+    else if ((it.tip === "single" || it.tip === "multi") && signups(it.id).some(x=>x.copilId===me) && (it.status === "done" || signups(it.id).filter(x=>x.copilId===me).every(x=>x.facut_la))) out.push(row('data-a="goItem" data-id="'+esc(it.id)+'"', it.titlu, secTag(s), it.status === "done" ? "Rezolvat" : "Făcut", it.status === "done" ? '' : facutBtn(signups(it.id).filter(x=>x.copilId===me).slice(-1)[0])));
+    else if (it.tip === "rotatie") { const mk2 = new Set(schoolMonths().slice(0,2).map(m=>m.key)); for (const sl of signups(it.id).filter(x => x.copilId===me && x.facut_la && mk2.has(x.cheie))) { const [y,m] = sl.cheie.split("-"); out.push(row('data-a="goItem" data-id="'+esc(it.id)+'"', it.titlu, secTag(s), "Făcut · "+LUNI[+m-1]+" "+y, facutBtn(sl))); } }
   }
   if (isChild(me)) for (const o of optDues(me).filter(x => optOk(x.p) && x.latest)) out.push(row('data-a="goOpt" data-id="'+esc(o.l.id)+'"', o.o.nume+' · '+lunaLabel(o.l.luna), '<span class="tag">Opțional</span>', "Plătit · "+lei(o.sum), optDecl(o.p) ? payBtn("optional", o.l.id, false) : ''));
   if (isChild(me)) for (const c of D.colecte.filter(c => !c.inchisa)) {
@@ -1403,7 +1546,7 @@ function needsHelp(){
 function viewNecesar(){
   const secs = D.sectiuni.filter(s => !isEvent(s)).sort((a,b)=>(a.ordine||0)-(b.ordine||0));
   const act = secs.filter(s => !arh(s)), old = secs.filter(arh);
-  let h = act.length ? act.map(secBlock).join("") : '<div class="empty">Nu e nimic pe lista de necesar.</div>';
+  let h = act.length ? act.map(secBlock).join("") : '<div class="empty">'+TX("necesar.gol","Nu e nimic pe lista de necesar.")+'</div>';
   if (old.length) h += '<details class="done-group arh-group"><summary>🗂️ Arhivă ('+old.length+' '+(old.length===1?'secțiune':'secțiuni')+')</summary><div class="view" style="margin-top:14px">'+old.map(secBlock).join("")+'</div></details>';
   return h;
 }
@@ -1428,7 +1571,7 @@ function viewEvents(){
   const all = up.concat(nodate, recent, past);
   const isPast = s => (s.data && s.data < todayStr()) || arh(s);
   const cur = up.concat(nodate, recent);
-  let body = cur.length ? cur.map(secBlock).join("") : '<div class="empty">Nu e niciun eveniment programat.</div>';
+  let body = cur.length ? cur.map(secBlock).join("") : '<div class="empty">'+TX("evenimente.gol","Nu e niciun eveniment programat.")+'</div>';
   if (past.length) body += '<details class="done-group arh-group"><summary>🗂️ Evenimente trecute ('+past.length+')</summary><div class="view" style="margin-top:14px">'+past.map(secBlock).join("")+'</div></details>';
   if (!all.length) return body;
   if (EVNAV === "wrap") return '<nav class="evnav wrap" aria-label="Alege evenimentul">'+all.map(s => '<button type="button" class="evchip'+(isPast(s)?' past':'')+'" data-a="goSec" data-id="'+esc(s.id)+'">'+evLabel(s)+'</button>').join("")+'</nav>' + body;
@@ -1454,7 +1597,7 @@ function secBlock(s){
     + '</div>';
   if (secArh) h += '<div class="arh-note">🗂️ Arhivat'+(s.arhivat_la ? ' pe '+esc(fmtShort(s.arhivat_la)) : '')+' · doar de citit</div>';
   else if (isPastEv) h += '<div class="arh-note past">Eveniment trecut</div>';
-  if (!its.length) h += '<div class="empty">Nu sunt itemi aici încă.</div>';
+  if (!its.length) h += '<div class="empty">'+TX("sectiune.gol","Nu sunt itemi aici încă.")+'</div>';
   if (its.length) h += '<div class="grid">'+open.concat(done).map(itemCard).join("")+'</div>';
   if (olds.length) { cap.canWrite = false; h += '<details class="done-group arh-group"><summary>🗂️ Arhivate ('+olds.length+')</summary><div class="grid" style="margin-top:10px">'+olds.map(itemCard).join("")+'</div></details>'; }
   cap.canWrite = prevW;
@@ -1485,7 +1628,7 @@ function voteBtns(kind, id, v, w){
 function signupBlock(s, it, w){
   const sub = [ (+s.bucati>0 ? s.bucati+" buc." : ""), s.nota ].filter(Boolean).join(" · ");
   const act = isMine(s)&&w ? '<button class="x" title="Retrage" aria-label="Retrage" data-a="unsign" data-id="'+esc(s.id)+'">'+ICON.x+'</button>' : '';
-  let h = '<div class="person">'+avHtml(s.copilId)+'<span class="t"><b>'+esc(kidName(s.copilId))+'</b>'+(sub?' <span>· '+linkify(sub)+'</span>':'')+'</span>'+act+'</div>';
+  let h = '<div class="person'+(s.facut_la?' done':'')+'">'+avHtml(s.copilId)+'<span class="t"><b>'+esc(kidName(s.copilId))+'</b>'+(sub?' <span>· '+linkify(sub)+'</span>':'')+'</span>'+(it.status === "done" && !s.facut_la ? '' : facutBtn(s))+act+'</div>';
   if (!s.nota || !ui.loaded.has("voturi_insc")) return h;
   const reps = D.comentarii.filter(c => c.inscriereId === s.id).sort((a,b)=>String(a.creat).localeCompare(String(b.creat)));
   h += '<div class="cacts sacts">'+voteBtns("i", s.id, votesOfInsc(s.id), w)+(w ? '<button type="button" class="vote" data-a="replyI" data-id="'+esc(s.id)+'">'+ICON.reply+'Răspunde'+(reps.length ? ' ('+reps.length+')' : '')+'</button>' : '')+'</div>'+whoLine(votesOfInsc(s.id), 'i:'+s.id);
@@ -1512,7 +1655,7 @@ function replyForm(c, it){
 function itemCard(it){
   const w = cap.canWrite;
   const isInfo = it.tip === "info";
-  let meta = termenChip(it) + (isInfo ? '' : '<span class="chip plain">'+TIP[it.tip||"single"]+'</span>');
+  let meta = termenChip(it) + (isInfo ? '' : '<span class="chip plain">'+TX("tip."+(it.tip||"single"), TIP[it.tip||"single"])+'</span>');
   if (it.cantitate) meta += '<span class="chip lilac">'+esc(it.cantitate)+'</span>';
   if (it.cost) meta += '<span class="chip wing">'+esc(it.cost)+'</span>';
   const statusSel = '<label class="sr" for="st-'+esc(it.id)+'">Status</label><select id="st-'+esc(it.id)+'" class="status '+esc(it.status)+'" data-a="status" data-id="'+esc(it.id)+'"'+(w && cap.admin?'':' disabled title="Statusul îl schimbă administratoarea"')+'>'
@@ -1546,7 +1689,7 @@ function itemCard(it){
     const su = signups(it.id); const months = schoolMonths(); const cur = months[0] && months[0].key;
     body = '<div class="months">'+months.map(m => { const s = su.find(x=>x.cheie===m.key); const lbl = m.label + (m.y !== new Date().getFullYear() ? " "+m.y : "");
       return '<div class="month'+(m.key===cur?' now':'')+'"><span class="mn">'+esc(lbl)+'</span>'
-        + (s ? '<span class="who">'+esc(kidName(s.copilId))+'</span>'+(isMine(s)&&w?'<button class="x" aria-label="Eliberează luna" title="Eliberează luna" data-a="unsign" data-id="'+esc(s.id)+'">'+ICON.x+'</button>':'')
+        + (s ? '<span class="who">'+esc(kidName(s.copilId))+'</span>'+facutBtn(s)+(isMine(s)&&w&&!s.facut_la?'<button class="x" aria-label="Eliberează luna" title="Eliberează luna" data-a="unsign" data-id="'+esc(s.id)+'">'+ICON.x+'</button>':'')
              : '<span class="who free">liber</span>'+(w && kid(ui.me) ? '<button class="btn small" data-a="slot" data-id="'+esc(it.id)+'" data-key="'+m.key+'">Iau eu</button>' : ''))
         + '</div>'; }).join("")+'</div>';
     if (w && !kid(ui.me)) body += '<div><button class="btn small" data-a="pick">Alege copilul ca să iei o lună</button></div>';
@@ -1580,7 +1723,7 @@ function collStats(c){
 function viewStrangeri(){
   const all = D.colecte.slice().sort((a,b)=>String(b.data).localeCompare(String(a.data)));
   const open = all.filter(c => !c.inchisa), closed = all.filter(c => c.inchisa);
-  let h = '<section><div class="sec-head"><div><h2>Strângeri de bani</h2><div class="sub">Suma pe copil și cine a trimis deja.</div></div>'
+  let h = '<section><div class="sec-head"><div><h2>'+TX("buget.strangeri.titlu","Strângeri de bani")+'</h2><div class="sub">'+TX("buget.strangeri.sub","Suma pe copil și cine a trimis deja.")+'</div></div>'
     + (cap.admin ? '<div class="row"><button class="btn small primary" data-a="collEdit">'+ICON.plus+'Strângere nouă</button></div>' : '') + '</div>';
   if (!all.length) h += '<div class="empty">'+(cap.admin ? 'Nicio strângere încă. Apasă „Strângere nouă”, alege suma pe copil, apoi bifează copiii pe măsură ce trimit banii.' : 'Nu e nicio strângere de bani acum.')+'</div>';
   h += '<div class="coll">' + open.map(collCard).join("") + '</div>';
@@ -1632,20 +1775,20 @@ function optDues(me){
 }
 function viewOptionale(){
   const opts = D.optionale.slice().sort((a,b)=>(a.ordine||0)-(b.ordine||0));
-  let h = '<section><div class="sec-head"><div><h2>De plată</h2><div class="sub">Prezența de fiecare lună și cât e de plată, după fișa de la grădiniță.</div></div>'
-    + (cap.admin ? '<div class="row"><button class="btn small primary" data-a="optImport">'+ICON.plus+'Încarcă prezența (Excel)</button></div>' : '') + '</div>';
+  let h = '<section><div class="sec-head"><div><h2>'+TX("deplata.titlu","De plată")+'</h2><div class="sub">'+TX("deplata.sub","Prezența de fiecare lună și cât e de plată, după fișa de la grădiniță.")+'</div></div>'
+    + (cap.admin ? '<div class="row"><button class="btn small primary" data-a="optImport">'+ICON.plus+'Încarcă prezența (Excel)</button><button class="btn small" data-a="lunaEdit">'+ICON.plus+'Lună nouă</button><button class="btn small" data-a="optEdit">'+ICON.plus+'Opțional</button><button class="btn small" data-a="cmdEdit">'+ICON.plus+'Plată cu produse</button></div>' : '') + '</div>';
   const oc = D.colecte.filter(c => c.loc === "optionale" && !c.inchisa).sort((a,b)=>String(a.data).localeCompare(String(b.data)));
-  const cm = D.comenzi.filter(cmdVis).sort((a,b)=>(arh(a)-arh(b)) || (a.ordine||0)-(b.ordine||0));
-  if (!opts.length && !oc.length && !cm.length) return h + '<div class="empty">Nu sunt opționale încă.</div></section>';
+  const cm = D.comenzi.filter(c => cmdVis(c) || cap.admin).sort((a,b)=>(arh(a)-arh(b)) || (a.ordine||0)-(b.ordine||0));
+  if (!opts.length && !oc.length && !cm.length) return h + '<div class="empty">'+TX("deplata.gol","Nu sunt opționale încă.")+'</div></section>';
   const sel = opts.concat(oc, cm).some(o=>o.id===ui.opt) ? ui.opt : (opts[0] || cm[0] || oc[0]).id; const O = opts.find(o=>o.id===sel);
-  const cmdTab = c => '<button type="button" role="tab" class="segb'+(c.id===sel?' on':'')+(arh(c)?' arh-tab':'')+'" aria-selected="'+(c.id===sel)+'" data-a="optSel" data-id="'+esc(c.id)+'"><span aria-hidden="true">'+esc(c.icon||"📚")+'</span> '+esc(c.titlu)+'</button>';
+  const cmdTab = c => '<button type="button" role="tab" class="segb'+(c.id===sel?' on':'')+(arh(c)?' arh-tab':'')+'" aria-selected="'+(c.id===sel)+'" data-a="optSel" data-id="'+esc(c.id)+'"><span aria-hidden="true">'+esc(c.icon||"📚")+'</span> '+esc(c.titlu)+(c.ascuns ? ' <small>(ascunsă)</small>' : '')+'</button>';
   const collTab = c => '<button type="button" role="tab" class="segb'+(c.id===sel?' on':'')+'" aria-selected="'+(c.id===sel)+'" data-a="optSel" data-id="'+esc(c.id)+'"><span aria-hidden="true">📚</span> '+esc(String(c.titlu).split(" (")[0])+'</button>';
   h += '<div class="seg" role="tablist">'+opts.map(o => { const n = D.optional_luni.filter(l=>l.optionalId===o.id).length; return '<button type="button" role="tab" class="segb'+(o.id===sel?' on':'')+'" aria-selected="'+(o.id===sel)+'" data-a="optSel" data-id="'+esc(o.id)+'"><span aria-hidden="true">'+esc(o.icon||"")+'</span> '+esc(o.nume)+(n?'':' <small>(fără date)</small>')+'</button>'; }).join("")+cm.map(cmdTab).join("")+oc.map(collTab).join("")+'</div>';
   const CM = cm.find(c => c.id === sel); if (CM) { if (ui.tab === "optionale" && /^#(optionale|deplata|de-plata)/.test(location.hash)) syncHash("deplata/"+sel); return h + viewComanda(CM); }
   if (!O) { const C = oc.find(c => c.id === sel); if (ui.tab === "optionale" && /^#(optionale|deplata|de-plata)/.test(location.hash)) syncHash("deplata/"+sel); return h + '</section><section class="optmonth"><div class="coll">'+collCard(C)+'</div></section>'; }
   if (O.descriere || cap.admin) h += '<div class="optinfo">'+(O.descriere ? linkify(O.descriere) : '<span class="hint">Adaugă cum se plătește (cui, până când).</span>')+(cap.admin ? ' <button class="linkbtn" data-a="optEdit" data-id="'+esc(O.id)+'">Editează</button>' : '')+'</div>';
   const luni = D.optional_luni.filter(l=>l.optionalId===sel).sort((a,b)=>String(b.luna).localeCompare(a.luna));
-  if (!luni.length) return h + '<div class="empty" style="margin-top:12px">Încă nu e încărcată prezența la '+esc(O.nume.toLowerCase())+'.'+(cap.admin?' Apasă „Încarcă prezența (Excel)”.':'')+'</div></section>';
+  if (!luni.length) return h + '<div class="empty" style="margin-top:12px">Încă nu e încărcată prezența la '+esc(O.nume.toLowerCase())+'.'+(cap.admin?' Apasă „Încarcă prezența (Excel)” sau „Lună nouă”.':'')+'</div></section>';
   const lAct = luni.filter(l => !arh(l)), lOld = luni.filter(arh);
   const L = luni.find(l=>l.id===ui.optLuna) || lAct[0] || luni[0];
   if (ui.tab === "optionale" && /^#(optionale|deplata|de-plata)/.test(location.hash)) syncHash("deplata/"+sel+"/"+L.luna);
@@ -1657,11 +1800,11 @@ function viewOptionale(){
   const pret = +L.pret || 0; const total = recs.reduce((a,r)=>a+r.n*pret,0); const paid = recs.filter(r => cap.admin ? optConf(r.p) : optOk(r.p)).reduce((a,r)=>a+r.n*pret,0);
   const decl = recs.filter(r => optDecl(r.p) && r.n);
   h += '</section><section class="optmonth" id="opt-'+esc(L.id)+'"><div class="sec-head"><div><h2>'+esc(O.icon||"")+' '+esc(O.nume)+' · '+esc(lunaLabel(L.luna))+'</h2><div class="sub">'+(ses.length ? ses.length+' ședințe: '+esc(ses.map(d=>parseD(d) ? parseD(d).getDate() : d).join(", "))+' '+esc(LUNI_S[(parseD(ses[0])||new Date()).getMonth()])+'. · '+esc(lei(pret))+' / ședință' : esc(lei(pret))+' / zi · după fișa de la grădiniță')+'</div></div>'
-    + '<div class="row">'+linkBtn("deplata/"+sel+"/"+L.luna)+(cap.admin && hasArhCol("optional_luni") ? '<button class="btn small ghost" data-a="arhLuna" data-id="'+esc(L.id)+'">'+(arh(L) ? 'Scoate din arhivă' : (ui.confirm === "al"+L.id ? 'Sunt neplătiți · apasă iar' : '🗂️ Arhivează luna'))+'</button>' : '')+(cap.admin ? '<button class="btn small ghost danger" data-a="optDelLuna" data-id="'+esc(L.id)+'">'+(ui.confirm==="ol"+L.id?'Sigur? Apasă iar':'Șterge luna')+'</button>' : '') + '</div></div>';
+    + '<div class="row">'+linkBtn("deplata/"+sel+"/"+L.luna)+(cap.admin && hasArhCol("optional_luni") ? '<button class="btn small ghost" data-a="arhLuna" data-id="'+esc(L.id)+'">'+(arh(L) ? 'Scoate din arhivă' : (ui.confirm === "al"+L.id ? 'Sunt neplătiți · apasă iar' : '🗂️ Arhivează luna'))+'</button>' : '')+(cap.admin ? '<button class="btn small ghost" data-a="lunaEdit" data-id="'+esc(L.id)+'">'+ICON.pen+'Editează luna</button>' : '')+(cap.admin ? '<button class="btn small ghost danger" data-a="optDelLuna" data-id="'+esc(L.id)+'">'+(ui.confirm==="ol"+L.id?'Sigur? Apasă iar':'Șterge luna')+'</button>' : '') + '</div></div>';
   const mine = recs.find(r => r.p.copilId === ui.me);
   if (mine) h += '<div class="mestat '+(optOk(mine.p) || !mine.n ?'ok':'')+'" style="margin-bottom:14px"><span>'+esc(firstName(kidName(ui.me)))+': '+(ses.length ? mine.n+' din '+ses.length+' ședințe' : mine.n+' '+(mine.n===1?'zi':'zile')+' × '+esc(lei(pret)))+' · <b>'+esc(lei(mine.n*pret))+'</b>'+(mine.n ? (optOk(mine.p) ? ' · plătit ✓' : ' de plată') : ' · nimic de plată')+'</span>'+(mine.n && !mine.p.platit ? payBtn("optional", L.id, !mine.p.platit_declarat) : '')+'</div>';
   if (ses.length) { h += achitBlock(L, total); h += sesNotes(L, ses, mine); }
-  else if (DIRECT_OPT.includes(L.optionalId)) h += '<p class="hint" style="margin:-4px 0 12px">Banii merg direct la grădiniță. Apasă „Am plătit” după ce faci transferul, ca să știi ce mai ai de plată.</p>';
+  else if ((D.optionale.find(o => o.id === L.optionalId) || {}).direct) h += '<p class="hint" style="margin:-4px 0 12px">Banii merg direct la grădiniță. Apasă „Am plătit” după ce faci transferul, ca să știi ce mai ai de plată.</p>';
   h += '<div class="money opt-tiles" style="--n:2"><div class="tile big"><div class="lab">Total de plată</div><div class="val">'+lei(total)+'</div></div><div class="tile"><div class="lab">Plătit</div><div class="val in">'+lei(paid)+'</div></div><div class="tile"><div class="lab">Rămas</div><div class="val'+(total-paid>0?' out':'')+'">'+lei(total-paid)+'</div></div></div>';
   if (cap.admin && decl.length) h += '<div class="amb-note">'+decl.length+' '+(decl.length===1?'părinte a bifat că a plătit':'părinți au bifat că au plătit')+' · <b>de confirmat</b>. Apasă pe butonul portocaliu după ce primești banii.</div>';
   h += '<div class="optlist">' + recs.map(r => {
@@ -1672,7 +1815,7 @@ function viewOptionale(){
       : r.p.copilId === ui.me && !r.p.platit
         ? '<button type="button" class="opaid'+(optOk(r.p)?' on':' own')+'" data-a="payMark" data-t="optional" data-ref="'+esc(L.id)+'" data-on="'+(optOk(r.p)?0:1)+'" aria-pressed="'+optOk(r.p)+'">'+(optOk(r.p)?'✓ Plătit':'Am plătit?')+'</button>'
         : '<span class="opaid'+(optOk(r.p)?' on':'')+'">'+(optOk(r.p)?'✓ Plătit':'De plată')+'</span>';
-    return '<div class="orow'+(r.p.copilId===ui.me?' mine':'')+'">'+avHtml(r.p.copilId)+'<div class="on"><b>'+esc(r.k.nume)+'</b>'+(ses.length ? '' : '<div class="zile">'+r.n+' '+(r.n===1?'zi':'zile')+' × '+esc(lei(pret))+'</div>')+'<div class="dots" aria-label="'+r.n+' prezențe din '+ses.length+'">'+ses.map((d,i)=>'<i class="'+(+pres[i]?'p':'a')+'" title="'+esc(fmtShort(d))+(+pres[i]?' – prezent':' – absent')+'">'+(parseD(d)?parseD(d).getDate():'')+'</i>').join("")+(ses.length ? '<span class="num">'+r.n+'/'+ses.length+'</span>' : '')+'</div></div><div class="oright"><span class="osum num">'+lei(sum)+'</span>'+paidEl+'</div></div>';
+    return '<div class="orow'+(r.p.copilId===ui.me?' mine':'')+'">'+avHtml(r.p.copilId)+'<div class="on"><b>'+esc(r.k.nume)+'</b>'+(ses.length ? '' : (cap.admin ? '<button type="button" class="zile zbtn" data-a="zileEdit" data-id="'+esc(r.p.id)+'">'+r.n+' '+(r.n===1?'zi':'zile')+' × '+esc(lei(pret))+' ✏️</button>' : '<div class="zile">'+r.n+' '+(r.n===1?'zi':'zile')+' × '+esc(lei(pret))+'</div>'))+'<div class="dots" aria-label="'+r.n+' prezențe din '+ses.length+'">'+ses.map((d,i)=>'<i class="'+(+pres[i]?'p':'a')+(cap.admin?' ed':'')+'"'+(cap.admin?' role="button" tabindex="0" data-a="presT" data-id="'+esc(r.p.id)+'" data-i="'+i+'"':'')+' title="'+esc(fmtShort(d))+(+pres[i]?' – prezent':' – absent')+'">'+(parseD(d)?parseD(d).getDate():'')+'</i>').join("")+(ses.length ? '<span class="num">'+r.n+'/'+ses.length+'</span>' : '')+'</div></div><div class="oright"><span class="osum num">'+lei(sum)+'</span>'+paidEl+'</div></div>';
   }).join("") + '</div>';
   return h + '</section>';
 }
@@ -1712,11 +1855,12 @@ function optNotesForm(id){
     + '<div class="acts"><button type="button" class="btn" data-a="close">Renunță</button><button class="btn primary" type="submit">Salvează</button></div><input type="hidden" name="id" value="'+esc(L.id)+'"></form>');
 }
 function optEditForm(id){
-  const o = D.optionale.find(x=>x.id===id); if (!o) return;
-  modal('<h3>Editează opționalul</h3><form id="fOpt" class="view" style="gap:12px">'
+  const o = (id && D.optionale.find(x=>x.id===id)) || { id:"", nume:"", icon:"", descriere:"", direct:false };
+  modal('<h3>'+(o.id ? 'Editează opționalul' : 'Opțional nou')+'</h3><form id="fOpt" class="view" style="gap:12px">'
     + '<div class="grid2"><label class="field" for="fo-n"><span>Nume</span><input class="inp" id="fo-n" name="nume" required maxlength="60" value="'+esc(o.nume)+'"></label>'
     + '<label class="field" for="fo-i"><span>Iconiță</span><input class="inp" id="fo-i" name="icon" maxlength="8" value="'+esc(o.icon||"")+'"></label></div>'
     + '<label class="field" for="fo-d"><span>Cum se plătește (apare la părinți)</span><textarea class="ta" id="fo-d" name="descriere" maxlength="1200" placeholder="ex. Plata se face cash la doamna Raluca, până pe 5 ale lunii.">'+esc(o.descriere||"")+'</textarea></label>'
+    + '<label class="row chkl" for="fo-dir"><input type="checkbox" id="fo-dir" name="direct"'+(o.direct?' checked':'')+'> Banii merg direct la grădiniță (bifa „Am plătit” a părintelui e suficientă, fără confirmarea ta)</label>'
     + '<div class="acts"><button type="button" class="btn" data-a="close">Renunță</button><button class="btn primary" type="submit">Salvează</button></div><input type="hidden" name="id" value="'+esc(o.id)+'"></form>');
 }
 /* import Excel */
@@ -1801,7 +1945,7 @@ function viewMoney(){
     if (r.tip === "in") bal[src] += v; else if (r.tip === "out") bal[src] -= v; else if (r.tip === "transfer") { bal[src] -= v; bal[dst] += v; } }
   const shown = Object.keys(SURSE).filter(k => k !== "adelina" || rows.some(r => srcOf(r) === "adelina" || (r.tip === "transfer" && dstOf(r) === "adelina")));
   const r2 = n => Math.round(n*100)/100;
-  let h = '<section><div class="sec-head"><div><h2>Bugetul grupei</h2><div class="sub">Tot ce s-a strâns și s-a cheltuit, la vedere pentru toți părinții.</div></div>'
+  let h = '<section><div class="sec-head"><div><h2>'+TX("buget.titlu","Bugetul grupei")+'</h2><div class="sub">'+TX("buget.sub","Tot ce s-a strâns și s-a cheltuit, la vedere pentru toți părinții.")+'</div></div>'
     + (cap.admin ? '<div class="row"><button class="btn small primary" data-a="finEdit" data-tip="in">'+ICON.plus+'Încasare</button><button class="btn small" data-a="finEdit" data-tip="out">'+ICON.plus+'Cheltuială</button><button class="btn small" data-a="finEdit" data-tip="transfer">'+ICON.plus+'Mutare cont ↔ cash</button></div>' : '') + '</div>';
   h += '<div class="money" style="--n:'+shown.length+'"><div class="tile big"><div class="lab">Sold total</div><div class="val">'+lei(r2(shown.reduce((a,k)=>a+bal[k],0)))+'</div>'+(shown.some(k=>r2(bal[k])<0) ? '<div class="note big-note">După ce se dau înapoi banii avansați</div>' : '')+'</div>'
     + shown.map(k => '<div class="tile"><div class="lab">'+SURSE[k].lung+'</div><div class="val'+(r2(bal[k])<0?' out':'')+'">'+lei(r2(bal[k]))+'</div>'+(r2(bal[k])<0 ? '<div class="note">Grupa are de dat înapoi '+lei(-r2(bal[k]))+'</div>' : '')+'</div>').join("") + '</div>'
@@ -1809,7 +1953,7 @@ function viewMoney(){
 
   h += viewStrangeri(rows);
 
-  h += '<section><div class="sec-head"><div><h2>Mișcări</h2><div class="sub">Cea mai recentă sus.</div></div></div>';
+  h += '<section><div class="sec-head"><div><h2>'+TX("buget.miscari","Mișcări")+'</h2><div class="sub">'+TX("buget.miscari.sub","Cea mai recentă sus.")+'</div></div></div>';
   if (!rows.length) h += '<div class="empty">'+(cap.admin ? 'Nu ai notat încă nicio sumă. Începe cu o încasare.' : 'Nu s-a notat încă nicio sumă.')+'</div>';
   const grouped = [], seen = {};
   for (const r of rows) {
@@ -1882,7 +2026,7 @@ function dayLabel(iso){
   return ["Duminică","Luni","Marți","Miercuri","Joi","Vineri","Sâmbătă"][d.getDay()]+", "+d.getDate()+" "+LUNI_S[d.getMonth()]+".";
 }
 const hm = iso => { const d = new Date(iso); return pad(d.getHours())+":"+pad(d.getMinutes()); };
-function actIcon(t){ const m = { insc:"🙋", retras:"↩️", coment:"💬", coment_sters:"🗑️", vot:"", plata:"💳", plata_anulata:"↩️", zi_nastere:"🎂" }; return t in m ? m[t] : "•"; }
+function actIcon(t){ const m = { insc:"🙋", retras:"↩️", coment:"💬", coment_sters:"🗑️", vot:"", plata:"💳", plata_anulata:"↩️", zi_nastere:"🎂", facut:"✅" }; return t in m ? m[t] : "•"; }
 function actPanel(){
   const pp = pendingPays(); const prev = ui.actPrev;
   let h = '<div class="act-head"><h3>Noutăți</h3><button type="button" class="btn small" data-a="close">Închide</button></div>';
@@ -1998,8 +2142,8 @@ async function maybeAskPush(){
   const last = +LS.get("fl_push_ask") || 0; if (Date.now() - last < 7*86400000) return;
   if ($("#modalRoot").innerHTML) return;
   LS.set("fl_push_ask", String(Date.now()));
-  if (st === "ios") modal('<h3>🔔 Notificări de la grupă</h3><p>Ca să afli imediat când apare ceva nou de ales sau de plătit și când e ziua unui copil, pune portalul pe ecranul telefonului:</p>'+IOS_STEPS+'<div class="acts"><button class="btn primary" data-a="close">Am înțeles</button></div>');
-  else modal('<h3>🔔 Notificări de la grupă</h3><p>Primești o notificare pe telefon când apare:</p><ul class="push-what"><li>📋 ceva nou de ales sau de bifat</li><li>💳 ceva nou de plătit</li><li>🎂 e ziua unui copil (în ziua respectivă)</li></ul><p class="hint">Doar între 8:00 și 21:00. Le poți opri oricând, apăsând pe numele de sus.</p><div class="acts"><button class="btn" data-a="close">Nu acum</button><button class="btn primary" data-a="pushOnModal">Pornește notificările</button></div>');
+  if (st === "ios") modal('<h3>'+TX("notif.titlu","🔔 Notificări de la grupă")+'</h3><p>Ca să afli imediat când apare ceva nou de ales sau de plătit și când e ziua unui copil, pune portalul pe ecranul telefonului:</p>'+IOS_STEPS+'<div class="acts"><button class="btn primary" data-a="close">Am înțeles</button></div>');
+  else modal('<h3>'+TX("notif.titlu","🔔 Notificări de la grupă")+'</h3><p>Primești o notificare pe telefon când apare:</p><ul class="push-what"><li>📋 ceva nou de ales sau de bifat</li><li>💳 ceva nou de plătit</li><li>🎂 e ziua unui copil (în ziua respectivă)</li></ul><p class="hint">Doar între 8:00 și 21:00. Le poți opri oricând, apăsând pe numele de sus.</p><div class="acts"><button class="btn" data-a="close">Nu acum</button><button class="btn primary" data-a="pushOnModal">Pornește notificările</button></div>');
 }
 function openMe(){
   const me = kid(ui.me); if (!me) { openPicker(); return; }
@@ -2086,6 +2230,9 @@ function settingsForm(){
     + '<label class="field" for="fx-a"><span>Anunț afișat sus pe Acasă</span><textarea class="ta" id="fx-a" name="anunt" maxlength="600" placeholder="ex. Joi aducem baloții până la 8:30. Gol = fără anunț.">'+esc(D.setari.anunt||"")+'</textarea></label>'
     + '<label class="field" for="fx-k"><span>Copiii grupei (câte unul pe rând)</span><textarea class="ta" id="fx-k" name="copii" style="min-height:220px">'+esc(sortedKids().map(c=>c.nume).join("\n"))+'</textarea></label>'
     + '<p class="hint">Dacă scoți un nume, dispare din liste; bifele vechi ale copilului rămân salvate.</p>'
+    + '<label class="field" for="fx-e"><span>Doamnele (câte una pe rând)</span><textarea class="ta" id="fx-e" name="doamne" style="min-height:70px">'+esc(sortedEdus().map(c=>c.nume).join("\n"))+'</textarea></label>'
+    + '<label class="field" for="fx-r"><span>Răspunsul la întrebarea de la intrare</span><input class="inp" id="fx-r" name="raspuns" maxlength="200" value="'+esc(T("intrare.raspuns","raluca"))+'"></label>'
+    + '<p class="hint">Întrebarea însăși o schimbi din ✏️ Texte. Dacă accepți mai multe răspunsuri, desparte-le prin virgulă (ex. raluca, ralu). Nu contează diacriticele și literele mari.</p>'
     + '<div class="acts"><button type="button" class="btn" data-a="close">Renunță</button><button class="btn primary" type="submit">Salvează</button></div></form>');
 }
 
@@ -2109,6 +2256,10 @@ document.addEventListener("click", async e => {
     case "goG": syncHash("ghid/"+id); goTo("g-"+id); break;
     case "pick": openPicker(); break;
     case "me": openMe(); break;
+    case "txToggle": ui.txEdit = !ui.txEdit; render(); break;
+    case "txEdit": e.preventDefault(); txForm(t.dataset.k); break;
+    case "txList": txList(); break;
+    case "txReset": { const k = t.dataset.k; const r = await sb.from("texte").delete().eq("cheie", k); if (r.error) toast("Nu s-a salvat.", true); else { await refetch("texte"); closeModal(); toast("Textul inițial a revenit"); } break; }
     case "bdEdit": bdForm(id); break;
     case "bdLater": LS.set("fl_bd_later_"+id, todayStr()); render(); break;
     case "bdDel": if (ui.confirm !== "bd"+id) { ui.confirm = "bd"+id; bdForm(id); break; } ui.confirm = null; if (await bdSave(id, null)) { closeModal(); toast("Data a fost ștearsă"); } break;
@@ -2150,6 +2301,7 @@ document.addEventListener("click", async e => {
     }
     case "replyI": ui.replyTo = id ? "i:"+id : ""; render(); if (id) { const ta = document.getElementById("ri-"+id); if (ta) ta.focus(); } break;
     case "reply": ui.replyTo = id || ""; render(); if (id) { const ta = document.getElementById("rp-"+id); if (ta) ta.focus(); } break;
+    case "facut": { t.disabled = true; const r = await sb.rpc("marcheaza_facut", { p_id: id, p_copil: ui.me || "", p_on: t.dataset.on === "1" }); if (r.error || !r.data) toast("Nu s-a salvat. Încearcă din nou.", true); else toast(t.dataset.on === "1" ? "Marcat ca făcut ✓" : "Anulat"); await refetch("inscrieri"); break; }
     case "unsign": t.disabled = true; await write(db => db.doc("inscrieri/"+id).delete(), "Retras"); break;
     case "delC": {
       if (ui.confirm !== "c"+id) { ui.confirm = "c"+id; t.innerHTML = '<span style="font-size:11px;font-weight:800;color:var(--berry)">Sigur?</span>'; t.style.width = "auto"; setTimeout(()=>{ if (ui.confirm==="c"+id) { ui.confirm=null; render(); } }, 3500); break; }
@@ -2161,6 +2313,19 @@ document.addEventListener("click", async e => {
     case "goOpt": { const l = D.optional_luni.find(x=>x.id===id); if (l) { ui.opt = l.optionalId; ui.optLuna = l.id; } setTab("optionale"); break; }
     case "optImport": IMP = null; importForm(); break;
     case "optEdit": optEditForm(id); break;
+    case "admMore": admMore(); break;
+    case "cmdEdit": ui.confirm = null; cmdForm(id); break;
+    case "prodAdd": { const box = $("#prodRows"); box.insertAdjacentHTML("beforeend", prodRow({}, box.children.length)); break; }
+    case "prodDel": { const r = t.closest(".prod-row"); if (r && $("#prodRows").children.length > 1) r.remove(); break; }
+    case "cmdDel": { if (ui.confirm !== "cmd"+id) { ui.confirm = "cmd"+id; t.textContent = "Sigur? Se șterg și alegerile"; break; } ui.confirm = null;
+      if (await write(async () => { chk(await sb.from("comenzi_copii").delete().eq("comanda_id", id)); chk(await sb.from("comenzi").delete().eq("id", id)); await refetch("comenzi"); await refetch("comenzi_copii"); }, "Plată ștearsă")) closeModal(); break; }
+    case "lunaEdit": lunaForm(id); break;
+    case "zileEdit": zileForm(id); break;
+    case "presT": { const pr = D.optional_prezente.find(x => x.id === id); if (!pr) break; const arr = (Array.isArray(pr.prezente) ? pr.prezente : []).slice(); const i = +t.dataset.i; arr[i] = +arr[i] ? 0 : 1; pr.prezente = arr; render();
+      await write(async () => { chk(await sb.from("optional_prezente").update({ prezente: arr }).eq("id", id)); }); break; }
+    case "anEdit": anForm(); break;
+    case "anAdd": $(t.dataset.k === "per" ? "#anPer" : "#anLib").insertAdjacentHTML("beforeend", ui.anRowTpl[t.dataset.k]); break;
+    case "anDel": { const r = t.closest(".an-row"); if (r) r.remove(); break; }
     case "optNotes": optNotesForm(id); break;
     case "optAchit": optAchitForm(id); break;
     case "optAchitOff": await write(async () => { chk(await sb.from("optional_luni").update({ achitat_la: "", achitat_suma: null, achitat_nota: "" }).eq("id", id)); await refetch("optional_luni"); }, "Anulat") && closeModal(); break;
@@ -2292,6 +2457,7 @@ document.addEventListener("change", async e => {
 
 document.addEventListener("input", e => {
   const t = e.target;
+  if (t.id === "txq") { const q = t.value.trim().toLowerCase(); document.querySelectorAll("#txList button").forEach(b => b.hidden = q && !b.dataset.n.includes(q)); return; }
   if (t.id === "pickQ") { const q = t.value.trim().toLowerCase(); document.querySelectorAll("#pickList button").forEach(b => b.hidden = q && !b.dataset.n.includes(q)); return; }
   const f = t.closest("form[data-a]"); if (!f) return;
   if (f.dataset.a === "comment") ui.drafts[f.dataset.insc ? "i:"+f.dataset.insc : f.dataset.parent ? "r:"+f.dataset.parent : f.dataset.id] = t.value;
@@ -2304,10 +2470,29 @@ document.addEventListener("keydown", e => { if (e.key === "Escape" && $("#modalR
 document.addEventListener("submit", async e => {
   e.preventDefault();
   const f = e.target; const fid = f.getAttribute("id"); const fd = Object.fromEntries(new FormData(f).entries());
-  if (fid === "fGate") { if (gateNorm(fd.raspuns).includes("raluca")) { LS.set("fl_ok","1"); try { sessionStorage.setItem("fl_ok","1"); } catch(e){} boot(); } else showGate(true); return; }
+  if (fid === "fGate") { if (T("intrare.raspuns","raluca").split(",").map(gateNorm).filter(Boolean).some(a => gateNorm(fd.raspuns).includes(a))) { LS.set("fl_ok","1"); try { sessionStorage.setItem("fl_ok","1"); } catch(e){} boot(); } else showGate(true); return; }
   const btn = f.querySelector('[type="submit"]'); if (btn) btn.disabled = true;
   const now = new Date().toISOString();
   try {
+    if (fid === "fCmd") {
+      const body = cmdFromForm(f); if (!body.titlu) return; if (!body.produse.length) { toast("Adaugă cel puțin un produs.", true); return; }
+      let cid = fd.id; if (!cid) { cid = slugId(body.titlu); if (D.comenzi.some(c => c.id === cid)) cid += "-" + uid().slice(0,4); body.ordine = D.comenzi.length + 1; }
+      if (await write(async () => { chk(await sb.from("comenzi").upsert(Object.assign({ id: cid }, body))); await refetch("comenzi"); }, "Plată salvată")) { closeModal(); ui.opt = cid; if (ui.tab !== "optionale") setTab("optionale"); else render(); }
+      return;
+    }
+    if (fid === "fLuna") { if (await saveLuna(fd)) { closeModal(); if (ui.tab !== "optionale") setTab("optionale"); else render(); } return; }
+    if (fid === "fZile") { const n = Math.max(0, Math.min(31, Math.round(+fd.n || 0))); if (await write(async () => { chk(await sb.from("optional_prezente").update({ prezente: Array(n).fill(1) }).eq("id", fd.id)); await refetch("optional_prezente"); }, "Salvat")) closeModal(); return; }
+    if (fid === "fAn") {
+      const A = anFromForm(f); if (!A.perioade.length) { toast("Adaugă cel puțin o perioadă cu date.", true); return; }
+      if (await write(async () => { chk(await sb.from("setari").upsert({ id: "general", an_scolar: A })); await refetch("setari"); }, "Anul școlar salvat")) closeModal();
+      return;
+    }
+    if (fid === "fTx") {
+      const v = String(fd.v||"").replace(/\r/g, "").trim();
+      const r = v ? await sb.from("texte").upsert({ cheie: fd.k, valoare: v, modificat: now }) : await sb.from("texte").delete().eq("cheie", fd.k);
+      if (r.error) { toast("Nu s-a salvat. Ești logată ca administratoare?", true); return; }
+      await refetch("texte"); closeModal(); toast("Text salvat"); return;
+    }
     if (fid === "fBd") {
       const c = kid(fd.copil); if (!c) return;
       const data = isEdu(c) ? (fd.zi && fd.luna ? BD_FARA_AN+"-"+pad(+fd.luna)+"-"+pad(+fd.zi) : "") : fd.data;
@@ -2352,8 +2537,9 @@ document.addEventListener("submit", async e => {
       if (D.colecte.some(x => 'loc' in x)) body.loc = fd.loc ? "optionale" : "";
       if (await write(db => db.doc("colecte/"+id).set(body), "Strângere salvată")) closeModal();
     } else if (fid === "fOpt") {
-      const o = D.optionale.find(x=>x.id===fd.id) || {}; const body = Object.assign({}, o, { nume:fd.nume.trim(), icon:(fd.icon||"").trim(), descriere:(fd.descriere||"").trim() }); delete body.id;
-      if (await write(db => db.doc("optionale/"+fd.id).set(body), "Salvat")) closeModal();
+      const o = D.optionale.find(x=>x.id===fd.id) || { ordine: D.optionale.length + 1 }; const body = Object.assign({}, o, { nume:fd.nume.trim(), icon:(fd.icon||"").trim(), descriere:(fd.descriere||"").trim(), direct: !!fd.direct }); delete body.id;
+      let oid = fd.id; if (!oid) { oid = slugId(fd.nume); if (D.optionale.some(x => x.id === oid)) oid += "-" + uid().slice(0,4); }
+      if (await write(db => db.doc("optionale/"+oid).set(body), "Salvat")) { closeModal(); if (!fd.id) { ui.opt = oid; render(); } }
     } else if (fid === "fAchit") {
       if (await write(async () => { chk(await sb.from("optional_luni").update({ achitat_la: fd.data, achitat_suma: +fd.suma || 0, achitat_nota: (fd.nota||"").trim() }).eq("id", fd.id)); await refetch("optional_luni"); }, "Marcat achitat ✓")) closeModal();
     } else if (fid === "fOptNote") {
@@ -2384,6 +2570,11 @@ document.addEventListener("submit", async e => {
         const keep = new Set();
         for (let i=0;i<names.length;i++) { const ex = byName.get(names[i]); if (ex) { keep.add(ex.id); if (+ex.ordine !== i+1) await db.doc("copii/"+ex.id).set({ nume:ex.nume, ordine:i+1 }); } else { await db.doc("copii/k"+uid()).set({ nume:names[i], ordine:i+1 }); } }
         for (const c of sortedKids()) if (!keep.has(c.id)) await db.doc("copii/"+c.id).delete();
+        const enames = String(fd.doamne||"").split("\n").map(x=>x.trim()).filter(Boolean), eds = sortedEdus();
+        for (let i=0;i<enames.length;i++) { const ex = eds[i]; if (ex) { if (ex.nume !== enames[i] || +ex.ordine !== i+1) await db.doc("copii/"+ex.id).set({ nume:enames[i], ordine:i+1, rol:"educatoare" }); } else await db.doc("copii/e"+uid()).set({ nume:enames[i], ordine:i+1, rol:"educatoare" }); }
+        for (const ex of eds.slice(enames.length)) await db.doc("copii/"+ex.id).delete();
+        const rs = String(fd.raspuns||"").trim();
+        if (rs && rs !== T("intrare.raspuns","raluca")) chk(await sb.from("texte").upsert({ cheie:"intrare.raspuns", valoare: rs, modificat: new Date().toISOString() }));
       }, "Salvat");
       if (ok) closeModal();
     }
