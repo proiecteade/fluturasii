@@ -64,3 +64,4 @@ Vercel publică automat din branch-ul main. Hellomeri.go.ro nu e implicat (pagin
 - 2026-11-22: reconciliere cu extrasul ING 1–22 nov.: confirmate în portal 11 plăți la poze, 16 la figurine, engleza oct. pentru Ilieș. Rămase de lămurit: transferurile de 300 (17 nov.) și 318 lei (19 nov.), cerneala imprimantă 183,96 lei (nu e în buget), cadoul domnișoarei Raluca (598 lei, nu e în portal), 20 lei rămași la caiete EDU.
 - 2026-11-22: trecută în buget cheltuiala „Cerneală imprimantă” 183,96 lei (16 nov., cont). Transferurile 300 + 318 lei = cadoul domnișoarei Raluca (nu se ține în portal).
 - 2026-11-22: totul editabil din portal (✏️ Texte, ⚙️ Mai mult: plăți cu produse, opționale, luni fără Excel, an școlar, doamne, răspunsul de la intrare); butonul „Am făcut” la înscrieri și la lunile pe rând.
+- 2026-11-22: intrat în buget restul de 8 lei de la cadoul domnișoarei Raluca (cu partea lui Vlad, 28 lei, socotită plătită de Adelina).
