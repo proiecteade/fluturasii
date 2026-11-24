@@ -67,3 +67,4 @@ Vercel publică automat din branch-ul main. Hellomeri.go.ro nu e implicat (pagin
 - 2026-11-22: intrat în buget restul de 8 lei de la cadoul domnișoarei Raluca (cu partea lui Vlad, 28 lei, socotită plătită de Adelina).
 - 2026-11-22: Vlad (Pîrvu) — plătite figurine și poze (glob); cadoul inclus.
 - 2026-11-22: evenimentele pot avea interval de date (`sectiuni.data_pana`, câmpul „Până pe” la editare); rămân la „următoare” până trece ultima zi, cu „În desfășurare, până pe …”.
+- 2026-11-24: Moș Crăciun ales — Cum Vă Place, ora 17:00, 500 lei; itemul „Moș Crăciun de închiriat” marcat rezolvat.
