@@ -69,3 +69,4 @@ Vercel publică automat din branch-ul main. Hellomeri.go.ro nu e implicat (pagin
 - 2026-11-22: evenimentele pot avea interval de date (`sectiuni.data_pana`, câmpul „Până pe” la editare); rămân la „următoare” până trece ultima zi, cu „În desfășurare, până pe …”.
 - 2026-11-24: Moș Crăciun ales — Cum Vă Place, ora 17:00, 500 lei; itemul „Moș Crăciun de închiriat” marcat rezolvat.
 - 2026-11-24: la „Moș Crăciun de închiriat” trecută familia Pavel ca responsabilă; plată nouă la De plată „Moș Crăciun · Serbarea de Crăciun” — 23 lei/copil, pentru toți (506 lei; restul de 6 lei intră în buget când plătesc toți).
+- 2026-11-24: stare nouă la itemi: „⏸ În pauză” (nu mai apare în „de făcut”/termene; card gri). Baza de date: permisă starea `pauza` în tabelul stari.

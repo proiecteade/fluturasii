@@ -439,6 +439,9 @@ button.opaid.own{background:var(--surface);border:1.5px solid var(--meadow);colo
 .status.todo{background-color:var(--wing-soft);color:var(--wing-ink)}
 .status.progress{background-color:var(--lilac-soft);color:var(--lilac)}
 .status.done{background-color:var(--meadow-soft);color:var(--meadow)}
+.status.pauza{background-color:var(--surface-2);color:var(--muted)}
+.item.is-pauza{background:var(--surface-2);box-shadow:none}
+.item.is-pauza h4{color:var(--muted)}
 .status:disabled{cursor:default;padding-right:11px;background-image:none;opacity:1}
 .field{display:grid;gap:5px}
 .field > span{font-size:12px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:var(--muted)}
@@ -806,7 +809,8 @@ const ICON = {
   user:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="9" r="4"/><path d="M4 21c1.5-4 5-5 8-5s6.5 1 8 5"/></svg>'
 };
 
-const STATUS = { todo:"De făcut", progress:"În lucru", done:"Rezolvat" };
+const STATUS = { todo:"De făcut", progress:"În lucru", pauza:"⏸ În pauză", done:"Rezolvat" };
+const paused = it => it && it.status === "pauza";
 const TIP = { single:"Cine se ocupă", multi:"Se înscrie oricine", fiecare:"Fiecare copil", rotatie:"Pe rând, lunar", info:"Doar de știut" };
 
 /* ---------- stare ---------- */
@@ -1399,7 +1403,7 @@ function viewHome(){
 function dayRel(d){ const x = parseD(d); if (!x) return ""; const t = parseD(todayStr()); const n = Math.round((x - t) / 86400000);
   return n === 0 ? "azi" : n === 1 ? "mâine" : n === 2 ? "poimâine" : (n > 2 && n < 7 ? ZILE[x.getDay()] : "") ; }
 function termenInfo(it){
-  if (!it.termen || it.status === "done") return null;
+  if (!it.termen || it.status === "done" || paused(it)) return null;
   const a = it.termen, b = it.termen_pana && it.termen_pana > a ? it.termen_pana : "";
   const last = b || a, t = todayStr(); if (last < t) return null;
   const ra = dayRel(a), rb = b ? dayRel(b) : "";
@@ -1503,7 +1507,7 @@ function myPay(){
 function myTodo(){
   const me = ui.me, out = [], mk = new Set(schoolMonths().slice(0,2).map(m=>m.key));
   for (const it of allItems().sort((a,b) => { const ta = termenInfo(a) ? a.termen : "9", tb = termenInfo(b) ? b.termen : "9"; return ta < tb ? -1 : ta > tb ? 1 : 0; })) {
-    if (it.tip === "info" || it.status === "done" || !sectionUpcoming(it)) continue;
+    if (it.tip === "info" || it.status === "done" || paused(it) || !sectionUpcoming(it)) continue;
     const s = sec(it.sectiune), where = s ? s.titlu + (s.data ? " · "+fmtSecShort(s) : "") : "";
     if (it.tip === "single" || it.tip === "multi") {
       const mine = signups(it.id).filter(x=>x.copilId===me && !x.facut_la);
@@ -1538,7 +1542,7 @@ function myDone(){
 function needsHelp(){
   const out = [], first = schoolMonths()[0];
   for (const it of allItems()) {
-    if (it.tip === "info" || it.status === "done" || !sectionUpcoming(it)) continue;
+    if (it.tip === "info" || it.status === "done" || paused(it) || !sectionUpcoming(it)) continue;
     if (it.tip === "single" || it.tip === "multi") {
       const tgt = targetOf(it), taken = takenOf(it), any = signups(it.id).length || (it.responsabil && kid(it.responsabil));
       if (tgt && taken < tgt) out.push(qrow(it, "Mai trebuie "+(tgt-taken)+" din "+tgt));
@@ -1713,7 +1717,7 @@ function itemCard(it){
       : '<div><button class="btn small" data-a="pick">Alege copilul ca să comentezi</button></div>';
     foot += '</div>';
   }
-  return '<article class="item'+(it.status==="done"&&!isInfo?' is-done':'')+(isInfo?' info':'')+(body?'':' noact')+'" id="item-'+esc(it.id)+'"><div class="i-main"><div class="item-head"><h4>'+esc(it.titlu)+'</h4>'+(isInfo ? '' : statusSel)+'</div>'+(meta ? '<div class="meta">'+meta+'</div>' : '')
+  return '<article class="item'+(it.status==="done"&&!isInfo?' is-done':'')+(paused(it)&&!isInfo?' is-pauza':'')+(isInfo?' info':'')+(body?'':' noact')+'" id="item-'+esc(it.id)+'"><div class="i-main"><div class="item-head"><h4>'+esc(it.titlu)+'</h4>'+(isInfo ? '' : statusSel)+'</div>'+(meta ? '<div class="meta">'+meta+'</div>' : '')
     + (it.detalii ? '<p class="det">'+linkify(it.detalii)+'</p>' : '') + '</div>' + (body ? '<div class="i-act">'+body+'</div>' : '') + foot + '</article>';
 }
 
