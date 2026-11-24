@@ -322,6 +322,14 @@ p,h1,h2,h3,h4,b,small,span{overflow-wrap:break-word}
 .cmd-opt.none.on{border-color:var(--muted);background:var(--surface-2);color:var(--muted)}
 .cmd-opt.none.on i{background:var(--muted);border-color:var(--muted)}
 .cmd-opt[disabled]{opacity:.7;cursor:default}
+.cmd-opts.pics{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,168px),1fr));gap:10px}
+.cmd-card{display:flex;flex-direction:column;gap:4px;min-width:0}
+.cmd-opts.pics .cmd-opt{flex-direction:column;align-items:stretch;position:relative;padding:8px;border-radius:16px;height:100%}
+.cmd-opts.pics .cmd-opt i{position:absolute;top:12px;left:12px;background:var(--surface);margin:0;z-index:1}
+.cmd-opts.pics .cmd-opt.none{grid-column:1/-1;flex-direction:row;align-items:center;height:auto;padding:10px 14px}
+.cmd-opts.pics .cmd-opt.none i{position:static}
+.cmd-pic{display:block;width:100%;aspect-ratio:1;object-fit:contain;background:#fff;border-radius:10px}
+.cmd-card .lnk{font-size:13px;padding-left:4px}
 .cmd-opt .num{color:var(--muted);font-weight:700}
 .cmd-tot{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:10px;font-size:14px;font-weight:700;color:var(--wing-ink)}
 .cmd-chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:3px}
@@ -978,14 +986,15 @@ function prodRow(p, i){
     + '<label class="field"><span>Preț (lei)</span><input class="inp num" name="p_pret" type="number" min="0" step="0.01" inputmode="decimal" value="'+esc(p.pret ?? "")+'"></label></div>'
     + '<div class="grid2"><label class="field"><span>Nume scurt (în liste)</span><input class="inp" name="p_scurt" maxlength="30" value="'+esc(p.scurt||"")+'"></label>'
     + '<label class="field"><span>Link (opțional)</span><input class="inp" name="p_link" maxlength="300" value="'+esc(p.link||"")+'"></label></div>'
-    + '<label class="field"><span>Ce conține (opțional)</span><input class="inp" name="p_info" maxlength="300" value="'+esc(p.info||"")+'"></label>'
+    + '<div class="grid2"><label class="field"><span>Ce conține (opțional)</span><input class="inp" name="p_info" maxlength="300" value="'+esc(p.info||"")+'"></label>'
+    + '<label class="field"><span>Poză (link, opțional)</span><input class="inp" name="p_img" maxlength="500" value="'+esc(p.img||"")+'"></label></div>'
     + '<div class="row" style="justify-content:space-between"><label class="row chkl"><input type="checkbox" name="p_rec"'+(p.recomandat?' checked':'')+'> ⭐ Recomandat</label><button type="button" class="btn small ghost danger" data-a="prodDel">Scoate produsul</button></div></div>';
 }
 function cmdFromForm(f){
   const g = n => [...f.querySelectorAll('[name="'+n+'"]')];
-  const ids = g("p_id"), nm = g("p_nume"), pr = g("p_pret"), sc = g("p_scurt"), lk = g("p_link"), inf = g("p_info"), rc = g("p_rec");
+  const ids = g("p_id"), nm = g("p_nume"), pr = g("p_pret"), sc = g("p_scurt"), lk = g("p_link"), inf = g("p_info"), rc = g("p_rec"), im = g("p_img");
   const produse = nm.map((el, i) => { const n = el.value.trim(); if (!n) return null; const o = { id: ids[i].value || slugId(sc[i].value || n)+"-"+uid().slice(0,4), nume: n, pret: +pr[i].value || 0 };
-    if (sc[i].value.trim()) o.scurt = sc[i].value.trim(); if (lk[i].value.trim()) o.link = lk[i].value.trim(); if (inf[i].value.trim()) o.info = inf[i].value.trim(); if (rc[i].checked) o.recomandat = true; return o; }).filter(Boolean);
+    if (sc[i].value.trim()) o.scurt = sc[i].value.trim(); if (lk[i].value.trim()) o.link = lk[i].value.trim(); if (inf[i].value.trim()) o.info = inf[i].value.trim(); if (rc[i].checked) o.recomandat = true; if (im[i] && im[i].value.trim()) o.img = im[i].value.trim(); return o; }).filter(Boolean);
   const v = n => (f.elements[n] ? f.elements[n].value : "").trim(), c = n => !!(f.elements[n] && f.elements[n].checked);
   return { titlu: v("titlu"), icon: v("icon"), descriere: v("descriere"), plata: v("plata"), cadou: v("cadou"), imagine: v("imagine"), produse, o_singura: c("o_singura"), obligatoriu: c("obligatoriu"), inchisa: c("inchisa"), ascuns: c("ascuns") };
 }
@@ -1449,7 +1458,7 @@ function cmdPayBtn(C, r, k){
   return '<span class="opaid'+(cmdOk(r)?' on':'')+'">'+(cmdOk(r)?'✓ Plătit':'De plată')+'</span>';
 }
 function viewComanda(C){
-  const prods = cmdProds(C), kids = sortedKids(); const recs = kids.map(k => ({ k, r: cmdRec(C.id, k.id) }));
+  const prods = cmdProds(C), kids = sortedKids(); const pics = prods.some(p => p.img); const recs = kids.map(k => ({ k, r: cmdRec(C.id, k.id) }));
   const answered = recs.filter(x => x.r && x.r.raspuns).length;
   const total = recs.reduce((a,x)=>a+cmdSum(C,x.r),0), paid = recs.filter(x => cap.admin ? x.r && x.r.platit : cmdOk(x.r)).reduce((a,x)=>a+cmdSum(C,x.r),0);
   const editable = k => !C.inchisa && !arh(C) && (cap.admin || k === ui.me);
@@ -1467,17 +1476,17 @@ function viewComanda(C){
     return h + '</section>';
   }
   if (C.imagine) h += '<a class="cmd-img" href="'+esc(C.imagine)+'" target="_blank" rel="noopener"><img src="'+esc(C.imagine)+'" alt="'+esc(C.titlu)+'" loading="lazy"><span>Vezi oferta mare</span></a>';
-  if (C.o_singura) h += '<div class="cmd-count"><b>Comandate:</b> '+prods.map(p => esc(p.scurt||p.nume)+' <span class="num">'+recs.filter(x => x.r && (x.r.produse||[]).includes(p.id)).length+'</span>').join(' · ')+' · Niciun pachet <span class="num">'+recs.filter(x => x.r && x.r.raspuns && !(x.r.produse||[]).length).length+'</span></div>';
+  if (C.o_singura) h += '<div class="cmd-count"><b>'+(pics?'Alese până acum':'Comandate')+':</b> '+prods.filter(p => !pics || recs.some(x => x.r && (x.r.produse||[]).includes(p.id))).map(p => esc(p.scurt||p.nume)+' <span class="num">'+recs.filter(x => x.r && (x.r.produse||[]).includes(p.id)).length+'</span>').join(' · ')+' · '+(pics?'Niciun joc':'Niciun pachet')+' <span class="num">'+recs.filter(x => x.r && x.r.raspuns && !(x.r.produse||[]).length).length+'</span></div>';
   else h += '<div class="cmd-prods">'+prods.map(p => '<div class="cmd-prod"><b>'+esc(p.nume)+'</b><span class="num">'+esc(lei(p.pret))+'</span>'+(p.info ? '<span class="cmd-info">'+esc(p.info)+'</span>' : '')+(p.link ? linkify(p.link) : '')+'<small>'+(n => n+(n===1?' comandat':' comandate'))(recs.filter(x => x.r && (x.r.produse||[]).includes(p.id)).length)+'</small></div>').join("")+'</div>';
   if (C.cadou) h += '<div class="optinfo" style="margin:0 0 12px">🎁 '+linkify(C.cadou)+'</div>';
   if (C.plata) { h += '<div class="optinfo pinfo" style="margin:0 0 12px">💳 '+linkify(C.plata)+''+'</div>'; }
   const mine = isChild(ui.me) ? recs.find(x => x.k.id === ui.me) : null;
   if (mine) {
     const r = mine.r, sel = r ? (r.produse || []) : [], sum = cmdSum(C, r), locked = r && r.platit;
-    h += '<div class="cmd-mine"><div class="eyebrow">Pentru '+esc(firstName(kidName(ui.me)))+'</div><div class="cmd-opts'+(C.o_singura?' radio':'')+'">'
-      + prods.map(p => '<button type="button" class="cmd-opt'+(sel.includes(p.id)?' on':'')+(p.recomandat?' rec':'')+'" data-a="cmdPick" data-id="'+esc(C.id)+'" data-p="'+esc(p.id)+'" data-kid="'+esc(ui.me)+'"'+(locked||C.inchisa||arh(C)?' disabled':'')+'><i></i><span class="cmd-ot">'+(p.recomandat ? '<span class="cmd-rec">⭐ Pachet recomandat</span>' : '')+esc(p.nume)+' <span class="num">'+esc(lei(p.pret))+'</span>'+(C.o_singura && p.info ? '<small>'+esc(p.info)+'</small>' : '')+'</span></button>').join("")
-      + '<button type="button" class="cmd-opt none'+(r && r.raspuns && !sel.length?' on':'')+'" data-a="cmdNone" data-id="'+esc(C.id)+'" data-kid="'+esc(ui.me)+'"'+(locked||C.inchisa||arh(C)?' disabled':'')+'><i></i>'+(C.o_singura ? 'Nu vreau niciun pachet' : 'Nu luăm')+'</button></div>'
-      + '<div class="cmd-tot"><span>'+(r && r.raspuns ? (sum ? 'De plată: <b>'+esc(lei(sum))+'</b>'+(cmdOk(r)?' · plătit ✓':'') : (C.o_singura ? 'Nu vreți niciun pachet. Mulțumim că ați răspuns!' : 'Nu luați nimic. Mulțumim că ați răspuns!')) : (C.o_singura ? 'Alege un pachet, sau „Nu vreau niciun pachet”.' : 'Alege ce iei, sau „Nu luăm”.'))+'</span>'+(sum && !(r && r.platit) ? payBtn("cmd", C.id, !cmdOk(r)) : '')+'</div></div>';
+    h += '<div class="cmd-mine"><div class="eyebrow">Pentru '+esc(firstName(kidName(ui.me)))+'</div><div class="cmd-opts'+(C.o_singura?' radio':'')+(pics?' pics':'')+'">'
+      + prods.map(p => (pics ? '<div class="cmd-card">' : '')+'<button type="button" class="cmd-opt'+(sel.includes(p.id)?' on':'')+(p.recomandat?' rec':'')+'" data-a="cmdPick" data-id="'+esc(C.id)+'" data-p="'+esc(p.id)+'" data-kid="'+esc(ui.me)+'"'+(locked||C.inchisa||arh(C)?' disabled':'')+'><i></i>'+(p.img ? '<img class="cmd-pic" src="'+esc(p.img)+'" alt="" loading="lazy">' : '')+'<span class="cmd-ot">'+(p.recomandat ? '<span class="cmd-rec">⭐ Pachet recomandat</span>' : '')+esc(p.nume)+' <span class="num">'+esc(lei(p.pret))+'</span>'+(C.o_singura && p.info ? '<small>'+esc(p.info)+'</small>' : '')+'</span></button>'+(pics ? (p.link ? '<a class="lnk" href="'+esc(p.link)+'" target="_blank" rel="noopener noreferrer">🔗 Vezi jocul</a>' : '')+'</div>' : '')).join("")
+      + '<button type="button" class="cmd-opt none'+(r && r.raspuns && !sel.length?' on':'')+'" data-a="cmdNone" data-id="'+esc(C.id)+'" data-kid="'+esc(ui.me)+'"'+(locked||C.inchisa||arh(C)?' disabled':'')+'><i></i>'+(C.o_singura ? (pics ? 'Nu vreau niciun joc' : 'Nu vreau niciun pachet') : 'Nu luăm')+'</button></div>'
+      + '<div class="cmd-tot"><span>'+(r && r.raspuns ? (sum ? 'De plată: <b>'+esc(lei(sum))+'</b>'+(cmdOk(r)?' · plătit ✓':'') : (C.o_singura ? (pics ? 'Nu vreți niciun joc. Mulțumim că ați răspuns!' : 'Nu vreți niciun pachet. Mulțumim că ați răspuns!') : 'Nu luați nimic. Mulțumim că ați răspuns!')) : (C.o_singura ? (pics ? 'Alege un joc, sau „Nu vreau niciun joc”.' : 'Alege un pachet, sau „Nu vreau niciun pachet”.') : 'Alege ce iei, sau „Nu luăm”.'))+'</span>'+(sum && !(r && r.platit) ? payBtn("cmd", C.id, !cmdOk(r)) : '')+'</div></div>';
   }
   h += '<div class="money opt-tiles" style="--n:2"><div class="tile big"><div class="lab">Total comandat</div><div class="val">'+lei(total)+'</div></div><div class="tile"><div class="lab">Plătit</div><div class="val in">'+lei(paid)+'</div></div><div class="tile"><div class="lab">Au răspuns</div><div class="val">'+answered+' / '+kids.length+'</div></div></div>';
   const decl = recs.filter(x => cmdDecl(x.r) && cmdSum(C, x.r));

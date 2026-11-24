@@ -70,3 +70,4 @@ Vercel publică automat din branch-ul main. Hellomeri.go.ro nu e implicat (pagin
 - 2026-11-24: Moș Crăciun ales — Cum Vă Place, ora 17:00, 500 lei; itemul „Moș Crăciun de închiriat” marcat rezolvat.
 - 2026-11-24: la „Moș Crăciun de închiriat” trecută familia Pavel ca responsabilă; plată nouă la De plată „Moș Crăciun · Serbarea de Crăciun” — 23 lei/copil, pentru toți (506 lei; restul de 6 lei intră în buget când plătesc toți).
 - 2026-11-24: stare nouă la itemi: „⏸ În pauză” (nu mai apare în „de făcut”/termene; card gri). Baza de date: permisă starea `pauza` în tabelul stari.
+- 2026-11-24: plată ascunsă „Cadou de Crăciun · jocuri Orchard” (`cadou-craciun`): 27 de jocuri Orchard 2–3 ani de la Gameology (fără extensiile Shopping List), cu preț −15%; fiecare părinte alege un joc. Cod: produsele pot avea poză (`img`) → alegerea apare ca grilă cu poze și link „Vezi jocul”; câmp „Poză” în formularul de produse; texte „joc” în loc de „pachet” când sunt poze.
