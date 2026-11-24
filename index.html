@@ -330,6 +330,17 @@ p,h1,h2,h3,h4,b,small,span{overflow-wrap:break-word}
 .cmd-opts.pics .cmd-opt.none i{position:static}
 .cmd-pic{display:block;width:100%;aspect-ratio:1;object-fit:contain;background:#fff;border-radius:10px}
 .cmd-card .lnk{font-size:13px;padding-left:4px}
+.cmd-grp{grid-column:1/-1;font-family:var(--f-display);font-size:19px;font-weight:800;margin:14px 0 0}
+.cmd-grp:first-child{margin-top:0}
+.cmd-chip.big{font-size:13.5px;padding:6px 12px;min-height:36px;cursor:pointer}
+.cad-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:10px}
+.cad-lab{font-weight:800;font-size:14px;margin-right:4px}
+.cad-frati{margin-top:16px;padding-top:12px;border-top:1px dashed var(--line);display:grid;gap:10px}
+.cad-frati .hint{margin:0}
+.cad-frate{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr) auto;gap:8px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px}
+.cad-frate .cad-row{grid-column:1/-1;margin-top:0}
+@media (max-width:640px){.cad-frate{grid-template-columns:1fr}.cad-frate .btn{justify-self:start}}
+.cmd-count .muted{color:var(--muted)}
 .cmd-opt .num{color:var(--muted);font-weight:700}
 .cmd-tot{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:10px;font-size:14px;font-weight:700;color:var(--wing-ink)}
 .cmd-chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:3px}
@@ -978,10 +989,11 @@ function cmdForm(id, keep){
     + chk("obligatoriu", C.obligatoriu, "Pentru toți copiii, fără alegere (toți plătesc tot)")
     + chk("inchisa", C.inchisa, "Închisă: nu se mai pot face alegeri")
     + chk("ascuns", C.ascuns, "Ascunsă: părinții nu o văd deloc")
+    + chk("cadouri", C.cadouri, "Cadouri: alegere obligatorie, frați/surori, opțiunea „comand eu acasă”")
     + '<div class="acts">'+(id ? '<button type="button" class="btn danger left" data-a="cmdDel" data-id="'+esc(id)+'">'+(ui.confirm==="cmd"+id ? 'Sigur? Se șterg și alegerile' : 'Șterge')+'</button>' : '')+'<button type="button" class="btn" data-a="close">Renunță</button><button class="btn primary" type="submit">Salvează</button></div></form>');
 }
 function prodRow(p, i){
-  return '<div class="prod-row" data-i="'+i+'"><input type="hidden" name="p_id" value="'+esc(p.id||"")+'">'
+  return '<div class="prod-row" data-i="'+i+'"><input type="hidden" name="p_id" value="'+esc(p.id||"")+'"><input type="hidden" name="p_grup" value="'+esc(p.grup||"")+'">'
     + '<div class="grid2"><label class="field"><span>Nume</span><input class="inp" name="p_nume" maxlength="80" value="'+esc(p.nume||"")+'" placeholder="ex. Pachet 1 · Canvas"></label>'
     + '<label class="field"><span>Preț (lei)</span><input class="inp num" name="p_pret" type="number" min="0" step="0.01" inputmode="decimal" value="'+esc(p.pret ?? "")+'"></label></div>'
     + '<div class="grid2"><label class="field"><span>Nume scurt (în liste)</span><input class="inp" name="p_scurt" maxlength="30" value="'+esc(p.scurt||"")+'"></label>'
@@ -992,11 +1004,11 @@ function prodRow(p, i){
 }
 function cmdFromForm(f){
   const g = n => [...f.querySelectorAll('[name="'+n+'"]')];
-  const ids = g("p_id"), nm = g("p_nume"), pr = g("p_pret"), sc = g("p_scurt"), lk = g("p_link"), inf = g("p_info"), rc = g("p_rec"), im = g("p_img");
+  const ids = g("p_id"), nm = g("p_nume"), pr = g("p_pret"), sc = g("p_scurt"), lk = g("p_link"), inf = g("p_info"), rc = g("p_rec"), im = g("p_img"), gr = g("p_grup");
   const produse = nm.map((el, i) => { const n = el.value.trim(); if (!n) return null; const o = { id: ids[i].value || slugId(sc[i].value || n)+"-"+uid().slice(0,4), nume: n, pret: +pr[i].value || 0 };
-    if (sc[i].value.trim()) o.scurt = sc[i].value.trim(); if (lk[i].value.trim()) o.link = lk[i].value.trim(); if (inf[i].value.trim()) o.info = inf[i].value.trim(); if (rc[i].checked) o.recomandat = true; if (im[i] && im[i].value.trim()) o.img = im[i].value.trim(); return o; }).filter(Boolean);
+    if (sc[i].value.trim()) o.scurt = sc[i].value.trim(); if (lk[i].value.trim()) o.link = lk[i].value.trim(); if (inf[i].value.trim()) o.info = inf[i].value.trim(); if (rc[i].checked) o.recomandat = true; if (im[i] && im[i].value.trim()) o.img = im[i].value.trim(); if (gr[i] && gr[i].value) o.grup = gr[i].value; return o; }).filter(Boolean);
   const v = n => (f.elements[n] ? f.elements[n].value : "").trim(), c = n => !!(f.elements[n] && f.elements[n].checked);
-  return { titlu: v("titlu"), icon: v("icon"), descriere: v("descriere"), plata: v("plata"), cadou: v("cadou"), imagine: v("imagine"), produse, o_singura: c("o_singura"), obligatoriu: c("obligatoriu"), inchisa: c("inchisa"), ascuns: c("ascuns") };
+  return { titlu: v("titlu"), icon: v("icon"), descriere: v("descriere"), plata: v("plata"), cadou: v("cadou"), imagine: v("imagine"), produse, o_singura: c("o_singura"), obligatoriu: c("obligatoriu"), inchisa: c("inchisa"), ascuns: c("ascuns"), cadouri: c("cadouri") };
 }
 /* opționale: lună nouă / editare lună */
 function lunaForm(id, optId){
@@ -1447,7 +1459,15 @@ const cmdRec = (cid, k) => { const r = D.comenzi_copii.find(x => x.comanda_id ==
   return undefined; };
 const cmdSave = (r, patch) => r.virtual ? sb.from("comenzi_copii").upsert(Object.assign({ id: r.id, comanda_id: r.comanda_id, copil_id: r.copilId, produse: r.produse, raspuns: true }, patch)) : sb.from("comenzi_copii").update(patch).eq("id", r.id);
 const cmdProds = C => Array.isArray(C.produse) ? C.produse : [];
-const cmdSum = (C, r) => r ? cmdProds(C).filter(p => (Array.isArray(r.produse) ? r.produse : []).includes(p.id)).reduce((a,p)=>a+(+p.pret||0),0) : 0;
+const cmdDet = r => (r && r.detalii && typeof r.detalii === "object" && !Array.isArray(r.detalii)) ? r.detalii : {};
+const cmdFrati = r => Array.isArray(cmdDet(r).frati) ? cmdDet(r).frati : [];
+const cmdSum = (C, r) => { if (!r) return 0; const ps = cmdProds(C), own = Array.isArray(r.produse) ? r.produse : [];
+  if (!C.cadouri) return ps.filter(p => own.includes(p.id)).reduce((a,p)=>a+(+p.pret||0),0);
+  const pr = id => +((ps.find(p => p.id === id) || {}).pret || 0); let s = cmdDet(r).acasa ? 0 : own.reduce((a,id)=>a+pr(id),0);
+  for (const f of cmdFrati(r)) if (f.produs && !f.acasa) s += pr(f.produs); return Math.round(s*100)/100; };
+/* cadouri: câte bucăți din fiecare joc (copil + frați); grup = doar ce intră în comanda comună */
+const cmdPicks = (C, r) => { if (!r) return []; const out = []; const d = cmdDet(r); for (const id of (r.produse||[])) out.push({ id, acasa: !!d.acasa, frate: "" }); for (const f of cmdFrati(r)) if (f.produs) out.push({ id: f.produs, acasa: !!f.acasa, frate: f.nume || "frate/soră" }); return out; };
+const cmdSaveDet = (cid, k, det) => sb.rpc("comanda_detalii", { p_comanda: cid, p_copil: k, p_detalii: det });
 const cmdOk = r => !!(r && (r.platit || r.platit_declarat)), cmdDecl = r => !!(r && !r.platit && r.platit_declarat);
 const cmdVis = c => !c.ascuns; // „Ascunsă” din formularul plății
 const openCmds = () => D.comenzi.filter(c => cmdVis(c) && !c.inchisa && !arh(c)).sort((a,b)=>(a.ordine||0)-(b.ordine||0));
@@ -1476,7 +1496,12 @@ function viewComanda(C){
     return h + '</section>';
   }
   if (C.imagine) h += '<a class="cmd-img" href="'+esc(C.imagine)+'" target="_blank" rel="noopener"><img src="'+esc(C.imagine)+'" alt="'+esc(C.titlu)+'" loading="lazy"><span>Vezi oferta mare</span></a>';
-  if (C.o_singura) { const cnt = p => recs.filter(x => x.r && (x.r.produse||[]).includes(p.id)).length, none = recs.filter(x => x.r && x.r.raspuns && !(x.r.produse||[]).length).length; const parts = prods.filter(p => !pics || cnt(p)).map(p => esc(p.scurt||p.nume)+' <span class="num">'+cnt(p)+'</span>'); if (!pics || none) parts.push((pics?'Niciun joc':'Niciun pachet')+' <span class="num">'+none+'</span>'); h += '<div class="cmd-count"><b>'+(pics?'Alese până acum':'Comandate')+':</b> '+(parts.length ? parts.join(' · ') : 'încă nimeni')+'</div>'; }
+  if (C.cadouri) { const all = recs.flatMap(x => cmdPicks(C, x.r)); const nm = id => { const p = prods.find(q => q.id === id); return p ? esc(p.scurt||p.nume) : esc(id); };
+    const tally = arr => { const m = new Map(); for (const x of arr) m.set(x.id, (m.get(x.id)||0)+1); return [...m].sort((a,b)=>b[1]-a[1]).map(([id,n]) => nm(id)+' <span class="num">'+n+'</span>'); };
+    const grp = all.filter(x => !x.acasa), acasa = all.length - grp.length, grpSum = grp.reduce((a,x)=>a+(+((prods.find(p=>p.id===x.id)||{}).pret||0)),0);
+    h += '<div class="cmd-count"><b>Alese până acum ('+all.length+'):</b> '+(all.length ? tally(all).join(' · ') : 'încă nimeni')+'</div>';
+    h += '<div class="cmd-count"><b>🛒 Comanda comună ('+grp.length+' '+(grp.length===1?'joc':'jocuri')+', '+esc(lei(Math.round(grpSum*100)/100))+'):</b> '+(grp.length ? tally(grp).join(' · ') : '—')+(acasa ? ' · <span class="muted">🏠 '+acasa+' comandate de părinți acasă</span>' : '')+'</div>'; }
+  else if (C.o_singura) { const cnt = p => recs.filter(x => x.r && (x.r.produse||[]).includes(p.id)).length, none = recs.filter(x => x.r && x.r.raspuns && !(x.r.produse||[]).length).length; const parts = prods.filter(p => !pics || cnt(p)).map(p => esc(p.scurt||p.nume)+' <span class="num">'+cnt(p)+'</span>'); if (!pics || none) parts.push((pics?'Niciun joc':'Niciun pachet')+' <span class="num">'+none+'</span>'); h += '<div class="cmd-count"><b>'+(pics?'Alese până acum':'Comandate')+':</b> '+(parts.length ? parts.join(' · ') : 'încă nimeni')+'</div>'; }
   else h += '<div class="cmd-prods">'+prods.map(p => '<div class="cmd-prod"><b>'+esc(p.nume)+'</b><span class="num">'+esc(lei(p.pret))+'</span>'+(p.info ? '<span class="cmd-info">'+esc(p.info)+'</span>' : '')+(p.link ? linkify(p.link) : '')+'<small>'+(n => n+(n===1?' comandat':' comandate'))(recs.filter(x => x.r && (x.r.produse||[]).includes(p.id)).length)+'</small></div>').join("")+'</div>';
   if (C.cadou) h += '<div class="optinfo" style="margin:0 0 12px">🎁 '+linkify(C.cadou)+'</div>';
   if (C.plata) { h += '<div class="optinfo pinfo" style="margin:0 0 12px">💳 '+linkify(C.plata)+''+'</div>'; }
@@ -1484,26 +1509,50 @@ function viewComanda(C){
   if (mine) {
     const r = mine.r, sel = r ? (r.produse || []) : [], sum = cmdSum(C, r), locked = r && r.platit;
     h += '<div class="cmd-mine"><div class="eyebrow">Pentru '+esc(firstName(kidName(ui.me)))+'</div><div class="cmd-opts'+(C.o_singura?' radio':'')+(pics?' pics':'')+'">'
-      + prods.map(p => (pics ? '<div class="cmd-card">' : '')+'<button type="button" class="cmd-opt'+(sel.includes(p.id)?' on':'')+(p.recomandat?' rec':'')+'" data-a="cmdPick" data-id="'+esc(C.id)+'" data-p="'+esc(p.id)+'" data-kid="'+esc(ui.me)+'"'+(locked||C.inchisa||arh(C)?' disabled':'')+'><i></i>'+(p.img ? '<img class="cmd-pic" src="'+esc(p.img)+'" alt="" loading="lazy">' : '')+'<span class="cmd-ot">'+(p.recomandat ? '<span class="cmd-rec">⭐ Pachet recomandat</span>' : '')+esc(p.nume)+' <span class="num">'+esc(lei(p.pret))+'</span>'+(C.o_singura && p.info ? '<small>'+esc(p.info)+'</small>' : '')+'</span></button>'+(pics ? (p.link ? '<a class="lnk" href="'+esc(p.link)+'" target="_blank" rel="noopener noreferrer">🔗 Vezi jocul</a>' : '')+'</div>' : '')).join("")
-      + '<button type="button" class="cmd-opt none'+(r && r.raspuns && !sel.length?' on':'')+'" data-a="cmdNone" data-id="'+esc(C.id)+'" data-kid="'+esc(ui.me)+'"'+(locked||C.inchisa||arh(C)?' disabled':'')+'><i></i>'+(C.o_singura ? (pics ? 'Nu vreau niciun joc' : 'Nu vreau niciun pachet') : 'Nu luăm')+'</button></div>'
-      + '<div class="cmd-tot"><span>'+(r && r.raspuns ? (sum ? 'De plată: <b>'+esc(lei(sum))+'</b>'+(cmdOk(r)?' · plătit ✓':'') : (C.o_singura ? (pics ? 'Nu vreți niciun joc. Mulțumim că ați răspuns!' : 'Nu vreți niciun pachet. Mulțumim că ați răspuns!') : 'Nu luați nimic. Mulțumim că ați răspuns!')) : (C.o_singura ? (pics ? 'Alege un joc, sau „Nu vreau niciun joc”.' : 'Alege un pachet, sau „Nu vreau niciun pachet”.') : 'Alege ce iei, sau „Nu luăm”.'))+'</span>'+(sum && !(r && r.platit) ? payBtn("cmd", C.id, !cmdOk(r)) : '')+'</div></div>';
+      + prods.map((p, i) => (pics && p.grup && p.grup !== (prods[i-1]||{}).grup ? '<div class="cmd-grp">'+esc(p.grup)+'</div>' : '')+(pics ? '<div class="cmd-card">' : '')+'<button type="button" class="cmd-opt'+(sel.includes(p.id)?' on':'')+(p.recomandat?' rec':'')+'" data-a="cmdPick" data-id="'+esc(C.id)+'" data-p="'+esc(p.id)+'" data-kid="'+esc(ui.me)+'"'+(locked||C.inchisa||arh(C)?' disabled':'')+'><i></i>'+(p.img ? '<img class="cmd-pic" src="'+esc(p.img)+'" alt="" loading="lazy">' : '')+'<span class="cmd-ot">'+(p.recomandat ? '<span class="cmd-rec">⭐ Pachet recomandat</span>' : '')+esc(p.nume)+' <span class="num">'+esc(lei(p.pret))+'</span>'+(C.o_singura && p.info ? '<small>'+esc(p.info)+'</small>' : '')+'</span></button>'+(pics ? (p.link ? '<a class="lnk" href="'+esc(p.link)+'" target="_blank" rel="noopener noreferrer">🔗 Vezi jocul</a>' : '')+'</div>' : '')).join("")
+      + (C.cadouri ? '' : '<button type="button" class="cmd-opt none'+(r && r.raspuns && !sel.length?' on':'')+'" data-a="cmdNone" data-id="'+esc(C.id)+'" data-kid="'+esc(ui.me)+'"'+(locked||C.inchisa||arh(C)?' disabled':'')+'><i></i>'+(C.o_singura ? (pics ? 'Nu vreau niciun joc' : 'Nu vreau niciun pachet') : 'Nu luăm')+'</button>')+'</div>'
+      + (C.cadouri ? cadouriExtra(C, r, ui.me, sel, prods, locked || C.inchisa || arh(C)) : '')
+      + '<div class="cmd-tot"><span>'+(C.cadouri && !(r && r.raspuns && sel.length) ? 'Alege un joc pentru '+esc(firstName(kidName(ui.me)))+'.' : C.cadouri && !sum ? 'Nu aveți nimic de plătit la comanda comună. Mulțumim!' : r && r.raspuns ? (sum ? 'De plată: <b>'+esc(lei(sum))+'</b>'+(cmdOk(r)?' · plătit ✓':'') : (C.o_singura ? (pics ? 'Nu vreți niciun joc. Mulțumim că ați răspuns!' : 'Nu vreți niciun pachet. Mulțumim că ați răspuns!') : 'Nu luați nimic. Mulțumim că ați răspuns!')) : (C.o_singura ? (pics ? 'Alege un joc, sau „Nu vreau niciun joc”.' : 'Alege un pachet, sau „Nu vreau niciun pachet”.') : 'Alege ce iei, sau „Nu luăm”.'))+'</span>'+(sum && !(r && r.platit) ? payBtn("cmd", C.id, !cmdOk(r)) : '')+'</div></div>';
   }
   h += '<div class="money opt-tiles" style="--n:2"><div class="tile big"><div class="lab">Total comandat</div><div class="val">'+lei(total)+'</div></div><div class="tile"><div class="lab">Plătit</div><div class="val in">'+lei(paid)+'</div></div><div class="tile"><div class="lab">Au răspuns</div><div class="val">'+answered+' / '+kids.length+'</div></div></div>';
   const decl = recs.filter(x => cmdDecl(x.r) && cmdSum(C, x.r));
   if (cap.admin && decl.length) h += '<div class="amb-note">'+decl.length+' '+(decl.length===1?'părinte a bifat că a plătit':'părinți au bifat că au plătit')+' · <b>de confirmat</b>. Apasă pe butonul portocaliu după ce primești banii.</div>';
   h += '<div class="optlist">'+recs.map(({k, r}) => {
     const sel = r ? (r.produse||[]) : []; const ed = editable(k.id) && !(r && r.platit);
-    const chips = prods.map(p => ed && cap.admin
+    const chips = C.cadouri ? cadouriChips(C, r, prods) : prods.map(p => ed && cap.admin
       ? '<button type="button" class="cmd-chip'+(sel.includes(p.id)?' on':'')+'" data-a="cmdPick" data-id="'+esc(C.id)+'" data-p="'+esc(p.id)+'" data-kid="'+esc(k.id)+'">'+esc(p.scurt || p.nume)+'</button>'
       : (r && r.raspuns ? '<span class="cmd-chip'+(sel.includes(p.id)?' on':'')+'">'+esc(p.scurt || p.nume)+'</span>' : '')).join("");
-    const noneOn = !!(r && r.raspuns && !sel.length), noneLab = C.o_singura ? 'Niciun pachet' : 'Nimic';
-    const noneChip = ed && cap.admin
+    const noneOn = !!(r && r.raspuns && !sel.length) && !C.cadouri, noneLab = C.o_singura ? 'Niciun pachet' : 'Nimic';
+    const noneChip = C.cadouri ? '' : ed && cap.admin
       ? '<button type="button" class="cmd-chip nil'+(noneOn?' on':'')+'" data-a="cmdNone" data-id="'+esc(C.id)+'" data-kid="'+esc(k.id)+'">'+noneLab+'</button>'
       : (r && r.raspuns ? '<span class="cmd-chip nil'+(noneOn?' on':'')+'">'+noneLab+'</span>' : '');
     const status = noneChip + (!r || !r.raspuns ? '<span class="cmd-wait">nu a răspuns</span>' : '');
     return '<div class="orow'+(k.id===ui.me?' mine':'')+'">'+avHtml(k.id)+'<div class="on"><b>'+esc(k.nume)+'</b><div class="cmd-chips">'+chips+status+'</div></div><div class="oright"><span class="osum num">'+lei(cmdSum(C, r))+'</span>'+(r ? cmdPayBtn(C, r, k.id) : '<span class="opaid none">—</span>')+'</div></div>';
   }).join("")+'</div>';
   return h + '</section>';
+}
+function cadouriChips(C, r, prods){
+  if (!r) return ''; const d = cmdDet(r), nm = id => { const p = prods.find(q => q.id === id); return p ? (p.scurt || p.nume) : id; };
+  let h = (r.produse||[]).map(id => '<span class="cmd-chip on">'+esc(nm(id))+(d.acasa ? ' · 🏠 acasă' : '')+'</span>').join("");
+  h += cmdFrati(r).map(f => '<span class="cmd-chip'+(f.produs?' on':'')+'">👧 '+esc(f.nume || 'frate/soră')+': '+(f.produs ? esc(nm(f.produs))+(f.acasa ? ' · 🏠 acasă' : '') : 'aduc ei cadoul')+'</span>').join("");
+  return h;
+}
+function cadouriExtra(C, r, k, sel, prods, dis){
+  const d = cmdDet(r), fr = cmdFrati(r), D_ = dis ? ' disabled' : '', base = ' data-id="'+esc(C.id)+'" data-kid="'+esc(k)+'"';
+  const tog = (on, v, lab, extra) => '<button type="button" class="cmd-chip big'+(on?' on':'')+'" data-a="cadAcasa"'+base+' data-v="'+v+'"'+(extra||'')+D_+'>'+lab+'</button>';
+  let h = '';
+  if (sel.length) h += '<div class="cad-row"><span class="cad-lab">Jocul lui '+esc(firstName(kidName(k)))+':</span>'+tog(!d.acasa, 0, '🛒 Intră în comanda comună')+tog(!!d.acasa, 1, '🏠 Îl comand eu acasă')+'</div>';
+  h += '<div class="cad-frati"><div class="eyebrow">Frați și surori care vin la serbare</div><p class="hint">Dacă vin și frați sau surori, Moșul are cadou și pentru ei. Alege-le un joc din listă sau notează că aduceți voi cadoul.</p>'
+    + fr.map((f, i) => '<div class="cad-frate"><input class="inp" placeholder="Prenume" maxlength="40" value="'+esc(f.nume||"")+'" data-fr="nume" data-i="'+i+'"'+base+D_+' aria-label="Prenumele fratelui sau surorii">'
+      + '<select class="sel" data-fr="produs" data-i="'+i+'"'+base+D_+' aria-label="Jocul ales"><option value="">🎁 Aducem noi cadoul, separat</option>'+prods.map(p => '<option value="'+esc(p.id)+'"'+(p.id===f.produs?' selected':'')+'>'+esc(p.nume)+' · '+esc(lei(p.pret))+'</option>').join("")+'</select>'
+      + (f.produs ? '<div class="cad-row">'+tog(!f.acasa, 0, '🛒 Comanda comună', ' data-i="'+i+'"')+tog(!!f.acasa, 1, '🏠 Comand eu acasă', ' data-i="'+i+'"')+'</div>' : '')
+      + '<button type="button" class="btn small ghost danger" data-a="cadFrDel" data-i="'+i+'"'+base+D_+'>Scoate</button></div>').join("")
+    + (fr.length < 6 ? '<button type="button" class="btn small ghost" data-a="cadFrAdd"'+base+D_+'>'+ICON.plus+'Adaugă un frate / o soră</button>' : '')+'</div>';
+  return h;
+}
+async function cadSave(id, k, mut){
+  const r = cmdRec(id, k), d = cmdDet(r), det = { acasa: !!d.acasa, frati: cmdFrati(r).map(f => Object.assign({}, f)) };
+  mut(det); await write(async () => { chk(await cmdSaveDet(id, k, det)); await refetch("comenzi_copii"); }, "Salvat ✓");
 }
 function myPay(){
   const me = ui.me, out = []; let total = 0;
@@ -2423,12 +2472,16 @@ document.addEventListener("click", async e => {
     case "cmdPick": case "cmdNone": {
       const k = t.dataset.kid; if (!k || (!cap.admin && k !== ui.me)) break; const C = D.comenzi.find(x=>x.id===id); if (!C) break;
       const r = cmdRec(id, k); let sel = r ? (r.produse||[]).slice() : [];
-      if (a === "cmdNone") sel = []; else { const pid = t.dataset.p; sel = sel.includes(pid) ? sel.filter(x=>x!==pid) : (C.o_singura ? [pid] : sel.concat(pid)); }
+      if (a === "cmdNone") sel = []; else { const pid = t.dataset.p; sel = sel.includes(pid) ? (C.cadouri ? sel : sel.filter(x=>x!==pid)) : (C.o_singura ? [pid] : sel.concat(pid)); }
       t.disabled = true;
       if (cap.admin) await write(async () => { chk(await sb.from("comenzi_copii").upsert({ id: id+"_"+k, comanda_id: id, copil_id: k, produse: sel, raspuns: true, actualizat: new Date().toISOString() })); await refetch("comenzi_copii"); });
       else await write(async () => { chk(await sb.rpc("comanda_alege", { p_comanda: id, p_copil: k, p_produse: sel })); await refetch("comenzi_copii"); }, sel.length ? "Salvat ✓" : "Notat: nu luați");
       break;
     }
+    case "cadAcasa": { const k = t.dataset.kid; if (!k || (!cap.admin && k !== ui.me)) break; t.disabled = true; const v = t.dataset.v === "1", i = t.dataset.i;
+      await cadSave(id, k, det => { if (i == null) det.acasa = v; else if (det.frati[+i]) det.frati[+i].acasa = v; }); break; }
+    case "cadFrAdd": { const k = t.dataset.kid; if (!k || (!cap.admin && k !== ui.me)) break; t.disabled = true; await cadSave(id, k, det => { det.frati.push({ nume:"", produs:"", acasa:false }); }); break; }
+    case "cadFrDel": { const k = t.dataset.kid; if (!k || (!cap.admin && k !== ui.me)) break; t.disabled = true; const i = +t.dataset.i; await cadSave(id, k, det => { det.frati.splice(i, 1); }); break; }
     case "cmdPaid": { const k = t.dataset.kid; const r = cmdRec(id, k); if (!r) break; t.disabled = true; const on = !r.platit;
       await write(async () => { chk(await cmdSave(r, { platit: on, data_plata: on ? todayStr() : "", platit_declarat: on ? !!r.platit_declarat : false })); await refetch("comenzi_copii"); }, on ? "Marcat plătit: "+firstName(kidName(k)) : "Marcat de plată"); break; }
     case "pushOn": t.disabled = true; await pushOn(); break;
@@ -2468,6 +2521,8 @@ document.addEventListener("change", async e => {
   }
   if (t.dataset && t.dataset.imp != null && IMP) { IMP.kids[+t.dataset.imp].copilId = t.value; renderImportPreview(); }
 });
+document.addEventListener("change", async e => { const t = e.target; if (!t || !t.dataset || !t.dataset.fr) return; const k = t.dataset.kid, id = t.dataset.id, i = +t.dataset.i, f = t.dataset.fr, v = t.value;
+  if (!k || (!cap.admin && k !== ui.me)) return; await cadSave(id, k, det => { if (det.frati[i]) { det.frati[i][f] = f === "nume" ? v.trim().slice(0,40) : v; if (f === "produs" && !v) det.frati[i].acasa = false; } }); });
 document.addEventListener("change", e => { if (e.target && e.target.id === "evsel" && e.target.value) { const id = e.target.value; e.target.value = ""; goTo("sec-"+id); } });
 document.addEventListener("change", async e => {
   const t = e.target.closest("select[data-a]"); if (!t) return;
