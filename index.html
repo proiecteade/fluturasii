@@ -1545,8 +1545,8 @@ function cadouriExtra(C, r, k, sel, prods, dis){
   h += '<div class="cad-frati"><div class="eyebrow">Frați și surori care vin la serbare</div><p class="hint">Dacă vin și frați sau surori, Moșul are cadou și pentru ei. Alege-le un joc din listă sau notează că aduceți voi cadoul.</p>'
     + fr.map((f, i) => '<div class="cad-frate"><input class="inp" placeholder="Prenume" maxlength="40" value="'+esc(f.nume||"")+'" data-fr="nume" data-i="'+i+'"'+base+D_+' aria-label="Prenumele fratelui sau surorii">'
       + '<select class="sel" data-fr="produs" data-i="'+i+'"'+base+D_+' aria-label="Jocul ales"><option value="">🎁 Aducem noi cadoul, separat</option>'+prods.map(p => '<option value="'+esc(p.id)+'"'+(p.id===f.produs?' selected':'')+'>'+esc(p.nume)+' · '+esc(lei(p.pret))+'</option>').join("")+'</select>'
-      + (f.produs ? '<div class="cad-row">'+tog(!f.acasa, 0, '🛒 Comanda comună', ' data-i="'+i+'"')+tog(!!f.acasa, 1, '🏠 Comand eu acasă', ' data-i="'+i+'"')+'</div>' : '')
-      + '<button type="button" class="btn small ghost danger" data-a="cadFrDel" data-i="'+i+'"'+base+D_+'>Scoate</button></div>').join("")
+      + '<button type="button" class="btn small ghost danger" data-a="cadFrDel" data-i="'+i+'"'+base+D_+'>Scoate</button>'
+      + (f.produs ? '<div class="cad-row">'+tog(!f.acasa, 0, '🛒 Comanda comună', ' data-i="'+i+'"')+tog(!!f.acasa, 1, '🏠 Comand eu acasă', ' data-i="'+i+'"')+'</div>' : '')+'</div>').join("")
     + (fr.length < 6 ? '<button type="button" class="btn small ghost" data-a="cadFrAdd"'+base+D_+'>'+ICON.plus+'Adaugă un frate / o soră</button>' : '')+'</div>';
   return h;
 }
