@@ -778,6 +778,7 @@ button.facut:not(.on):hover{background:var(--meadow-soft)}
 [id^="cmd-"]{scroll-margin-top:16px}
 @media (max-width:720px){[id^="cmd-"]{scroll-margin-top:calc(var(--navh,0px) + 16px)}}
 [id^="coll-"]{scroll-margin-top:16px}
+.dp-tip{margin:-4px 0 8px}
 </style>
 </head>
 <body>
@@ -1930,10 +1931,10 @@ function viewOptionale(){
   let h = '<section><div class="sec-head"><div><h2>'+TX("deplata.titlu","De plată")+'</h2><div class="sub">'+TX("deplata.sub","Opționalele de fiecare lună, strângerile de bani și celelalte plăți ale grupei.")+'</div></div></div>' + dpBand();
   if (!opts.length && !cm.length && !D.colecte.length) return h + '<div class="empty">'+TX("deplata.gol","Nu sunt opționale încă.")+'</div></section>';
   const cols = D.colecte.slice().sort((a,b)=>String(b.data).localeCompare(String(a.data)));
-  const sel = opts.concat(cm, cols).some(o=>o.id===ui.opt) ? ui.opt : (opts[0] || cm[0] || cols[0] || {}).id; const O = opts.find(o=>o.id===sel), CM = cm.find(c => c.id === sel), CO = cols.find(c => c.id === sel);
+  const sel = opts.concat(cm, cols).some(o=>o.id===ui.opt) ? ui.opt : ""; const O = opts.find(o=>o.id===sel), CM = cm.find(c => c.id === sel), CO = cols.find(c => c.id === sel);
   h += '<div class="dp-h"><h3>'+TX("deplata.lunare","🔁 Lunare")+'</h3>'+(cap.admin ? '<div class="row"><button class="btn small" data-a="lunaEdit">'+ICON.plus+'Lună nouă</button><button class="btn small" data-a="optImport">'+ICON.plus+'Excel</button><button class="btn small ghost" data-a="optEdit">'+ICON.plus+'Opțional</button></div>' : '')+'</div>';
   h += opts.length ? '<div class="dp-cards">'+opts.map(o => dpCard(o, sel)).join("")+'</div>' : '<div class="empty">Nu sunt opționale lunare.</div>';
-  h += O ? optDetail(O) : '</section>';
+  h += O ? optDetail(O) : (opts.length ? '<p class="hint dp-tip">'+TX("deplata.tip","Apasă pe un opțional ca să vezi lunile, prezența și cine a plătit.")+'</p>' : '')+'</section>';
   const open = cm.filter(c => !c.inchisa && !arh(c)), done = cm.filter(c => c.inchisa || arh(c));
   const colOpen = cols.filter(c => !c.inchisa), colDone = cols.filter(c => c.inchisa);
   const rowsOpen = open.map(c => dpRow(c, sel)).concat(colOpen.map(c => dpCollRow(c, sel))), rowsDone = done.map(c => dpRow(c, sel)).concat(colDone.map(c => dpCollRow(c, sel)));
@@ -2411,7 +2412,7 @@ document.addEventListener("click", async e => {
   if (a === "closeScrim") { if (e.target === t && !pickForced) closeModal(); return; }
   if (t.tagName === "SELECT" || t.tagName === "FORM") return;
   switch (a) {
-    case "tab": if (t.dataset.k === "ghid") LS.set("fl_ghid","1"); setTab(t.dataset.k); break;
+    case "tab": if (t.dataset.k === "ghid") LS.set("fl_ghid","1"); if (t.dataset.k === "optionale") { ui.opt = ""; ui.optLuna = ""; } setTab(t.dataset.k); break;
     case "ghidOk": LS.set("fl_ghid","1"); render(); break;
     case "goG": syncHash("ghid/"+id); goTo("g-"+id); break;
     case "pick": openPicker(); break;
@@ -2468,7 +2469,7 @@ document.addEventListener("click", async e => {
       ui.confirm = null; await write(db => db.doc("comentarii/"+id).delete(), "Comentariu șters"); break;
     }
     case "settings": settingsForm(); break;
-    case "optSel": ui.opt = id; ui.optLuna = ""; syncHash(); render(); if (D.comenzi.some(c => c.id === id)) goTo("cmd-"+id); else if (D.colecte.some(c => c.id === id)) goTo("coll-"+id); else if (D.optionale.some(o => o.id === id) && matchMedia("(max-width:720px)").matches) { const el = document.querySelector(".optinfo, .optmonth"); if (el) el.scrollIntoView({ behavior:"smooth", block:"start" }); } break;
+    case "optSel": if (ui.opt === id) { ui.opt = ""; ui.optLuna = ""; syncHash(); render(); break; } ui.opt = id; ui.optLuna = ""; syncHash(); render(); if (D.comenzi.some(c => c.id === id)) goTo("cmd-"+id); else if (D.colecte.some(c => c.id === id)) goTo("coll-"+id); else if (D.optionale.some(o => o.id === id) && matchMedia("(max-width:720px)").matches) { const el = document.querySelector(".optinfo, .optmonth"); if (el) el.scrollIntoView({ behavior:"smooth", block:"start" }); } break;
     case "optLuna": ui.optLuna = id; syncHash(); render(); break;
     case "goOpt": { const l = D.optional_luni.find(x=>x.id===id); if (l) { ui.opt = l.optionalId; ui.optLuna = l.id; } setTab("optionale"); break; }
     case "optImport": IMP = null; importForm(); break;
