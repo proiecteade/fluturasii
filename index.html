@@ -341,6 +341,12 @@ p,h1,h2,h3,h4,b,small,span{overflow-wrap:break-word}
 .cad-frate .cad-row{grid-column:1/-1;margin-top:0}
 @media (max-width:640px){.cad-frate{grid-template-columns:1fr}.cad-frate .btn{justify-self:start}}
 .cmd-count .muted{color:var(--muted)}
+.cad-stats{display:grid;gap:8px;margin:0 0 14px}
+.cad-stat{font-size:14.5px}
+.cad-stat .muted{color:var(--muted)}
+.cad-shop{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 14px}
+.cad-list{color:var(--muted);font-size:14px;margin-top:4px;line-height:1.6}
+.cad-list b{color:var(--ink)}
 .cmd-opt .num{color:var(--muted);font-weight:700}
 .cmd-tot{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:10px;font-size:14px;font-weight:700;color:var(--wing-ink)}
 .cmd-chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:3px}
@@ -1529,11 +1535,16 @@ function viewComanda(C){
     return h + '</section>';
   }
   if (C.imagine) h += '<a class="cmd-img" href="'+esc(C.imagine)+'" target="_blank" rel="noopener"><img src="'+esc(C.imagine)+'" alt="'+esc(C.titlu)+'" loading="lazy"><span>Vezi oferta mare</span></a>';
-  if (C.cadouri) { const all = recs.flatMap(x => cmdPicks(C, x.r)); const nm = id => { const p = prods.find(q => q.id === id); return p ? esc(p.scurt||p.nume) : esc(id); };
-    const tally = arr => { const m = new Map(); for (const x of arr) m.set(x.id, (m.get(x.id)||0)+1); return [...m].sort((a,b)=>b[1]-a[1]).map(([id,n]) => nm(id)+' <span class="num">'+n+'</span>'); };
-    const grp = all.filter(x => !x.acasa), acasa = all.length - grp.length, grpSum = grp.reduce((a,x)=>a+(+((prods.find(p=>p.id===x.id)||{}).pret||0)),0);
-    h += '<div class="cmd-count"><b>Alese până acum ('+all.length+'):</b> '+(all.length ? tally(all).join(' · ') : 'încă nimeni')+'</div>';
-    h += '<div class="cmd-count"><b>🛒 Comanda comună ('+grp.length+' '+(grp.length===1?'joc':'jocuri')+', '+esc(lei(Math.round(grpSum*100)/100))+'):</b> '+(grp.length ? tally(grp).join(' · ') : '—')+(acasa ? ' · <span class="muted">🏠 '+acasa+' comandate de părinți acasă</span>' : '')+'</div>'; }
+  if (C.cadouri) { const all = recs.flatMap(x => cmdPicks(C, x.r)); const P = id => prods.find(q => q.id === id) || { nume:id, pret:0 };
+    const shop = id => (P(id).info || "").split(" · ")[0] || "Altele", nm = id => esc((P(id).nume || id).replace(/^Smart Games · /, ""));
+    const kidsDone = recs.filter(x => x.r && (x.r.produse||[]).length).length, fr = recs.flatMap(x => cmdFrati(x.r)), frJoc = fr.filter(f => f.produs).length;
+    const grp = all.filter(x => !x.acasa), acasa = all.length - grp.length, sumOf = arr => Math.round(arr.reduce((a,x)=>a+(+P(x.id).pret||0),0)*100)/100;
+    const tally = arr => { const m = new Map(); for (const x of arr) m.set(x.id, (m.get(x.id)||0)+1); return [...m].sort((a,b)=>b[1]-a[1] || String(P(a[0]).nume).localeCompare(P(b[0]).nume)).map(([id,n]) => nm(id)+(n>1?' <b class="num">×'+n+'</b>':'')).join(' · '); };
+    h += '<div class="cad-stats"><div class="cad-stat"><b>👧 Au ales:</b> <span class="num">'+kidsDone+'</span> din '+kids.length+' copii'+(fr.length ? ' · <b>➕ frați/surori:</b> <span class="num">'+fr.length+'</span>'+(fr.length - frJoc ? ' ('+frJoc+' cu joc din listă, '+(fr.length-frJoc)+' cu cadou adus separat)' : '') : '')+'</div>';
+    h += '<div class="cad-stat"><b>🛒 Comanda comună:</b> <span class="num">'+grp.length+'</span> '+(grp.length===1?'joc':'jocuri')+', <span class="num">'+esc(lei(sumOf(grp)))+'</span>'+(acasa ? ' · <span class="muted">🏠 '+acasa+' comandate de părinți acasă</span>' : '')+'</div>';
+    const shops = [...new Set(grp.map(x => shop(x.id)))].sort();
+    for (const sh of shops) { const a = grp.filter(x => shop(x.id) === sh); h += '<div class="cad-stat cad-shop"><b>'+esc(sh)+'</b> · <span class="num">'+a.length+'</span> '+(a.length===1?'joc':'jocuri')+', <span class="num">'+esc(lei(sumOf(a)))+'</span><div class="cad-list">'+tally(a)+'</div></div>'; }
+    h += '</div>'; }
   else if (C.o_singura) { const cnt = p => recs.filter(x => x.r && (x.r.produse||[]).includes(p.id)).length, none = recs.filter(x => x.r && x.r.raspuns && !(x.r.produse||[]).length).length; const parts = prods.filter(p => !pics || cnt(p)).map(p => esc(p.scurt||p.nume)+' <span class="num">'+cnt(p)+'</span>'); if (!pics || none) parts.push((pics?'Niciun joc':'Niciun pachet')+' <span class="num">'+none+'</span>'); h += '<div class="cmd-count"><b>'+(pics?'Alese până acum':'Comandate')+':</b> '+(parts.length ? parts.join(' · ') : 'încă nimeni')+'</div>'; }
   else h += '<div class="cmd-prods">'+prods.map(p => '<div class="cmd-prod"><b>'+esc(p.nume)+'</b><span class="num">'+esc(lei(p.pret))+'</span>'+(p.info ? '<span class="cmd-info">'+esc(p.info)+'</span>' : '')+(p.link ? linkify(p.link) : '')+'<small>'+(n => n+(n===1?' comandat':' comandate'))(recs.filter(x => x.r && (x.r.produse||[]).includes(p.id)).length)+'</small></div>').join("")+'</div>';
   if (C.cadou) h += '<div class="optinfo" style="margin:0 0 12px">🎁 '+linkify(C.cadou)+'</div>';
