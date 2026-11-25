@@ -75,3 +75,4 @@ Vercel publică automat din branch-ul main. Hellomeri.go.ro nu e implicat (pagin
 - 2026-11-25: cadou de Crăciun — șterse alegerile de test ale lui Vlad; jocurile sunt în 2 secțiuni: Gameology (toate, crescător după prețul cu −15%) și De-a joaca (Smart Games, crescător).
 - 2026-11-25: cadou Crăciun — termen alegere și plată 30 nov. (comenzile pe 1 dec.), plata în contul ING, codul MOMS4MOMS la Gameology; încă ascunsă.
 - 2026-11-25: cadou Crăciun — pusă live pentru părinți (nu mai e ascunsă).
+- 2026-11-25: „De plată” reorganizat: bandă cu totul de plată al copilului, secțiunea „🔁 Lunare” (cardurile opționalelor, detaliul dedesubt) și „🧾 Alte plăți” (comenzile, cu „Încheiate” strânse). Strângerile de bani nu mai apar la De plată, doar în Bugetul grupei.

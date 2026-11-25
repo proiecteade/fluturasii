@@ -738,6 +738,39 @@ button.facut:not(.on):hover{background:var(--meadow-soft)}
 .zbtn{border:1px dashed var(--line);background:transparent;border-radius:8px;padding:2px 8px;font:inherit;color:inherit;cursor:pointer}
 .cal.rng .d{font-size:.82em;letter-spacing:-.5px;white-space:nowrap}
 .cal.rng .m,.cal.rng .w{white-space:nowrap}
+
+/* De plată: lunare + alte plăți */
+.dp-band{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;width:100%;border:0;background:var(--berry-soft);color:var(--berry);border-radius:14px;padding:12px 16px;font:inherit;font-weight:700;font-size:15px;text-align:left;cursor:pointer;margin-bottom:16px}
+.dp-band b{font-weight:900}
+.dp-band .dp-go{font-size:13px;font-weight:800}
+.dp-band.ok{background:var(--meadow-soft);color:var(--meadow);cursor:default;justify-content:flex-start}
+.dp-band.ok svg{width:18px;height:18px}
+.dp-h{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:6px 0 10px}
+.dp-h h3{margin:0;font-family:var(--f-display);font-size:20px;font-weight:800}
+.dp-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:14px}
+@media (max-width:720px){.dp-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.dp-card{position:relative;display:flex;flex-direction:column;gap:4px;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;font:inherit;color:var(--ink);cursor:pointer;min-width:0}
+.dp-card:hover{background:var(--surface-2)}
+.dp-card.on{border-color:var(--wing);box-shadow:inset 0 0 0 1px var(--wing)}
+.dp-n{font-weight:800;font-size:15.5px}
+.dp-s{font-size:13px;font-weight:700;color:var(--muted)}
+.dp-s.due{color:var(--berry)}.dp-s.ok{color:var(--meadow)}
+.dp-dot{position:absolute;top:10px;right:10px;width:10px;height:10px;border-radius:50%;background:var(--berry)}
+.dp-alte{margin-top:8px}
+.dp-rows{display:flex;flex-direction:column;gap:6px}
+.dp-row{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 14px;font:inherit;color:var(--ink);cursor:pointer}
+.dp-row:hover{background:var(--surface-2)}
+.dp-row.on{border-color:var(--wing);box-shadow:inset 0 0 0 1px var(--wing)}
+.dp-ic{font-size:20px;flex:none}
+.dp-t{flex:1;min-width:0;display:flex;flex-direction:column}
+.dp-t b{font-weight:800}
+.dp-t small{font-size:13px;color:var(--muted);font-weight:700}
+.dp-pill{flex:none;font-size:12.5px;font-weight:800;border-radius:999px;padding:4px 10px;white-space:nowrap}
+.dp-pill.a{background:var(--wing-soft);color:var(--wing-ink)}.dp-pill.d{background:var(--berry-soft);color:var(--berry)}.dp-pill.k{background:var(--meadow-soft);color:var(--meadow)}.dp-pill.n{background:var(--surface-2);color:var(--muted)}
+.dp-done{margin-top:10px}
+.dp-done .dp-rows{margin-top:8px}
+[id^="cmd-"]{scroll-margin-top:16px}
+@media (max-width:720px){[id^="cmd-"]{scroll-margin-top:calc(var(--navh,0px) + 16px)}}
 </style>
 </head>
 <body>
@@ -1842,19 +1875,54 @@ function optDues(me){
   }
   return out.sort((a,b)=>String(b.l.luna).localeCompare(a.l.luna));
 }
+function dpBand(){
+  const me = ui.me; if (!isChild(me)) return '';
+  const pay = myPay();
+  if (!pay.total) return '<div class="dp-band ok">'+ICON.check+'<span>'+esc(firstName(kidName(me)))+': totul e plătit. Mulțumim!</span></div>';
+  const un = optDues(me).filter(x => !optOk(x.p) && x.sum)[0];
+  const uc = un ? null : D.comenzi.filter(c => cmdVis(c)).find(C => { const r = cmdRec(C.id, me); return cmdSum(C, r) && !cmdOk(r); });
+  const act = un ? 'data-a="goOpt" data-id="'+esc(un.l.id)+'"' : uc ? 'data-a="goCmd" data-id="'+esc(uc.id)+'"' : 'data-a="tab" data-k="acasa"';
+  return '<button type="button" class="dp-band" '+act+'><span>💳 '+esc(firstName(kidName(me)))+': <b>'+esc(lei(pay.total))+'</b> de plată</span><span class="dp-go">Vezi ce e neplătit →</span></button>';
+}
+function dpCard(o, sel){
+  const me = ui.me, luni = D.optional_luni.filter(l => l.optionalId === o.id).sort((a,b)=>String(b.luna).localeCompare(a.luna));
+  let st = luni.length ? lunaLabel(luni[0].luna) : 'fără date încă', cls = '', dot = false;
+  if (isChild(me) && luni.length) {
+    const ds = optDues(me).filter(x => x.o.id === o.id), un = ds.filter(x => !optOk(x.p));
+    if (un.length) { dot = true; const sum = un.reduce((a,x)=>a+x.sum,0); st = (un.length === 1 ? lunaLabel(un[0].l.luna) : un.length+' luni')+' · '+lei(sum)+' de plată'; cls = 'due'; }
+    else { const d0 = ds.find(x => x.l.id === luni[0].id); st = lunaLabel(luni[0].luna)+' · '+(d0 ? 'plătit ✓' : 'nimic de plată'); cls = 'ok'; }
+  }
+  return '<button type="button" class="dp-card'+(o.id === sel ? ' on' : '')+'" data-a="optSel" data-id="'+esc(o.id)+'" aria-pressed="'+(o.id === sel)+'">'+(dot ? '<span class="dp-dot" aria-label="De plată"></span>' : '')
+    + '<span class="dp-n"><span aria-hidden="true">'+esc(o.icon||"⭐")+'</span> '+esc(o.nume)+'</span><span class="dp-s '+cls+'">'+esc(st)+'</span></button>';
+}
+function dpRow(C, sel){
+  const me = ui.me; let sub = [], pill = '';
+  if (C.obligatoriu) sub.push("Pentru toți");
+  if (isChild(me) && !C.ascuns) { const r = cmdRec(C.id, me), sum = cmdSum(C, r);
+    if (sum) sub.push(lei(sum));
+    pill = cmdOk(r) && sum ? '<span class="dp-pill k">✓ Plătit</span>' : sum ? '<span class="dp-pill d">De plată</span>' : (r && r.raspuns) ? '<span class="dp-pill n">Nu luați</span>' : (C.inchisa || arh(C)) ? '' : '<span class="dp-pill a">Alege</span>'; }
+  if (C.ascuns) sub.push("ascunsă pentru părinți");
+  if (C.inchisa && !arh(C)) sub.push("închisă");
+  return '<button type="button" class="dp-row'+(C.id === sel ? ' on' : '')+'" data-a="optSel" data-id="'+esc(C.id)+'" aria-pressed="'+(C.id === sel)+'"><span class="dp-ic" aria-hidden="true">'+esc(C.icon||"📚")+'</span><span class="dp-t"><b>'+esc(C.titlu)+'</b>'+(sub.length ? '<small>'+esc(sub.join(" · "))+'</small>' : '')+'</span>'+pill+'</button>';
+}
 function viewOptionale(){
   const opts = D.optionale.slice().sort((a,b)=>(a.ordine||0)-(b.ordine||0));
-  let h = '<section><div class="sec-head"><div><h2>'+TX("deplata.titlu","De plată")+'</h2><div class="sub">'+TX("deplata.sub","Prezența de fiecare lună și cât e de plată, după fișa de la grădiniță.")+'</div></div>'
-    + (cap.admin ? '<div class="row"><button class="btn small primary" data-a="optImport">'+ICON.plus+'Încarcă prezența (Excel)</button><button class="btn small" data-a="lunaEdit">'+ICON.plus+'Lună nouă</button><button class="btn small" data-a="optEdit">'+ICON.plus+'Opțional</button><button class="btn small" data-a="cmdEdit">'+ICON.plus+'Plată cu produse</button></div>' : '') + '</div>';
-  const oc = D.colecte.filter(c => c.loc === "optionale" && !c.inchisa).sort((a,b)=>String(a.data).localeCompare(String(b.data)));
-  const cm = D.comenzi.filter(c => cmdVis(c) || cap.admin).sort((a,b)=>(arh(a)-arh(b)) || (a.ordine||0)-(b.ordine||0));
-  if (!opts.length && !oc.length && !cm.length) return h + '<div class="empty">'+TX("deplata.gol","Nu sunt opționale încă.")+'</div></section>';
-  const sel = opts.concat(oc, cm).some(o=>o.id===ui.opt) ? ui.opt : (opts[0] || cm[0] || oc[0]).id; const O = opts.find(o=>o.id===sel);
-  const cmdTab = c => '<button type="button" role="tab" class="segb'+(c.id===sel?' on':'')+(arh(c)?' arh-tab':'')+'" aria-selected="'+(c.id===sel)+'" data-a="optSel" data-id="'+esc(c.id)+'"><span aria-hidden="true">'+esc(c.icon||"📚")+'</span> '+esc(c.titlu)+(c.ascuns ? ' <small>(ascunsă)</small>' : '')+'</button>';
-  const collTab = c => '<button type="button" role="tab" class="segb'+(c.id===sel?' on':'')+'" aria-selected="'+(c.id===sel)+'" data-a="optSel" data-id="'+esc(c.id)+'"><span aria-hidden="true">📚</span> '+esc(String(c.titlu).split(" (")[0])+'</button>';
-  h += '<div class="seg" role="tablist">'+opts.map(o => { const n = D.optional_luni.filter(l=>l.optionalId===o.id).length; return '<button type="button" role="tab" class="segb'+(o.id===sel?' on':'')+'" aria-selected="'+(o.id===sel)+'" data-a="optSel" data-id="'+esc(o.id)+'"><span aria-hidden="true">'+esc(o.icon||"")+'</span> '+esc(o.nume)+(n?'':' <small>(fără date)</small>')+'</button>'; }).join("")+cm.map(cmdTab).join("")+oc.map(collTab).join("")+'</div>';
-  const CM = cm.find(c => c.id === sel); if (CM) { if (ui.tab === "optionale" && /^#(optionale|deplata|de-plata)/.test(location.hash)) syncHash("deplata/"+sel); return h + viewComanda(CM); }
-  if (!O) { const C = oc.find(c => c.id === sel); if (ui.tab === "optionale" && /^#(optionale|deplata|de-plata)/.test(location.hash)) syncHash("deplata/"+sel); return h + '</section><section class="optmonth"><div class="coll">'+collCard(C)+'</div></section>'; }
+  const cm = D.comenzi.filter(c => cmdVis(c) || cap.admin).sort((a,b)=>(a.ordine||0)-(b.ordine||0));
+  let h = '<section><div class="sec-head"><div><h2>'+TX("deplata.titlu","De plată")+'</h2><div class="sub">'+TX("deplata.sub","Opționalele de fiecare lună și celelalte plăți ale grupei.")+'</div></div></div>' + dpBand();
+  if (!opts.length && !cm.length) return h + '<div class="empty">'+TX("deplata.gol","Nu sunt opționale încă.")+'</div></section>';
+  const sel = opts.concat(cm).some(o=>o.id===ui.opt) ? ui.opt : (opts[0] || cm[0]).id; const O = opts.find(o=>o.id===sel), CM = cm.find(c => c.id === sel);
+  h += '<div class="dp-h"><h3>'+TX("deplata.lunare","🔁 Lunare")+'</h3>'+(cap.admin ? '<div class="row"><button class="btn small" data-a="lunaEdit">'+ICON.plus+'Lună nouă</button><button class="btn small" data-a="optImport">'+ICON.plus+'Excel</button><button class="btn small ghost" data-a="optEdit">'+ICON.plus+'Opțional</button></div>' : '')+'</div>';
+  h += opts.length ? '<div class="dp-cards">'+opts.map(o => dpCard(o, sel)).join("")+'</div>' : '<div class="empty">Nu sunt opționale lunare.</div>';
+  h += O ? optDetail(O) : '</section>';
+  const open = cm.filter(c => !c.inchisa && !arh(c)), done = cm.filter(c => c.inchisa || arh(c));
+  h += '<section class="dp-alte"><div class="dp-h"><h3>'+TX("deplata.alte","🧾 Alte plăți")+'</h3>'+(cap.admin ? '<div class="row"><button class="btn small" data-a="cmdEdit">'+ICON.plus+'Plată cu produse</button></div>' : '')+'</div>';
+  h += open.length ? '<div class="dp-rows">'+open.map(c => dpRow(c, sel)).join("")+'</div>' : '<div class="empty">'+TX("deplata.alte.gol","Nu sunt alte plăți deschise acum.")+'</div>';
+  if (done.length) h += '<details class="all dp-done"'+(CM && done.includes(CM) ? ' open' : '')+'><summary>'+TX("deplata.incheiate","Încheiate")+' ('+done.length+')</summary><div class="dp-rows">'+done.map(c => dpRow(c, sel)).join("")+'</div></details>';
+  if (CM) { if (ui.tab === "optionale" && /^#(optionale|deplata|de-plata)/.test(location.hash)) syncHash("deplata/"+sel); return h + viewComanda(CM); }
+  return h + '</section>';
+}
+function optDetail(O){
+  const sel = O.id; let h = '';
   if (O.descriere || cap.admin) h += '<div class="optinfo">'+(O.descriere ? linkify(O.descriere) : '<span class="hint">Adaugă cum se plătește (cui, până când).</span>')+(cap.admin ? ' <button class="linkbtn" data-a="optEdit" data-id="'+esc(O.id)+'">Editează</button>' : '')+'</div>';
   const luni = D.optional_luni.filter(l=>l.optionalId===sel).sort((a,b)=>String(b.luna).localeCompare(a.luna));
   if (!luni.length) return h + '<div class="empty" style="margin-top:12px">Încă nu e încărcată prezența la '+esc(O.nume.toLowerCase())+'.'+(cap.admin?' Apasă „Încarcă prezența (Excel)” sau „Lună nouă”.':'')+'</div></section>';
@@ -2378,7 +2446,7 @@ document.addEventListener("click", async e => {
       ui.confirm = null; await write(db => db.doc("comentarii/"+id).delete(), "Comentariu șters"); break;
     }
     case "settings": settingsForm(); break;
-    case "optSel": ui.opt = id; ui.optLuna = ""; syncHash(); render(); break;
+    case "optSel": ui.opt = id; ui.optLuna = ""; syncHash(); render(); if (D.comenzi.some(c => c.id === id)) goTo("cmd-"+id); else if (D.optionale.some(o => o.id === id) && matchMedia("(max-width:720px)").matches) { const el = document.querySelector(".optinfo, .optmonth"); if (el) el.scrollIntoView({ behavior:"smooth", block:"start" }); } break;
     case "optLuna": ui.optLuna = id; syncHash(); render(); break;
     case "goOpt": { const l = D.optional_luni.find(x=>x.id===id); if (l) { ui.opt = l.optionalId; ui.optLuna = l.id; } setTab("optionale"); break; }
     case "optImport": IMP = null; importForm(); break;
