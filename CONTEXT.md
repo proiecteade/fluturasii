@@ -79,3 +79,4 @@ Vercel publică automat din branch-ul main. Hellomeri.go.ro nu e implicat (pagin
 - 2026-11-25: cadouri — statistici noi: câți copii din 22 au ales + frați/surori; comanda comună pe magazine (Gameology / De-a joaca) cu număr, sumă și jocuri ×bucăți.
 - 2026-11-25: strângerile de bani s-au mutat la De plată → „Alte plăți” (deschise în listă, închise la „Încheiate”); butonul „+ Strângere” e acolo. Bugetul grupei arată doar soldul, totalurile și mișcările. Linkurile vechi #buget/<strângere> duc la De plată.
 - 2026-11-25: De plată se deschide strâns (doar carduri și rânduri); detaliul apare la tap și se închide la al doilea tap. Linkurile directe (#deplata/<id>) și banda de sus deschid direct plata respectivă.
+- 2026-11-25: pe Acasă, lista „✓ Gata” e strânsă; se deschide la tap.

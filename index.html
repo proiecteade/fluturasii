@@ -779,6 +779,11 @@ button.facut:not(.on):hover{background:var(--meadow-soft)}
 @media (max-width:720px){[id^="cmd-"]{scroll-margin-top:calc(var(--navh,0px) + 16px)}}
 [id^="coll-"]{scroll-margin-top:16px}
 .dp-tip{margin:-4px 0 8px}
+details.done-list>summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:6px}
+details.done-list>summary::-webkit-details-marker{display:none}
+details.done-list>summary::after{content:"›";font-size:16px;transition:transform .15s}
+details.done-list[open]>summary::after{transform:rotate(90deg)}
+details.done-list[open]>summary{margin-bottom:8px}
 </style>
 </head>
 <body>
@@ -1455,7 +1460,7 @@ function viewHome(){
     if (pay.rows.length) h += '<div class="todo-grp"><div class="eyebrow pay-h">💳 De plătit<span class="num">'+esc(lei(pay.total))+'</span></div><div class="quick">'+pay.rows.join("")+'</div></div>';
     h += '<div class="todo-grp"><div class="eyebrow">'+TX("acasa.todo.pregatit","📋 De pregătit și de adus")+'</div>'+(mineH.length ? '<div class="quick">'+mineH.join("")+'</div>' : '<div class="empty">'+TX("acasa.todo.gol","Nimic deschis pentru voi acum. Mulțumim!")+'</div>')+'</div>';
   }
-  if (kid(ui.me)) { const dn = myDone(); if (dn.length) h += '<div class="done-list"><div class="eyebrow done-h">✓ Gata ('+dn.length+')</div><div class="quick">'+dn.join("")+'</div></div>'; }
+  if (kid(ui.me)) { const dn = myDone(); if (dn.length) h += '<details class="done-list"'+(ui.doneOpen ? ' open' : '')+'><summary class="eyebrow done-h">✓ Gata ('+dn.length+')</summary><div class="quick">'+dn.join("")+'</div></details>'; }
   h += '</section>';
   h += '<section><div class="sec-head"><div><h2>'+TX("acasa.ajutor.titlu","Unde e nevoie de ajutor")+'</h2><div class="sub">'+TX("acasa.ajutor.sub","Lucruri care nu au încă pe cineva.")+'</div></div></div>';
   h += help.length ? '<div class="quick">'+help.join("")+'</div>' : '<div class="empty">'+TX("acasa.ajutor.gol","Totul are pe cineva care se ocupă.")+'</div>';
@@ -2405,6 +2410,7 @@ function goTo(elId){
 function tabOfSec(s){ return isEvent(s) ? "evenimente" : "necesar"; }
 function needMe(then){ if (kid(ui.me)) return true; openPicker(then); return false; }
 
+document.addEventListener("toggle", e => { const d = e.target; if (d && d.classList && d.classList.contains("done-list")) ui.doneOpen = d.open; }, true);
 document.addEventListener("click", async e => {
   if (e.target.closest("a.lnk")) return;
   const t = e.target.closest("[data-a]"); if (!t) return;
