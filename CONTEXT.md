@@ -81,3 +81,4 @@ Vercel publică automat din branch-ul main. Hellomeri.go.ro nu e implicat (pagin
 - 2026-11-25: De plată se deschide strâns (doar carduri și rânduri); detaliul apare la tap și se închide la al doilea tap. Linkurile directe (#deplata/<id>) și banda de sus deschid direct plata respectivă.
 - 2026-11-25: pe Acasă, lista „✓ Gata” e strânsă; se deschide la tap.
 - 2026-11-25: pe Acasă, la plățile tip „Cadouri” (alegere obligatorie) nu mai scrie „sau Nu luăm”.
+- 2026-11-25: reconciliere extras ING 22–25 nov.: confirmate poze (+7, total 19), figurine (+4, total 21), Moș Crăciun 23 lei (12 plătiți), perdele 135 lei (9 plătiți, în buget). Plățile pentru „cadou de Crăciun” de azi (684,49 lei, 8 familii) se returnează — nu sunt trecute în portal.
