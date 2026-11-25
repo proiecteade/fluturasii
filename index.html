@@ -1627,7 +1627,7 @@ function myTodo(){
     else if (it.tip === "fiecare" && isChild(me) && !signups(it.id).some(x=>x.copilId===me)) out.push(qrow(it, "Nebifat încă", "wing"));
     else if (it.tip === "rotatie") { const slot = signups(it.id).find(x => x.copilId===me && mk.has(x.cheie) && !x.facut_la); if (slot) { const [y,m] = slot.cheie.split("-"); out.push(qrow(it, "Luna ta: "+LUNI[+m-1]+" "+y, "lilac", facutBtn(slot))); } }
   }
-  if (isChild(me)) for (const C of openCmds().filter(c => !c.obligatoriu)) { const r = cmdRec(C.id, me); if (!r || !r.raspuns) out.unshift('<div role="button" tabindex="0" class="qrow" data-a="goCmd" data-id="'+esc(C.id)+'"><span class="dot" style="background:var(--lilac)"></span><span class="t"><b>'+esc((C.icon||"📚")+" "+C.titlu)+'</b><span class="qsub"><span class="tag">Opțional</span><small>Alege ce iei (sau „Nu luăm”)</small></span></span></div>'); }
+  if (isChild(me)) for (const C of openCmds().filter(c => !c.obligatoriu)) { const r = cmdRec(C.id, me); if (!r || !r.raspuns) out.unshift('<div role="button" tabindex="0" class="qrow" data-a="goCmd" data-id="'+esc(C.id)+'"><span class="dot" style="background:var(--lilac)"></span><span class="t"><b>'+esc((C.icon||"📚")+" "+C.titlu)+'</b><span class="qsub"><span class="tag">Opțional</span><small>'+(C.cadouri ? 'Alege ce iei pentru '+esc(firstName(kidName(me))) : 'Alege ce iei (sau „Nu luăm”)')+'</small></span></span></div>'); }
   return out;
 }
 function myDone(){
